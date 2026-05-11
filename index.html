@@ -1,0 +1,709 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --accent: #c8ff00;
+    --accent2: #ff3c00;
+    --text: #e8e8e8;
+    --muted: #666;
+    --card-h: 200px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 40px 32px 24px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(200,255,0,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .label-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 96px);
+    letter-spacing: 2px;
+    line-height: 0.9;
+    color: var(--text);
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-top: 12px;
+    text-transform: uppercase;
+  }
+
+  /* CONTROLS */
+  .controls {
+    padding: 20px 32px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 8px 16px;
+    outline: none;
+    flex: 1;
+    min-width: 200px;
+    transition: border-color 0.2s;
+    letter-spacing: 1px;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--muted); }
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 8px 14px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(200,255,0,0.05);
+  }
+  .count {
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: auto;
+    letter-spacing: 1px;
+  }
+  .count span { color: var(--accent); }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    padding: 0;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    padding: 24px;
+    position: relative;
+    transition: background 0.2s;
+    animation: fadeIn 0.4s ease both;
+  }
+  .card:hover { background: var(--surface2); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-index {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  .artist-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1.5px;
+    line-height: 1;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .artist-origin {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .origin-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .releases {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .link-btn:hover { color: var(--text); border-color: var(--text); }
+  .link-btn.sc:hover { border-color: #ff5500; color: #ff5500; }
+  .link-btn.ig:hover { border-color: #c13584; color: #c13584; }
+  .link-btn.na {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+  }
+  .link-icon { font-size: 12px; }
+
+  .year-badge {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 2px;
+    background: rgba(200,255,0,0.1);
+    color: var(--accent);
+    padding: 2px 8px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  /* FOOTER */
+  .footer {
+    padding: 24px 32px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+
+  .no-results {
+    grid-column: 1/-1;
+    padding: 60px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="label-tag">RNLSM · Córdoba, Argentina · Electronic Music</span>
+  <h1>RATIONALISM<br><span>RECORDS</span></h1>
+  <p class="subtitle">Artist Catalog — Est. 2010 · Minimal / Deep Tech / House</p>
+</div>
+
+<div class="controls">
+  <input class="search-input" id="search" placeholder="Buscar artista..." oninput="filterArtists()" />
+  <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+  <button class="filter-btn" onclick="setFilter('AR', this)">Argentina</button>
+  <button class="filter-btn" onclick="setFilter('INT', this)">Internacional</button>
+  <span class="count" id="count"><span id="shown">—</span> artistas</span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="footer">
+  Rationalism Records · <a href="https://soundcloud.com/rationalism" target="_blank">soundcloud.com/rationalism</a> · Córdoba · ARG
+</div>
+
+<script>
+const artists = [
+  {
+    name: "Martin Bellomo",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2010",
+    releases: "After The Fog LP · Go Round EP · REVISITED · Crudeza Cordobesa · Lost Decade · Disipado LP",
+    sc: "https://soundcloud.com/martinbellomo",
+    ig: "https://www.instagram.com/martinbellomo/"
+  },
+  {
+    name: "Lucianno Villarreal",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2015",
+    releases: "A11 · La Noche · Bad Habit · M004/Square w/ Bellomo",
+    sc: "https://soundcloud.com/lucianovillarreal",
+    ig: "https://www.instagram.com/luciannovillarreal/"
+  },
+  {
+    name: "Brandub",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2015",
+    releases: "VinylClub · Sorry Chord w/ Rodrigo DP · Crudeza Cordobesa",
+    sc: "https://soundcloud.com/brandub",
+    ig: "https://www.instagram.com/brandub_/"
+  },
+  {
+    name: "Bodeler",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2015",
+    releases: "Pantrax · Rough Side · Crudeza Cordobesa",
+    sc: "https://soundcloud.com/bodeler",
+    ig: "https://www.instagram.com/bodeler_music/"
+  },
+  {
+    name: "Nicolas Diez",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2015",
+    releases: "Jackpot · V.A. DOCTA001",
+    sc: "https://soundcloud.com/nicolasdiez",
+    ig: "https://www.instagram.com/nicolasdiez_/"
+  },
+  {
+    name: "Alexis Cabrera",
+    origin: "Argentina",
+    region: "AR",
+    since: "2016",
+    releases: "Corriendo Por Detras · Hypnotized",
+    sc: "https://soundcloud.com/alexiscabrera",
+    ig: "https://www.instagram.com/alexiscabrera_music/"
+  },
+  {
+    name: "Pedro D'Alessandro",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2016",
+    releases: "Portal de Piedra · Juntos · Lost Decade w/ Bellomo",
+    sc: "https://soundcloud.com/pedrodalessandro",
+    ig: "https://www.instagram.com/pedrodalessandromusic/"
+  },
+  {
+    name: "Rodrigo DP",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2017",
+    releases: "Sorry Chord w/ Brandub",
+    sc: "https://soundcloud.com/rodrigodp",
+    ig: "https://www.instagram.com/rodrigodp/"
+  },
+  {
+    name: "Gus Bonani",
+    origin: "Argentina",
+    region: "AR",
+    since: "2017",
+    releases: "Groovy Love / Melodrama EP",
+    sc: "https://soundcloud.com/gusbonani",
+    ig: "https://www.instagram.com/gusbonani/"
+  },
+  {
+    name: "Juan Panza",
+    origin: "Argentina",
+    region: "AR",
+    since: "2017",
+    releases: "Vaporized EP",
+    sc: "https://soundcloud.com/juanpanza",
+    ig: "https://www.instagram.com/juanpanzamusic/"
+  },
+  {
+    name: "Glasidum",
+    origin: "Argentina",
+    region: "AR",
+    since: "2017",
+    releases: "V.A. DOCTA001 · Drawing tool CD.001",
+    sc: "https://soundcloud.com/glasidum",
+    ig: "https://www.instagram.com/glasidum/"
+  },
+  {
+    name: "Furz",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2018",
+    releases: "After The Fog LP w/ Bellomo · Stardust w/ Castelo · V.A. DOCTA001",
+    sc: "https://soundcloud.com/furz",
+    ig: "https://www.instagram.com/furz_music/"
+  },
+  {
+    name: "Trentz",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2018",
+    releases: "Ralenti · Neue EP (V.A.) · V.A. DOCTA001",
+    sc: "https://soundcloud.com/trentzmusic",
+    ig: "https://www.instagram.com/trentz_music/"
+  },
+  {
+    name: "Cajal",
+    origin: "Argentina",
+    region: "AR",
+    since: "2018",
+    releases: "Nos Quedamos Solos · Sunchales 4:20 · Neue EP · Split Effort Two",
+    sc: "https://soundcloud.com/cajal-music",
+    ig: "https://www.instagram.com/cajal_music/"
+  },
+  {
+    name: "Prodot",
+    origin: "Argentina",
+    region: "AR",
+    since: "2018",
+    releases: "Brick · Neue EP · Split Effort One",
+    sc: "https://soundcloud.com/prodot",
+    ig: "https://www.instagram.com/prodotmusic/"
+  },
+  {
+    name: "Lautaro Scavuzzo",
+    origin: "Rosario, AR",
+    region: "AR",
+    since: "2018",
+    releases: "Disperso · Neue EP",
+    sc: "https://soundcloud.com/lautaroscavuzzo",
+    ig: "https://www.instagram.com/lautaroscavuzzo/"
+  },
+  {
+    name: "Nico Castoldi",
+    origin: "Argentina",
+    region: "AR",
+    since: "2018",
+    releases: "Mödern Things EP · Rhythm Takes Control EP · Bolantis",
+    sc: "https://soundcloud.com/nicocastoldi",
+    ig: "https://www.instagram.com/nicocastoldi/"
+  },
+  {
+    name: "Moodbeat",
+    origin: "Mar del Plata, AR",
+    region: "AR",
+    since: "2018",
+    releases: "Alphabet Part 1",
+    sc: "https://soundcloud.com/moodbeat",
+    ig: "https://www.instagram.com/moodbeat_music/"
+  },
+  {
+    name: "Agus Ferreyra",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2018",
+    releases: "Nueva Genesis EP",
+    sc: "https://soundcloud.com/agusferreyra",
+    ig: "https://www.instagram.com/agusferreyraaudio/"
+  },
+  {
+    name: "Sergio Jr.",
+    origin: "Argentina",
+    region: "AR",
+    since: "2018",
+    releases: "Reset Wave EP",
+    sc: "https://soundcloud.com/sergiodesargentomusic",
+    ig: "https://www.instagram.com/sergio_jr_music/"
+  },
+  {
+    name: "Fran Piussi",
+    origin: "Mar del Plata, AR",
+    region: "AR",
+    since: "2019",
+    releases: "Algoritmos EP · Poco Amor / Corre El Tiempo",
+    sc: "https://soundcloud.com/franpiussi",
+    ig: "https://www.instagram.com/franpiussi/"
+  },
+  {
+    name: "Juzel",
+    origin: "Argentina",
+    region: "AR",
+    since: "2019",
+    releases: "Capri EP · Split Effort Two w/ Cajal · Drawing tool CD.001",
+    sc: "https://soundcloud.com/juzel",
+    ig: "https://www.instagram.com/juzelmusic/"
+  },
+  {
+    name: "Sebbe",
+    origin: "Sweden",
+    region: "INT",
+    since: "2019",
+    releases: "Over the Sun EP",
+    sc: "https://soundcloud.com/sebbe-music",
+    ig: "https://www.instagram.com/sebbemusic/"
+  },
+  {
+    name: "Jesper Tjarnfors",
+    origin: "Sweden",
+    region: "INT",
+    since: "2019",
+    releases: "Anouar EP",
+    sc: "https://soundcloud.com/jespertjarnfors",
+    ig: "https://www.instagram.com/jespertjarnfors/"
+  },
+  {
+    name: "Mathieu Basi",
+    origin: "Francia",
+    region: "INT",
+    since: "2019",
+    releases: "Split Effort One w/ Prodot & Only Slave Nation",
+    sc: "https://soundcloud.com/mathieubasi",
+    ig: "https://www.instagram.com/mathieubasi/"
+  },
+  {
+    name: "Only Slave Nation",
+    origin: "Internacional",
+    region: "INT",
+    since: "2019",
+    releases: "Split Effort One",
+    sc: "https://soundcloud.com/onlyslavenation",
+    ig: null
+  },
+  {
+    name: "Danush",
+    origin: "Internacional",
+    region: "INT",
+    since: "2020",
+    releases: "Patsy EP",
+    sc: "https://soundcloud.com/danush",
+    ig: "https://www.instagram.com/danush_music/"
+  },
+  {
+    name: "Tato Piatti",
+    origin: "Argentina",
+    region: "AR",
+    since: "2016",
+    releases: "Transilvania",
+    sc: "https://soundcloud.com/tatopiatti",
+    ig: "https://www.instagram.com/tatopiatti/"
+  },
+  {
+    name: "Lupz",
+    origin: "Argentina",
+    region: "AR",
+    since: "2016",
+    releases: "Space Jam",
+    sc: "https://soundcloud.com/lupz",
+    ig: null
+  },
+  {
+    name: "LuvClap",
+    origin: "Argentina",
+    region: "AR",
+    since: "2017",
+    releases: "Fever",
+    sc: "https://soundcloud.com/luvclap",
+    ig: null
+  },
+  {
+    name: "Castelo",
+    origin: "Argentina",
+    region: "AR",
+    since: "2018",
+    releases: "Stardust w/ Furz",
+    sc: "https://soundcloud.com/castelo-music",
+    ig: "https://www.instagram.com/castelo_music/"
+  },
+  {
+    name: "Gruuv'",
+    origin: "Argentina",
+    region: "AR",
+    since: "2016",
+    releases: "A1 w/ Cajal",
+    sc: "https://soundcloud.com/gruuvmusic",
+    ig: null
+  },
+  {
+    name: "Iron1",
+    origin: "Argentina",
+    region: "AR",
+    since: "2021",
+    releases: "Ciclotimia EP",
+    sc: "https://soundcloud.com/iron1music",
+    ig: "https://www.instagram.com/iron1music/"
+  },
+  {
+    name: "Slacks (US)",
+    origin: "USA",
+    region: "INT",
+    since: "2021",
+    releases: "SumoFit EP",
+    sc: "https://soundcloud.com/slacksmusic",
+    ig: "https://www.instagram.com/slacksmusic/"
+  },
+  {
+    name: "Bürkle",
+    origin: "Internacional",
+    region: "INT",
+    since: "2022",
+    releases: "New Order EP feat. Etienné B.",
+    sc: "https://soundcloud.com/burkle-music",
+    ig: "https://www.instagram.com/burkle_music/"
+  },
+  {
+    name: "Etienné B.",
+    origin: "Internacional",
+    region: "INT",
+    since: "2022",
+    releases: "New Order EP w/ Bürkle",
+    sc: "https://soundcloud.com/etienneb",
+    ig: "https://www.instagram.com/etienneb_music/"
+  },
+  {
+    name: "Chuki Juri",
+    origin: "Argentina",
+    region: "AR",
+    since: "2022",
+    releases: "Güten Morgen EP",
+    sc: "https://soundcloud.com/chukijuri",
+    ig: "https://www.instagram.com/chukijuri/"
+  },
+  {
+    name: "Cossmos",
+    origin: "Argentina",
+    region: "AR",
+    since: "2022",
+    releases: "Another Story EP w/ TxL (BER)",
+    sc: "https://soundcloud.com/cossmos",
+    ig: "https://www.instagram.com/cossmos_music/"
+  },
+  {
+    name: "TxL (BER)",
+    origin: "Berlín, DE",
+    region: "INT",
+    since: "2022",
+    releases: "Another Story EP w/ Cossmos · Blockimber",
+    sc: "https://soundcloud.com/txlber",
+    ig: "https://www.instagram.com/txlber/"
+  },
+  {
+    name: "Detax",
+    origin: "Argentina",
+    region: "AR",
+    since: "2018",
+    releases: "Mödern Things EP w/ Nico Castoldi",
+    sc: "https://soundcloud.com/detax",
+    ig: "https://www.instagram.com/detaxmusic/"
+  },
+  {
+    name: "Alexis Rodriguez",
+    origin: "Argentina",
+    region: "AR",
+    since: "2021",
+    releases: "Roswell EP",
+    sc: "https://soundcloud.com/alexisrodriguezmusic",
+    ig: "https://www.instagram.com/alexisrodriguezmusic/"
+  },
+  {
+    name: "Lucas Mari",
+    origin: "Córdoba, AR",
+    region: "AR",
+    since: "2015",
+    releases: "Drawing tool CD.001",
+    sc: "https://soundcloud.com/lucasmari",
+    ig: "https://www.instagram.com/lucasmarimusic/"
+  }
+];
+
+let currentFilter = 'all';
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderArtists();
+}
+
+function filterArtists() {
+  renderArtists();
+}
+
+function renderArtists() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const grid = document.getElementById('grid');
+  
+  const filtered = artists.filter(a => {
+    const matchSearch = a.name.toLowerCase().includes(search) || 
+                        a.origin.toLowerCase().includes(search) ||
+                        a.releases.toLowerCase().includes(search);
+    const matchRegion = currentFilter === 'all' || a.region === currentFilter;
+    return matchSearch && matchRegion;
+  });
+
+  document.getElementById('shown').textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="no-results">No se encontraron artistas</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map((a, i) => `
+    <div class="card" style="animation-delay:${i * 30}ms">
+      <span class="card-index">${String(i+1).padStart(2,'0')}</span>
+      <div class="year-badge">DESDE ${a.since}</div>
+      <div class="artist-name">${a.name}</div>
+      <div class="artist-origin">
+        <span class="origin-dot"></span>
+        ${a.origin}
+      </div>
+      <div class="releases">${a.releases}</div>
+      <div class="links">
+        ${a.sc ? `<a class="link-btn sc" href="${a.sc}" target="_blank"><span class="link-icon">◎</span>SoundCloud</a>` : '<span class="link-btn na"><span class="link-icon">◎</span>SoundCloud</span>'}
+        ${a.ig ? `<a class="link-btn ig" href="${a.ig}" target="_blank"><span class="link-icon">◈</span>Instagram</a>` : '<span class="link-btn na"><span class="link-icon">◈</span>Instagram</span>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+// Init
+renderArtists();
+</script>
+</body>
+</html>
