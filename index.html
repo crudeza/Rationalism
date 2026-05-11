@@ -1,0 +1,471 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --acid:#b8ff00;
+  --acid2:#00ffe5;
+  --acid3:#ff2d78;
+  --bg:#050505;
+  --surface:#0d0d0d;
+  --surface2:#141414;
+  --border:#1f1f1f;
+  --border-acid:rgba(184,255,0,0.25);
+  --text:#d0d0d0;
+  --muted:#555;
+  --font:'Share Tech Mono',monospace;
+  --font2:'Orbitron',sans-serif;
+}
+body,html{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+.wrap{min-height:100vh}
+
+/* SCANLINES */
+.wrap::before{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+  pointer-events:none;z-index:999;
+}
+
+/* HEADER */
+.hdr{
+  padding:24px 20px 16px;
+  border-bottom:1px solid var(--border-acid);
+  position:relative;overflow:hidden;
+}
+.hdr::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--acid),transparent);
+  animation:scan 3s linear infinite;
+}
+@keyframes scan{from{background-position:-200% 0}to{background-position:200% 0}}
+.sys-tag{font-size:9px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.sys-tag span{color:var(--acid);animation:blink 1.2s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.title-block{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.main-title{font-family:var(--font2);font-size:clamp(18px,5vw,36px);font-weight:900;color:var(--acid);letter-spacing:2px;text-shadow:0 0 20px rgba(184,255,0,0.3)}
+.sub-title{font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase}
+.stats-row{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.stat{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.stat b{color:var(--acid2);font-family:var(--font2);font-size:12px}
+
+/* CONTROLS */
+.controls{
+  padding:10px 20px;
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  position:sticky;top:0;z-index:100;
+}
+.search{
+  flex:1;min-width:160px;
+  font-family:var(--font);font-size:12px;letter-spacing:1px;
+  padding:7px 12px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--acid);
+  outline:none;
+}
+.search::placeholder{color:var(--muted)}
+.search:focus{border-color:var(--acid);box-shadow:0 0 8px rgba(184,255,0,0.15)}
+.fbtn{
+  font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  padding:6px 10px;
+  background:transparent;border:1px solid var(--border);
+  color:var(--muted);cursor:pointer;transition:all 0.15s;
+}
+.fbtn:hover{border-color:var(--acid);color:var(--acid)}
+.fbtn.on{border-color:var(--acid);color:var(--bg);background:var(--acid);font-weight:700}
+.cnt{font-family:var(--font2);font-size:10px;color:var(--muted);margin-left:auto;letter-spacing:2px}
+.cnt b{color:var(--acid)}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:1px;
+  background:var(--border);
+}
+
+/* CARD */
+.card{
+  background:var(--surface);
+  padding:0;
+  display:flex;flex-direction:column;
+  transition:background 0.15s;
+  position:relative;
+  overflow:hidden;
+}
+.card:hover{background:var(--surface2)}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:var(--acid);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.3s ease;
+}
+.card:hover::before{transform:scaleX(1)}
+
+/* PHOTO */
+.photo-wrap{
+  width:100%;aspect-ratio:1;
+  position:relative;overflow:hidden;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.photo-wrap img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(100%) contrast(1.1);
+  transition:filter 0.3s;display:block;
+}
+.card:hover .photo-wrap img{filter:grayscale(60%) contrast(1.05)}
+.photo-fallback{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font2);font-size:28px;font-weight:900;
+  color:var(--acid);
+  background:var(--bg);
+}
+.photo-num{
+  position:absolute;top:6px;left:6px;
+  font-size:9px;color:var(--acid);letter-spacing:2px;
+  background:rgba(0,0,0,0.7);padding:2px 5px;
+}
+.photo-rel{
+  position:absolute;top:6px;right:6px;
+  font-family:var(--font2);font-size:9px;
+  background:var(--acid);color:#000;
+  padding:2px 6px;font-weight:700;
+}
+
+/* CARD BODY */
+.card-body{padding:10px 12px 12px}
+.aname{font-family:var(--font2);font-size:12px;font-weight:700;color:#f0f0f0;letter-spacing:0.5px;margin-bottom:3px;line-height:1.2}
+.aaka{font-size:9px;color:var(--acid2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.aorigin{font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.origin-dot{width:4px;height:4px;background:var(--acid3);flex-shrink:0}
+.links{display:flex;gap:5px}
+.lbtn{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--font);font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  padding:4px 8px;
+  border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;
+  transition:all 0.15s;flex:1;justify-content:center;
+}
+.lbtn:hover{color:var(--acid);border-color:var(--acid);background:rgba(184,255,0,0.05)}
+.lbtn.ig:hover{color:var(--acid3);border-color:var(--acid3);background:rgba(255,45,120,0.05)}
+.lbtn.na{opacity:0.2;pointer-events:none}
+
+/* LOADING PULSE */
+.img-loading{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+}
+.pulse{width:20px;height:20px;border:1px solid var(--acid);animation:pulse 1s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.8)}}
+
+/* EMPTY */
+.empty{
+  grid-column:1/-1;padding:4rem;
+  text-align:center;color:var(--muted);
+  font-family:var(--font2);font-size:12px;letter-spacing:3px;
+}
+
+/* FOOTER */
+.footer{
+  padding:16px 20px;border-top:1px solid var(--border-acid);
+  text-align:center;font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;
+}
+.footer a{color:var(--acid);text-decoration:none}
+.footer a:hover{text-shadow:0 0 8px var(--acid)}
+
+/* REGION PILL */
+.rpill{
+  position:absolute;bottom:6px;left:6px;
+  font-size:8px;letter-spacing:2px;padding:1px 5px;border:1px solid;
+}
+.rpill-AR{color:var(--acid2);border-color:var(--acid2)}
+.rpill-INT{color:var(--acid3);border-color:var(--acid3)}
+.rpill-MX{color:#ffaa00;border-color:#ffaa00}
+</style>
+
+<h2 class="sr-only">Rationalism Records — catálogo de 110 artistas con fotos, SoundCloud e Instagram</h2>
+
+<div class="wrap">
+<div class="hdr">
+  <div class="sys-tag">SYS:RNLSM_DB v2.0 <span>█</span> CÓRDOBA, ARG</div>
+  <div class="title-block">
+    <div class="main-title">RATIONALISM RECORDS</div>
+    <div class="sub-title">Artist Database</div>
+  </div>
+  <div class="stats-row">
+    <div class="stat">TOTAL <b id="total-count">110</b></div>
+    <div class="stat">AR <b>86</b></div>
+    <div class="stat">INT <b>22</b></div>
+    <div class="stat">MX <b>2</b></div>
+    <div class="stat">EST. <b>2010</b></div>
+  </div>
+</div>
+
+<div class="controls">
+  <input class="search" id="search" placeholder="> BUSCAR ARTISTA..." oninput="render()">
+  <button class="fbtn on" onclick="setF('all',this)">ALL</button>
+  <button class="fbtn" onclick="setF('AR',this)">ARG</button>
+  <button class="fbtn" onclick="setF('INT',this)">INT</button>
+  <button class="fbtn" onclick="setF('MX',this)">MX</button>
+  <span class="cnt"><b id="shown">—</b> ENTRIES</span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="footer">
+  <a href="https://soundcloud.com/rationalism" target="_blank">SC:RATIONALISM</a> &nbsp;·&nbsp;
+  <a href="https://rnlsm.bandcamp.com" target="_blank">BANDCAMP:RNLSM</a> &nbsp;·&nbsp;
+  MINIMAL / DEEP TECH / HOUSE · CBA · ARG
+</div>
+</div>
+
+<script>
+const artists = [
+{n:"Martin Bellomo",o:"Córdoba, AR",r:"AR",rel:24,sc:"martinbellomo",ig:"martinbellomo",sp:"4Z0DVrrXJPt9lCgKGMWRt3",tx:"30186"},
+{n:"Mild Bang",o:"Mexico",r:"MX",rel:7,sc:"mild-bang",ig:null,sp:null,tx:null},
+{n:"Lucianno Villarreal",o:"Córdoba, AR",r:"AR",rel:6,aka:"RYPLI",sc:"rypli_sound",ig:"rypli_sound",sp:null,tx:null},
+{n:"Pedro D'Alessandro",o:"Argentina",r:"AR",rel:6,sc:"pedrodalessandro",ig:"pedrodaless",sp:null,tx:null},
+{n:"Kaesar",o:"Argentina",r:"AR",rel:4,sc:null,ig:"kaesar___",sp:null,tx:null},
+{n:"Tabiuss",o:"Argentina",r:"AR",rel:4,sc:"tabiuss_",ig:null,sp:null,tx:null},
+{n:"Hernan Bass",o:"Argentina",r:"AR",rel:4,sc:"hernanbass",ig:null,sp:null,tx:null},
+{n:"Mauro Batista",o:"Argentina",r:"AR",rel:4,sc:null,ig:null,sp:null,tx:null},
+{n:"Duky",o:"Argentina",r:"AR",rel:3,sc:null,ig:null,sp:null,tx:null},
+{n:"Pedro Zoy",o:"Argentina",r:"AR",rel:3,sc:null,ig:null,sp:null,tx:null},
+{n:"Bodeler",o:"Córdoba, AR",r:"AR",rel:3,sc:"bodeler",ig:"bodelermusic",sp:"5kJqDnLCfNbO3g5rZlqzHO",tx:"7671"},
+{n:"Du Sant",o:"Argentina",r:"AR",rel:3,sc:null,ig:null,sp:null,tx:null},
+{n:"MiniMora",o:"Argentina",r:"AR",rel:3,sc:null,ig:null,sp:null,tx:null},
+{n:"Nicolas Diez",o:"Argentina",r:"AR",rel:3,sc:"nicolasdiez",ig:"nicolasdiezdesign",sp:null,tx:null},
+{n:"LuvClap",o:"Argentina",r:"AR",rel:3,sc:"luvclap",ig:"luvclap.producer",sp:null,tx:null},
+{n:"Trentz",o:"Córdoba, AR",r:"AR",rel:3,sc:"dj-trentz",ig:"trntzx",sp:null,tx:null},
+{n:"Cajal",o:"Córdoba, AR",r:"AR",rel:3,sc:"cajalmusic",ig:"cajal.music",sp:null,tx:null},
+{n:"Juzel",o:"Mar del Plata, AR",r:"AR",rel:3,sc:"juzelmusic",ig:"juzelmusic",sp:null,tx:null},
+{n:"Tom Pooks",o:"Internacional",r:"INT",rel:2,sc:"tompooksofficial",ig:null,sp:null,tx:null},
+{n:"Mario Franca",o:"Argentina",r:"AR",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Alexis Cabrera",o:"Argentina",r:"AR",rel:2,sc:"alexiscabrera",ig:null,sp:null,tx:null},
+{n:"Rodrigo Rivera",o:"Argentina",r:"AR",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Topper",o:"Argentina",r:"AR",rel:2,sc:"topper",ig:null,sp:null,tx:null},
+{n:"Ale Castro",o:"Argentina",r:"AR",rel:2,sc:"ale-castro",ig:null,sp:null,tx:null},
+{n:"Nicolas Cuer",o:"Internacional",r:"INT",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Rodrigo Dp",o:"Argentina",r:"AR",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"P. Lopez",o:"Argentina",r:"AR",rel:2,sc:"p-lopez",ig:null,sp:null,tx:null},
+{n:"Akvo",o:"Mexico",r:"MX",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Lucas Perazzi",o:"Argentina",r:"AR",rel:2,aka:"LUPZ",sc:"lucas-perazzi",ig:null,sp:null,tx:null},
+{n:"Nico Cano",o:"Argentina",r:"AR",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Facu Avenali",o:"Argentina",r:"AR",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Esteban Gutierrez",o:"Argentina",r:"AR",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Wally Stryk",o:"Internacional",r:"INT",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Rodrigo",o:"Argentina",r:"AR",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Furz",o:"Córdoba, AR",r:"AR",rel:2,sc:"furz",ig:"furzmusic",sp:null,tx:null},
+{n:"Smoothless",o:"Argentina",r:"AR",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Gruuv'",o:"Argentina",r:"AR",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"Lautaro Scavuzzo",o:"Rosario, AR",r:"AR",rel:2,sc:"lautaroscavuzzo",ig:"lautaroscavuzzo",sp:null,tx:null},
+{n:"Dellacasa",o:"Argentina",r:"AR",rel:2,sc:"dellacasa",ig:null,sp:null,tx:null},
+{n:"Pablo Brizzio",o:"Argentina",r:"AR",rel:2,sc:"pablo-brizzio",ig:null,sp:null,tx:null},
+{n:"Prodot",o:"Córdoba, AR",r:"AR",rel:2,sc:"prodot",ig:"prodotmusic",sp:null,tx:null},
+{n:"Fran Piussi",o:"Mar del Plata, AR",r:"AR",rel:2,sc:"franpiussi",ig:"franpiussi",sp:null,tx:null},
+{n:"TxL (BER)",o:"Berlín, DE",r:"INT",rel:2,sc:null,ig:null,sp:null,tx:null},
+{n:"DT",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Rick Wade",o:"Detroit, USA",r:"INT",rel:1,sc:"rickwade",ig:"rickwade",sp:"6Y6UvV0TpBatFnRuFCcfkI",tx:"1386"},
+{n:"Patrick Zigon",o:"Francia",r:"INT",rel:1,sc:"patrick-zigon",ig:null,sp:null,tx:null},
+{n:"Mikael Stavostrand",o:"Suecia",r:"INT",rel:1,sc:"mikael-stavostrand",ig:null,sp:null,tx:null},
+{n:"Justin Drake",o:"Canada",r:"INT",rel:1,sc:"justin-drake",ig:null,sp:null,tx:null},
+{n:"Vernon",o:"Internacional",r:"INT",rel:1,sc:"vernon",ig:null,sp:null,tx:null},
+{n:"Cossmos",o:"Argentina",r:"AR",rel:1,sc:"cossmos",ig:"cossmos_music",sp:null,tx:null},
+{n:"Iron1",o:"Argentina",r:"AR",rel:1,sc:"iron1music",ig:"iron1music",sp:null,tx:null},
+{n:"Slacks",o:"USA",r:"INT",rel:1,sc:"slacksmusic",ig:"slacksmusic",sp:null,tx:null},
+{n:"Sebbe",o:"Suecia",r:"INT",rel:1,sc:"sebbe-music",ig:"sebbemusic",sp:null,tx:null},
+{n:"Jesper Tjarnfors",o:"Suecia",r:"INT",rel:1,sc:"jespertjarnfors",ig:"jespertjarnfors",sp:null,tx:null},
+{n:"Mathieu Basi",o:"Francia",r:"INT",rel:1,sc:"mathieubasi",ig:"mathieubasi",sp:null,tx:null},
+{n:"Only Slave Nation",o:"Francia",r:"INT",rel:1,sc:"onlyslavenation",ig:null,sp:null,tx:null},
+{n:"Danush",o:"Internacional",r:"INT",rel:1,sc:"danush",ig:"danush_music",sp:null,tx:null},
+{n:"Castoldi",o:"Argentina",r:"AR",rel:1,aka:"Nico",sc:"nicocastoldi",ig:"nicocastoldi",sp:null,tx:null},
+{n:"Castelo",o:"Argentina",r:"AR",rel:1,sc:"castelo-music",ig:"castelo_music",sp:null,tx:null},
+{n:"Agus Ferreyra",o:"Córdoba, AR",r:"AR",rel:1,sc:"agusferreyra",ig:"agusferreyraaudio",sp:null,tx:null},
+{n:"Juan Panza",o:"Argentina",r:"AR",rel:1,sc:"juanpanza",ig:null,sp:null,tx:null},
+{n:"Gus Bonani",o:"Argentina",r:"AR",rel:1,sc:"gusbonani",ig:null,sp:null,tx:null},
+{n:"Sergio Jr.",o:"Argentina",r:"AR",rel:1,sc:"sergiodesargentomusic",ig:"sergio_jr_music",sp:null,tx:null},
+{n:"ro_mo",o:"Argentina",r:"AR",rel:1,sc:"ro-mo",ig:null,sp:null,tx:null},
+{n:"Alexis Rodriguez",o:"Argentina",r:"AR",rel:1,sc:"alexisrodriguezmusic",ig:"alexisrodriguezmusic",sp:null,tx:null},
+{n:"Tato Piatti",o:"Argentina",r:"AR",rel:1,sc:"tatopiatti",ig:"tatopiatti",sp:null,tx:null},
+{n:"Lupz",o:"Argentina",r:"AR",rel:1,sc:"lupz",ig:null,sp:null,tx:null},
+{n:"Moodbeat",o:"Mar del Plata, AR",r:"AR",rel:1,sc:"moodbeat",ig:"moodbeat_music",sp:null,tx:null},
+{n:"Bürkle",o:"Internacional",r:"INT",rel:1,sc:"burkle-music",ig:"burkle_music",sp:null,tx:null},
+{n:"Etienné B.",o:"Internacional",r:"INT",rel:1,sc:"etienneb",ig:"etienneb_music",sp:null,tx:null},
+{n:"Chuki Juri",o:"Argentina",r:"AR",rel:1,sc:"chukijuri",ig:"chukijuri",sp:null,tx:null},
+{n:"Brandub",o:"Córdoba, AR",r:"AR",rel:1,sc:"brandub",ig:"brandub_",sp:null,tx:null},
+{n:"Gustavo Sierra",o:"Córdoba, AR",r:"AR",rel:1,sc:"gustavo-sierra",ig:null,sp:null,tx:null},
+{n:"Ezequiel Esley",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Espen Lauritzen",o:"Noruega",r:"INT",rel:1,sc:"espen-lauritzen",ig:null,sp:null,tx:null},
+{n:"Glasidum",o:"Córdoba, AR",r:"AR",rel:1,sc:"glasidum",ig:"glasidum",sp:null,tx:null},
+{n:"Mathias Woot",o:"Internacional",r:"INT",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Sean Rooney",o:"Internacional",r:"INT",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Adrian Kiliszek",o:"Internacional",r:"INT",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"ZRK",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"ZippiE",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Yeark",o:"Argentina",r:"AR",rel:1,sc:"yeark",ig:null,sp:null,tx:null},
+{n:"Ema Geerez",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Yanny Villar",o:"Argentina",r:"AR",rel:1,sc:"yanny-villar",ig:null,sp:null,tx:null},
+{n:"Bombilla",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Duo",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Dual T",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Franck Valat",o:"Francia",r:"INT",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Plusculaar",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Geoff Wichmann",o:"Internacional",r:"INT",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"AndrewS",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"PM (Cyprus)",o:"Chipre",r:"INT",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Gonza Algue",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Frank Jr",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"[Aura]",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Sebastian Oviedo",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Agustin Cooper",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"DJ Tato Acosta",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"G-Zzer",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Emiliano Ferreyra",o:"Córdoba, AR",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Luis Bustos",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Maxi Fried",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Pedro Lambert",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Detax",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"Yusuke Yamamoto",o:"Japón",r:"INT",rel:1,sc:"yusukeyamamoto",ig:null,sp:null,tx:null},
+{n:"Sukenobu",o:"Japón",r:"INT",rel:1,sc:null,ig:null,sp:null,tx:null},
+{n:"R.A.P.",o:"Argentina",r:"AR",rel:1,sc:"rap-artist",ig:null,sp:null,tx:null},
+{n:"Los Loopers",o:"Argentina",r:"AR",rel:1,sc:"los-loopers",ig:null,sp:null,tx:null},
+{n:"Cordero",o:"Argentina",r:"AR",rel:1,sc:null,ig:null,sp:null,tx:null}
+];
+
+const imgCache = {};
+
+async function fetchImage(a) {
+  const key = a.n;
+  if (imgCache[key] !== undefined) return imgCache[key];
+  imgCache[key] = null;
+
+  // 1. Try MusicBrainz + CAA
+  try {
+    const q = encodeURIComponent(`artist:"${a.n}"`);
+    const res = await fetch(`https://musicbrainz.org/ws/2/artist?query=${q}&limit=1&fmt=json`, {
+      headers:{'User-Agent':'RationalismDB/1.0 (educational)'}
+    });
+    if(res.ok){
+      const d = await res.json();
+      const mbid = d?.artists?.[0]?.id;
+      if(mbid){
+        const r2 = await fetch(`https://coverartarchive.org/artist/${mbid}`);
+        if(r2.ok){const d2=await r2.json();const img=d2?.images?.[0]?.image;if(img){imgCache[key]=img;return img;}}
+      }
+    }
+  } catch{}
+
+  // 2. Try SoundCloud public API
+  if(a.sc){
+    try{
+      const r = await fetch(`https://api.soundcloud.com/resolve?url=https://soundcloud.com/${a.sc}&client_id=iZIs9mchVcX5lhVRyQGGAYlNPVldzAoX`);
+      if(r.ok){
+        const d=await r.json();
+        const url=(d.avatar_url||'').replace('-large','-t300x300');
+        if(url&&!url.includes('default')){imgCache[key]=url;return url;}
+      }
+    }catch{}
+  }
+
+  // 3. Try Last.fm artist images
+  try{
+    const q=encodeURIComponent(a.n);
+    const r=await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${q}&api_key=b25b959554ed76058ac220b7b2e0a026&format=json`);
+    if(r.ok){
+      const d=await r.json();
+      const imgs=d?.artist?.image;
+      if(imgs){
+        const large=imgs.find(i=>i.size==='extralarge')||imgs[imgs.length-1];
+        const url=large?.['#text'];
+        if(url&&url.length>0&&!url.includes('2a96cbd8b46e442fc41c2b86b821562f')){
+          imgCache[key]=url;return url;
+        }
+      }
+    }
+  }catch{}
+
+  imgCache[key]=null;
+  return null;
+}
+
+async function loadCardImage(a, idx) {
+  const wrap = document.getElementById(`pw${idx}`);
+  if(!wrap) return;
+  const url = await fetchImage(a);
+  if(url){
+    const loading = wrap.querySelector('.img-loading');
+    const fallback = wrap.querySelector('.photo-fallback');
+    const img = document.createElement('img');
+    img.alt = a.n;
+    img.onload = () => {
+      if(loading) loading.remove();
+      if(fallback) fallback.remove();
+      wrap.insertBefore(img, wrap.firstChild);
+    };
+    img.onerror = () => { if(loading) loading.remove(); };
+    img.src = url;
+  } else {
+    const loading = wrap.querySelector('.img-loading');
+    if(loading) loading.remove();
+  }
+}
+
+function initials(n){ return n.replace(/[[\]]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?'; }
+
+let filt='all';
+function setF(f,btn){filt=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');render();}
+
+function render(){
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  const list=artists.filter(a=>{
+    if(filt!=='all'&&a.r!==filt)return false;
+    return !q||a.n.toLowerCase().includes(q)||a.o.toLowerCase().includes(q)||(a.aka||'').toLowerCase().includes(q);
+  });
+  document.getElementById('shown').textContent=list.length;
+  const g=document.getElementById('grid');
+  if(!list.length){g.innerHTML='<div class="empty">> NO ENTRIES FOUND_</div>';return;}
+
+  g.innerHTML=list.map((a,i)=>{
+    const ini=initials(a.n);
+    const akaHtml=a.aka?`<div class="aaka">// ${a.aka}</div>`:'';
+    const scUrl=a.sc?`https://soundcloud.com/${a.sc}`:'';
+    const igUrl=a.ig?`https://www.instagram.com/${a.ig}/`:'';
+    const cached=imgCache[a.n];
+    const imgHtml=cached
+      ?`<img src="${cached}" alt="${a.n}">`
+      :`<div class="img-loading"><div class="pulse"></div></div><div class="photo-fallback">${ini}</div>`;
+
+    return`<div class="card">
+      <div class="photo-wrap" id="pw${i}">
+        ${imgHtml}
+        <div class="photo-num">${String(i+1).padStart(3,'0')}</div>
+        <div class="photo-rel">${a.rel}</div>
+        <div class="rpill rpill-${a.r}">${a.r==='AR'?'ARG':a.r}</div>
+      </div>
+      <div class="card-body">
+        <div class="aname">${a.n}</div>
+        ${akaHtml}
+        <div class="aorigin"><span class="origin-dot"></span>${a.o}</div>
+        <div class="links">
+          ${a.sc?`<a class="lbtn sc" href="${scUrl}" target="_blank">SC</a>`:`<span class="lbtn na">SC</span>`}
+          ${a.ig?`<a class="lbtn ig" href="${igUrl}" target="_blank">IG</a>`:`<span class="lbtn na">IG</span>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Load images for visible cards
+  list.forEach((a,i)=>{
+    if(!imgCache[a.n]){
+      loadCardImage(a,i);
+    }
+  });
+}
+
+render();
+</script>
