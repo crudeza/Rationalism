@@ -3,1280 +3,962 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-  <!-- SEO PRIMARY -->
   <title>Martin Bellomo — DJ · Producer · Baroque Beatmaker | Córdoba, Argentina</title>
   <meta name="description" content="Martin Bellomo es un DJ y productor de Córdoba, Argentina. Minimal House, Electro, Acid y UK Garage. Releases en Momentz Records, Rationalism Records, MyHouse YourHouse y After:Fx Music.">
   <meta name="keywords" content="Martin Bellomo, DJ Córdoba Argentina, productor música electrónica, baroque beatmaker, minimal house, electro, acid house, UK garage, Rationalism Records, Momentz Records, MyHouse YourHouse Records, After Fx Music, electronic music Argentina">
   <meta name="author" content="Martin Bellomo">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://martinbellomo.vercel.app/">
-
-  <!-- OG / Social -->
   <meta property="og:type" content="profile">
   <meta property="og:title" content="Martin Bellomo — DJ · Producer · Baroque Beatmaker">
-  <meta property="og:description" content="Baroque beatmaker from Downtown Córdoba, Argentina. Minimal House · Electro · Acid · UK Garage. Headmaster at Rationalism Records, Momentz Records & MyHouse YourHouse.">
+  <meta property="og:description" content="Baroque beatmaker from Downtown Córdoba, Argentina. Minimal House · Electro · Acid · UK Garage.">
   <meta property="og:image" content="https://i1.sndcdn.com/avatars-6sFYYgLImOuzAKX6-FzylOw-t500x500.jpg">
   <meta property="og:url" content="https://martinbellomo.vercel.app/">
-  <meta property="og:site_name" content="Martin Bellomo">
-  <meta property="og:locale" content="es_AR">
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Martin Bellomo — DJ · Producer · Baroque Beatmaker">
   <meta name="twitter:description" content="Minimal House · Electro · Acid · UK Garage. Baroque beatmaker from Córdoba, Argentina.">
   <meta name="twitter:image" content="https://i1.sndcdn.com/avatars-6sFYYgLImOuzAKX6-FzylOw-t500x500.jpg">
-
-  <!-- Schema.org JSON-LD for AI/LLM indexing -->
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@type": "MusicGroup",
-    "name": "Martin Bellomo",
-    "alternateName": "martinbellomo",
-    "description": "Martin Bellomo is a baroque beatmaker from Downtown Córdoba, Argentina. Minimal House, Electro, Acid and UK Garage. Headmaster at Rationalism Records, Momentz Records and A&R at MyHouse YourHouse.",
-    "genre": ["Minimal House", "Electro", "Acid", "UK Garage", "Electronic"],
-    "foundingLocation": { "@type": "Place", "name": "Córdoba", "addressCountry": "AR" },
-    "url": "https://martinbellomo.vercel.app/",
-    "sameAs": [
-      "https://soundcloud.com/martinbellomo",
-      "https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy",
-      "https://instagram.com/martinbellomo",
-      "https://www.youtube.com/@evan806vinylmusic",
-      "https://soundcloud.com/rationalism",
-      "https://soundcloud.com/mhyh-records",
-      "https://soundcloud.com/momentzrecords",
-      "https://soundcloud.com/afterfxmusic"
-    ],
-    "image": "https://i1.sndcdn.com/avatars-6sFYYgLImOuzAKX6-FzylOw-t500x500.jpg"
+    "@context":"https://schema.org","@type":"MusicGroup",
+    "name":"Martin Bellomo","alternateName":"martinbellomo",
+    "description":"Martin Bellomo is a baroque beatmaker from Downtown Córdoba, Argentina. Minimal House, Electro, Acid and UK Garage.",
+    "genre":["Minimal House","Electro","Acid","UK Garage","Electronic"],
+    "foundingLocation":{"@type":"Place","name":"Córdoba","addressCountry":"AR"},
+    "url":"https://martinbellomo.vercel.app/",
+    "sameAs":["https://soundcloud.com/martinbellomo","https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy","https://instagram.com/martinbellomo","https://www.youtube.com/@evan806vinylmusic"],
+    "image":"https://i1.sndcdn.com/avatars-6sFYYgLImOuzAKX6-FzylOw-t500x500.jpg"
   }
   </script>
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400&display=swap" rel="stylesheet">
 
-  <style>
-    /* ══════════════════════════════════════
-       RESET & DESIGN TOKENS
-    ══════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<style>
+/* ═══════════════════════════════════════
+   TOKENS & RESET
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#050505; --white:#f0ede6;
+  --mid:#141414;   --dim:#272727;
+  --acid:#c8f53a;  --rust:#d4420e;
+  --muted:#888880;
+  --fd:'Bebas Neue',sans-serif;
+  --fm:'Space Mono',monospace;
+  --fb:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--black);color:var(--white);font-family:var(--fb);font-weight:300;overflow-x:hidden}
+@media(pointer:fine){body{cursor:crosshair}}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%;height:auto}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.45}
 
-    :root {
-      --black:  #050505;
-      --white:  #f0ede6;
-      --mid:    #141414;
-      --dim:    #272727;
-      --acid:   #c8f53a;
-      --rust:   #d4420e;
-      --muted:  #888880;
+/* ═══════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════ */
+.cursor-dot{display:none;position:fixed;width:8px;height:8px;background:var(--acid);border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:transform .12s;mix-blend-mode:exclusion}
+@media(pointer:fine){.cursor-dot{display:block}}
 
-      --font-display: 'Bebas Neue', sans-serif;
-      --font-mono:    'Space Mono', monospace;
-      --font-body:    'DM Sans', sans-serif;
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+nav.main-nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  background:rgba(5,5,5,.72);
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+@media(min-width:768px){nav.main-nav{padding:18px 40px}}
+@media(min-width:1024px){nav.main-nav{padding:18px 60px}}
 
-      --sp-sm: 20px;
-      --sp-md: 32px;
-      --sp-lg: 56px;
+.nav-logo{font-family:var(--fd);font-size:20px;letter-spacing:3px;color:var(--acid)}
 
-      --sec-v: 64px;
-      --sec-h: 20px;
-    }
+/* Desktop links */
+.nav-desktop{display:none;list-style:none;gap:28px}
+.nav-desktop a{font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.nav-desktop a:hover{color:var(--acid)}
+@media(min-width:768px){.nav-desktop{display:flex}}
 
-    @media (min-width: 768px) {
-      :root { --sec-v: 88px; --sec-h: 40px; }
-    }
-    @media (min-width: 1024px) {
-      :root { --sec-v: 100px; --sec-h: 60px; }
-    }
+/* Hamburger — mobile only */
+.nav-burger{
+  display:flex;flex-direction:column;justify-content:center;gap:5px;
+  width:40px;height:40px;background:none;border:none;cursor:pointer;padding:5px;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-burger span{display:block;height:1.5px;background:var(--white);transition:all .3s;transform-origin:center}
+.nav-burger.is-open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-burger.is-open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-burger.is-open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+@media(min-width:768px){.nav-burger{display:none}}
 
-    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* Drawer */
+.nav-drawer{
+  position:fixed;top:0;right:0;bottom:0;
+  width:min(280px,80vw);
+  background:var(--mid);border-left:1px solid var(--dim);
+  z-index:299;
+  padding:80px 32px 40px;
+  display:flex;flex-direction:column;gap:28px;
+  transform:translateX(110%);
+  transition:transform .38s cubic-bezier(.4,0,.2,1);
+  visibility:hidden;
+}
+.nav-drawer.is-open{transform:translateX(0);visibility:visible}
+.nav-drawer a{font-family:var(--fm);font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);transition:color .2s;-webkit-tap-highlight-color:transparent}
+.nav-drawer a:hover,.nav-drawer a:active{color:var(--acid)}
+@media(min-width:768px){.nav-drawer{display:none}}
 
-    body {
-      background: var(--black);
-      color: var(--white);
-      font-family: var(--font-body);
-      font-weight: 300;
-      overflow-x: hidden;
-    }
-    @media (pointer: fine) { body { cursor: crosshair; } }
+/* Overlay */
+.nav-overlay{
+  display:block;position:fixed;inset:0;
+  background:rgba(0,0,0,.55);z-index:298;
+  opacity:0;pointer-events:none;
+  transition:opacity .38s;
+}
+.nav-overlay.is-open{opacity:1;pointer-events:auto}
 
-    a { text-decoration: none; color: inherit; }
-    img { display: block; max-width: 100%; height: auto; }
+/* ═══════════════════════════════════════
+   HERO + ABOUT — UNIFIED
+═══════════════════════════════════════ */
+.hero-about{
+  position:relative;overflow:hidden;
+  min-height:100svh;
+  display:flex;flex-direction:column;
+  padding-top:54px;
+}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(55%) contrast(1.08)}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(5,5,5,.6) 0%,rgba(5,5,5,.28) 32%,rgba(5,5,5,.8) 68%,var(--black) 100%);
+}
+@media(min-width:768px){
+  .hero-bg::after{background:linear-gradient(to right,var(--black) 0%,rgba(5,5,5,.75) 38%,rgba(5,5,5,.18) 65%,rgba(5,5,5,.55) 100%),linear-gradient(to bottom,transparent 58%,var(--black) 100%)}
+  .hero-bg img{object-position:65% top}
+}
+.scanlines{position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px)}
+.glitch-badge{
+  display:none;position:absolute;bottom:52px;right:28px;z-index:3;
+  width:96px;height:96px;border:1px solid var(--acid);border-radius:50%;
+  align-items:center;justify-content:center;
+  animation:spin 22s linear infinite;
+}
+.glitch-badge-text{font-family:var(--fm);font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--acid);text-align:center;line-height:1.7;animation:spin 22s linear infinite reverse}
+@media(min-width:600px){.glitch-badge{display:flex}}
+@media(min-width:1024px){.glitch-badge{bottom:76px;right:52px;width:110px;height:110px}}
 
-    /* Noise texture */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 9998; opacity: .45;
-    }
+.hero-content{
+  position:relative;z-index:2;flex:1;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:var(--sp,20px) var(--sp,20px) 48px;
+  max-width:720px;
+}
+@media(min-width:768px){.hero-content{padding:0 40px 72px;justify-content:center;min-height:100svh}}
+@media(min-width:1024px){.hero-content{padding-left:60px;padding-bottom:80px}}
 
-    /* ── Custom cursor (desktop only) ── */
-    .cursor-dot {
-      display: none;
-      position: fixed; width: 8px; height: 8px;
-      background: var(--acid); border-radius: 50%;
-      pointer-events: none; z-index: 10000;
-      transform: translate(-50%,-50%);
-      transition: transform .12s;
-      mix-blend-mode: exclusion;
-    }
-    @media (pointer: fine) { .cursor-dot { display: block; } }
+.genre-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;opacity:0;animation:fadeUp .5s .15s forwards}
+.genre-pill{padding:5px 11px;border:1px solid rgba(200,245,58,.4);background:rgba(200,245,58,.07);font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--acid)}
+.hero-tag{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--acid);text-transform:uppercase;margin-bottom:11px;opacity:0;animation:fadeUp .5s .28s forwards}
+.hero-title{font-family:var(--fd);font-size:clamp(66px,20vw,136px);line-height:.88;letter-spacing:2px;opacity:0;animation:fadeUp .6s .42s forwards}
+.hero-title .accent{color:var(--acid);display:block}
+.hero-bio{margin-top:22px;font-size:14px;line-height:1.78;color:rgba(240,237,230,.7);max-width:540px;opacity:0;animation:fadeUp .6s .55s forwards}
+@media(min-width:768px){.hero-bio{font-size:15px}}
+.about-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;opacity:0;animation:fadeUp .5s .64s forwards}
+.tag{padding:5px 11px;border:1px solid var(--dim);font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;transition:all .2s}
+.tag:hover{border-color:var(--acid);color:var(--acid)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;opacity:0;animation:fadeUp .5s .73s forwards}
+.hero-stats{display:flex;gap:26px;flex-wrap:wrap;margin-top:26px;padding-top:18px;border-top:1px solid var(--dim);opacity:0;animation:fadeUp .5s .84s forwards}
+.stat-num{font-family:var(--fd);font-size:26px;color:var(--acid);line-height:1}
+.stat-label{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:3px}
 
-    /* ══════════════════════════════════════
-       NAVIGATION
-    ══════════════════════════════════════ */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 15px var(--sp-sm);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      background: rgba(5,5,5,.65);
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    @media (min-width: 768px) { nav { padding: 18px 40px; } }
+/* ═══════════════════════════════════════
+   TICKER
+═══════════════════════════════════════ */
+.ticker-wrap{background:var(--acid);overflow:hidden;padding:11px 0}
+.ticker-track{display:flex;white-space:nowrap;animation:ticker 28s linear infinite}
+.ticker-item{font-family:var(--fd);font-size:13px;letter-spacing:3px;color:var(--black);padding:0 26px}
+.ticker-sep{color:var(--rust)}
 
-    .nav-logo {
-      font-family: var(--font-display);
-      font-size: 20px; letter-spacing: 3px; color: var(--acid);
-    }
+/* ═══════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════ */
+section{padding:64px 20px;position:relative}
+@media(min-width:768px){section{padding:88px 40px}}
+@media(min-width:1024px){section{padding:100px 60px}}
 
-    /* Desktop inline links */
-    .nav-links-desktop {
-      display: none; list-style: none; gap: 28px;
-    }
-    .nav-links-desktop a {
-      font-family: var(--font-mono);
-      font-size: 11px; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--muted);
-      transition: color .2s;
-    }
-    .nav-links-desktop a:hover { color: var(--acid); }
-    @media (min-width: 768px) { .nav-links-desktop { display: flex; } }
+.section-label{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--acid);text-transform:uppercase;margin-bottom:12px}
+.section-title{font-family:var(--fd);font-size:clamp(36px,8vw,66px);line-height:1;letter-spacing:2px}
 
-    /* Hamburger */
-    .nav-burger {
-      display: flex; flex-direction: column;
-      justify-content: center; gap: 5px;
-      width: 40px; height: 40px;
-      background: none; border: none; cursor: pointer; padding: 6px;
-    }
-    .nav-burger span {
-      display: block; height: 1.5px; background: var(--white);
-      transition: all .3s;
-    }
-    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .nav-burger.open span:nth-child(2) { opacity: 0; }
-    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-    @media (min-width: 768px) { .nav-burger { display: none; } }
+/* Buttons */
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;background:var(--acid);color:var(--black);font-family:var(--fm);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:all .2s;cursor:pointer;border:none;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.btn-primary:hover,.btn-primary:active{background:var(--white);transform:translateY(-2px)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border:1px solid rgba(255,255,255,.22);color:var(--white);font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:all .2s;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.btn-secondary:hover,.btn-secondary:active{border-color:var(--acid);color:var(--acid)}
 
-    /* Drawer */
-    .nav-drawer {
-      position: fixed; top: 0; right: 0; bottom: 0;
-      width: min(280px, 80vw);
-      background: var(--mid);
-      border-left: 1px solid var(--dim);
-      z-index: 199;
-      padding: 80px 32px;
-      display: flex; flex-direction: column; gap: 28px;
-      transform: translateX(100%);
-      transition: transform .35s cubic-bezier(.4,0,.2,1);
-    }
-    .nav-drawer.open { transform: translateX(0); }
-    .nav-drawer a {
-      font-family: var(--font-mono);
-      font-size: 13px; letter-spacing: 3px;
-      text-transform: uppercase; color: var(--muted); transition: color .2s;
-    }
-    .nav-drawer a:hover { color: var(--acid); }
-    @media (min-width: 768px) { .nav-drawer { display: none; } }
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .65s,transform .65s}
+.reveal.visible{opacity:1;transform:translateY(0)}
 
-    .nav-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,.5); z-index: 198;
-    }
-    .nav-overlay.open { display: block; }
+/* ═══════════════════════════════════════
+   RELEASES
+═══════════════════════════════════════ */
+#releases{background:var(--mid);border-top:1px solid var(--dim)}
+.releases-header{display:flex;flex-direction:column;gap:14px;margin-bottom:44px}
+@media(min-width:600px){.releases-header{flex-direction:row;align-items:flex-end;justify-content:space-between}}
+.releases-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+@media(min-width:768px){.releases-grid{grid-template-columns:repeat(3,1fr)}}
+.release-card{position:relative;overflow:hidden;aspect-ratio:1;background:var(--dim);cursor:pointer;-webkit-tap-highlight-color:transparent;display:block}
+.release-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s,filter .5s;filter:grayscale(30%)}
+.release-card:hover img{transform:scale(1.06);filter:grayscale(0%)}
+.release-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,.95) 0%,transparent 58%);display:flex;flex-direction:column;justify-content:flex-end;padding:14px;opacity:0;transition:opacity .3s}
+.release-card:hover .release-overlay,.release-card.tapped .release-overlay{opacity:1}
+.release-name{font-family:var(--fd);font-size:17px;letter-spacing:1px}
+.release-label-tag{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--acid);text-transform:uppercase;margin-top:3px}
+.release-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;background:var(--acid);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--black);opacity:0;transition:opacity .3s}
+.release-card:hover .release-icon,.release-card.tapped .release-icon{opacity:1}
 
-    /* ══════════════════════════════════════
-       HERO + ABOUT — SINGLE UNIFIED SECTION
-    ══════════════════════════════════════ */
-    .hero-about {
-      position: relative; overflow: hidden;
-      min-height: 100svh;
-      display: flex; flex-direction: column;
-      padding-top: 56px; /* nav height */
-    }
+/* ═══════════════════════════════════════
+   VIDEOS SECTION
+═══════════════════════════════════════ */
+#videos{border-top:1px solid var(--dim)}
+.videos-header{margin-bottom:44px}
+.video-scroll-wrap{
+  display:flex;gap:12px;
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-bottom:16px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:var(--dim) transparent;
+}
+.video-scroll-wrap::-webkit-scrollbar{height:3px}
+.video-scroll-wrap::-webkit-scrollbar-track{background:transparent}
+.video-scroll-wrap::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
+.video-card{
+  flex:0 0 min(300px,80vw);scroll-snap-align:start;
+  position:relative;overflow:hidden;
+  background:var(--dim);cursor:pointer;
+  border:1px solid var(--dim);transition:border-color .3s;
+  -webkit-tap-highlight-color:transparent;
+  display:block;
+}
+.video-card:hover{border-color:rgba(200,245,58,.3)}
+.video-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}
+.video-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s,filter .4s;filter:grayscale(25%)}
+.video-card:hover .video-thumb img{transform:scale(1.06);filter:grayscale(0%)}
+.video-play-btn{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.32);transition:background .3s;
+}
+.video-card:hover .video-play-btn{background:rgba(0,0,0,.12)}
+.video-play-icon{
+  width:48px;height:48px;background:var(--acid);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:var(--black);
+  transition:transform .2s;
+}
+.video-card:hover .video-play-icon{transform:scale(1.1)}
+.video-info{padding:14px 16px}
+.video-title{font-family:var(--fd);font-size:17px;letter-spacing:.5px;line-height:1.2;margin-bottom:6px}
+.video-meta{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--acid);text-transform:uppercase}
 
-    /* Fullbleed BG */
-    .hero-bg {
-      position: absolute; inset: 0; z-index: 0;
-    }
-    .hero-bg img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: top center;
-      filter: grayscale(55%) contrast(1.08);
-    }
-    .hero-bg::after {
-      content: '';
-      position: absolute; inset: 0;
-      background:
-        linear-gradient(to bottom,
-          rgba(5,5,5,.6)  0%,
-          rgba(5,5,5,.3)  35%,
-          rgba(5,5,5,.78) 68%,
-          var(--black)    100%
-        );
-    }
-    /* On desktop, fade from left so text is readable */
-    @media (min-width: 768px) {
-      .hero-bg::after {
-        background:
-          linear-gradient(to right,
-            var(--black)    0%,
-            rgba(5,5,5,.75) 35%,
-            rgba(5,5,5,.2)  65%,
-            rgba(5,5,5,.55) 100%
-          ),
-          linear-gradient(to bottom,
-            transparent 60%,
-            var(--black) 100%
-          );
-      }
-      .hero-bg img { object-position: 65% top; }
-    }
+/* Desktop: grid instead of scroll */
+@media(min-width:900px){
+  .video-scroll-wrap{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    overflow-x:visible;gap:12px;padding-bottom:0;
+    scroll-snap-type:none;
+  }
+  .video-card{flex:none}
+}
+@media(min-width:1200px){
+  .video-scroll-wrap{grid-template-columns:repeat(5,1fr)}
+}
 
-    /* Scanlines */
-    .scanlines {
-      position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      background: repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(0,0,0,.09) 2px, rgba(0,0,0,.09) 4px
-      );
-    }
+/* ═══════════════════════════════════════
+   TROMMEL FEATURE
+═══════════════════════════════════════ */
+#featured{border-top:1px solid var(--dim);background:var(--mid)}
+.featured-inner{display:flex;flex-direction:column;gap:44px}
+@media(min-width:768px){.featured-inner{flex-direction:row;align-items:center;gap:60px}.featured-text,.featured-player{flex:1}}
+.featured-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(200,245,58,.07);border:1px solid rgba(200,245,58,.28);padding:6px 13px;margin-bottom:18px}
+.featured-badge-dot{width:6px;height:6px;background:var(--acid);border-radius:50%;animation:pulse 2s infinite}
+.featured-badge-text{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--acid)}
+.featured-player{border:1px solid rgba(200,245,58,.12);overflow:hidden}
+.featured-player iframe{width:100%;display:block}
 
-    /* Spinning badge */
-    .glitch-badge {
-      display: none;
-      position: absolute; bottom: 60px; right: 32px; z-index: 3;
-      width: 96px; height: 96px;
-      border: 1px solid var(--acid); border-radius: 50%;
-      align-items: center; justify-content: center;
-      animation: spin 22s linear infinite;
-    }
-    .glitch-badge-text {
-      font-family: var(--font-mono);
-      font-size: 8px; letter-spacing: 2.5px;
-      text-transform: uppercase; color: var(--acid);
-      text-align: center; line-height: 1.7;
-      animation: spin 22s linear infinite reverse;
-    }
-    @media (min-width: 600px)  { .glitch-badge { display: flex; } }
-    @media (min-width: 1024px) { .glitch-badge { bottom: 80px; right: 56px; width: 110px; height: 110px; } }
+/* ═══════════════════════════════════════
+   STREAM
+═══════════════════════════════════════ */
+#stream{border-top:1px solid var(--dim)}
+.stream-grid{display:flex;flex-direction:column;gap:10px;margin-top:44px}
+@media(min-width:600px){.stream-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
+.stream-card{position:relative;display:flex;align-items:center;gap:16px;padding:20px 22px;border:1px solid var(--dim);background:var(--mid);overflow:hidden;transition:all .3s;min-height:68px;-webkit-tap-highlight-color:transparent}
+.stream-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acid);transform:scaleY(0);transition:transform .3s}
+.stream-card:hover,.stream-card:active{border-color:var(--acid);background:rgba(200,245,58,.04)}
+.stream-card:hover::before,.stream-card:active::before{transform:scaleY(1)}
+.stream-icon{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.si-sc{background:rgba(255,85,0,.15)}.si-sp{background:rgba(29,185,84,.15)}.si-yt{background:rgba(255,0,0,.15)}
+.stream-info{flex:1;min-width:0}
+.stream-name{font-family:var(--fd);font-size:20px;letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stream-desc{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:3px}
+.stream-arrow{font-size:17px;color:var(--acid);opacity:0;transform:translateX(-6px);transition:all .3s;flex-shrink:0}
+.stream-card:hover .stream-arrow{opacity:1;transform:translateX(0)}
 
-    /* Content container */
-    .hero-content {
-      position: relative; z-index: 2;
-      flex: 1;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: var(--sp-md) var(--sp-sm) 48px;
-      max-width: 700px;
-    }
-    @media (min-width: 768px) {
-      .hero-content {
-        padding: 0 40px 72px;
-        justify-content: center;
-        min-height: 100svh;
-      }
-    }
-    @media (min-width: 1024px) {
-      .hero-content { padding-left: 60px; padding-bottom: 80px; max-width: 720px; }
-    }
+/* ═══════════════════════════════════════
+   LABELS
+═══════════════════════════════════════ */
+#labels{background:var(--mid);border-top:1px solid var(--dim)}
+.labels-grid{display:grid;grid-template-columns:1fr;gap:2px;margin-top:44px}
+@media(min-width:480px){.labels-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.labels-grid{grid-template-columns:repeat(4,1fr)}}
+.label-card{padding:28px 22px;border:1px solid var(--dim);background:var(--black);display:flex;flex-direction:column;gap:12px;transition:all .3s;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.label-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--acid);transform:scaleX(0);transition:transform .3s}
+.label-card:hover,.label-card:active{border-color:rgba(200,245,58,.28);background:var(--mid)}
+.label-card:hover::after,.label-card:active::after{transform:scaleX(1)}
+.label-logo-wrap{width:64px;height:64px;overflow:hidden;border-radius:4px;background:var(--dim);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.label-logo-wrap img{width:100%;height:100%;object-fit:cover;transition:filter .3s}
+.label-card:hover .label-logo-wrap img{filter:brightness(1.1)}
+.label-logo-text{font-family:var(--fd);font-size:11px;letter-spacing:1px;text-align:center;color:var(--acid);padding:4px}
+.label-role{font-family:var(--fm);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--acid)}
+.label-name{font-family:var(--fd);font-size:22px;letter-spacing:1px;line-height:1.1}
+.label-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.label-link{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--acid);text-transform:uppercase}
 
-    /* Genre pills */
-    .genre-pills {
-      display: flex; flex-wrap: wrap; gap: 7px;
-      margin-bottom: 18px;
-      opacity: 0; animation: fadeUp .5s .15s forwards;
-    }
-    .genre-pill {
-      padding: 5px 11px;
-      border: 1px solid rgba(200,245,58,.4);
-      background: rgba(200,245,58,.07);
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--acid);
-    }
+/* ═══════════════════════════════════════
+   PAST EVENTS
+═══════════════════════════════════════ */
+#events{border-top:1px solid var(--dim)}
+.events-grid{
+  display:grid;grid-template-columns:1fr;gap:2px;
+  margin-top:44px;
+}
+@media(min-width:600px){.events-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.events-grid{grid-template-columns:repeat(3,1fr)}}
 
-    /* Tag line */
-    .hero-tag {
-      font-family: var(--font-mono);
-      font-size: 10px; letter-spacing: 3px;
-      color: var(--acid); text-transform: uppercase;
-      margin-bottom: 12px;
-      opacity: 0; animation: fadeUp .5s .28s forwards;
-    }
+.event-country{
+  border:1px solid var(--dim);background:var(--mid);
+  padding:28px 22px;
+  display:flex;flex-direction:column;gap:14px;
+  transition:border-color .3s;position:relative;overflow:hidden;
+}
+.event-country::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acid);transform:scaleX(0);transition:transform .3s}
+.event-country:hover{border-color:rgba(200,245,58,.25)}
+.event-country:hover::before{transform:scaleX(1)}
+.event-flag{font-size:24px;line-height:1}
+.event-country-name{font-family:var(--fd);font-size:28px;letter-spacing:2px;color:var(--acid);line-height:1}
+.event-city-list{display:flex;flex-direction:column;gap:9px}
+.event-item{
+  padding:8px 12px;
+  background:rgba(255,255,255,.03);
+  border-left:2px solid var(--dim);
+  transition:border-color .2s;
+}
+.event-item:hover{border-color:var(--acid)}
+.event-venue{font-family:var(--fd);font-size:16px;letter-spacing:.5px;color:var(--white)}
+.event-details{font-family:var(--fm);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:3px}
+.event-item a{display:block}
+.event-item a .event-venue{color:var(--acid)}
 
-    /* Name */
-    .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(68px, 20vw, 136px);
-      line-height: .88; letter-spacing: 2px;
-      opacity: 0; animation: fadeUp .6s .42s forwards;
-    }
-    .hero-title .accent { color: var(--acid); display: block; }
+/* ═══════════════════════════════════════
+   BOOKING
+═══════════════════════════════════════ */
+#booking{border-top:1px solid var(--dim);text-align:center}
+.booking-inner{max-width:560px;margin:0 auto}
+.booking-headline{font-family:var(--fd);font-size:clamp(52px,15vw,86px);line-height:.9;letter-spacing:2px;margin:18px 0 24px}
+.booking-headline em{display:block;color:var(--acid);font-style:normal}
+.booking-sub{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:32px}
+.booking-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
 
-    /* Bio paragraph */
-    .hero-bio {
-      margin-top: 24px;
-      font-size: 14px; line-height: 1.78;
-      color: rgba(240,237,230,.7);
-      max-width: 540px;
-      opacity: 0; animation: fadeUp .6s .55s forwards;
-    }
-    @media (min-width: 768px) { .hero-bio { font-size: 15px; } }
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{padding:28px 20px;border-top:1px solid var(--dim);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+@supports(padding:env(safe-area-inset-bottom)){footer{padding-bottom:calc(28px + env(safe-area-inset-bottom))}}
+@media(min-width:640px){footer{flex-direction:row;justify-content:space-between;padding:26px 40px;text-align:left}}
+@media(min-width:1024px){footer{padding:26px 60px}}
+.footer-logo{font-family:var(--fd);font-size:15px;letter-spacing:3px;color:var(--acid)}
+.footer-social{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.social-link{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;transition:color .2s}
+.social-link:hover{color:var(--acid)}
+.footer-copy{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
 
-    /* Keyword tags */
-    .about-tags {
-      display: flex; flex-wrap: wrap; gap: 7px;
-      margin-top: 18px;
-      opacity: 0; animation: fadeUp .5s .64s forwards;
-    }
-    .tag {
-      padding: 5px 11px;
-      border: 1px solid var(--dim);
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 2px;
-      color: var(--muted); text-transform: uppercase;
-      transition: all .2s;
-    }
-    .tag:hover { border-color: var(--acid); color: var(--acid); }
-
-    /* CTAs */
-    .hero-cta {
-      display: flex; flex-wrap: wrap; gap: 10px;
-      margin-top: 28px;
-      opacity: 0; animation: fadeUp .5s .73s forwards;
-    }
-
-    /* Stats */
-    .hero-stats {
-      display: flex; gap: 28px; flex-wrap: wrap;
-      margin-top: 28px; padding-top: 20px;
-      border-top: 1px solid var(--dim);
-      opacity: 0; animation: fadeUp .5s .84s forwards;
-    }
-    .stat-num {
-      font-family: var(--font-display);
-      font-size: 28px; color: var(--acid); line-height: 1;
-    }
-    .stat-label {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--muted); margin-top: 3px;
-    }
-
-    /* ══════════════════════════════════════
-       TICKER
-    ══════════════════════════════════════ */
-    .ticker-wrap { background: var(--acid); overflow: hidden; padding: 11px 0; }
-    .ticker-track {
-      display: flex; white-space: nowrap;
-      animation: ticker 28s linear infinite;
-    }
-    .ticker-item {
-      font-family: var(--font-display);
-      font-size: 13px; letter-spacing: 3px;
-      color: var(--black); padding: 0 28px;
-    }
-    .ticker-sep { color: var(--rust); }
-
-    /* ══════════════════════════════════════
-       SHARED SECTION STYLES
-    ══════════════════════════════════════ */
-    section {
-      padding: var(--sec-v) var(--sec-h);
-      position: relative;
-    }
-
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: 10px; letter-spacing: 3px;
-      color: var(--acid); text-transform: uppercase; margin-bottom: 13px;
-    }
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(38px, 8vw, 68px);
-      line-height: 1; letter-spacing: 2px;
-    }
-
-    /* Buttons */
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 22px;
-      background: var(--acid); color: var(--black);
-      font-family: var(--font-mono);
-      font-size: 11px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase;
-      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-      transition: all .2s; cursor: pointer; border: none; white-space: nowrap;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .btn-primary:hover, .btn-primary:active { background: var(--white); transform: translateY(-2px); }
-
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 20px;
-      border: 1px solid rgba(255,255,255,.22); color: var(--white);
-      font-family: var(--font-mono);
-      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-      transition: all .2s; white-space: nowrap;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .btn-secondary:hover, .btn-secondary:active { border-color: var(--acid); color: var(--acid); }
-
-    /* Scroll reveal */
-    .reveal {
-      opacity: 0; transform: translateY(32px);
-      transition: opacity .65s, transform .65s;
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* ══════════════════════════════════════
-       RELEASES
-    ══════════════════════════════════════ */
-    #releases { background: var(--mid); border-top: 1px solid var(--dim); }
-
-    .releases-header {
-      display: flex; flex-direction: column; gap: 14px;
-      margin-bottom: var(--sp-lg);
-    }
-    @media (min-width: 600px) {
-      .releases-header { flex-direction: row; align-items: flex-end; justify-content: space-between; }
-    }
-
-    .releases-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
-    }
-    @media (min-width: 768px) {
-      .releases-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    .release-card {
-      position: relative; overflow: hidden;
-      aspect-ratio: 1; background: var(--dim); cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .release-card img {
-      width: 100%; height: 100%; object-fit: cover;
-      transition: transform .5s, filter .5s; filter: grayscale(30%);
-    }
-    .release-card:hover img { transform: scale(1.06); filter: grayscale(0%); }
-
-    .release-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(5,5,5,.95) 0%, transparent 58%);
-      display: flex; flex-direction: column;
-      justify-content: flex-end; padding: 14px;
-      opacity: 0; transition: opacity .3s;
-    }
-    .release-card:hover .release-overlay,
-    .release-card.tapped .release-overlay { opacity: 1; }
-
-    .release-name {
-      font-family: var(--font-display);
-      font-size: 17px; letter-spacing: 1px;
-    }
-    .release-label-tag {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 2px;
-      color: var(--acid); text-transform: uppercase; margin-top: 3px;
-    }
-    .release-icon {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      width: 42px; height: 42px;
-      background: var(--acid); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px; color: var(--black);
-      opacity: 0; transition: opacity .3s;
-    }
-    .release-card:hover .release-icon,
-    .release-card.tapped .release-icon { opacity: 1; }
-
-    /* ══════════════════════════════════════
-       TROMMEL FEATURE
-    ══════════════════════════════════════ */
-    #featured { border-top: 1px solid var(--dim); }
-
-    .featured-inner {
-      display: flex; flex-direction: column; gap: var(--sp-lg);
-    }
-    @media (min-width: 768px) {
-      .featured-inner { flex-direction: row; align-items: center; gap: 60px; }
-      .featured-text, .featured-player { flex: 1; }
-    }
-
-    .featured-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(200,245,58,.07);
-      border: 1px solid rgba(200,245,58,.28);
-      padding: 6px 13px; margin-bottom: 18px;
-    }
-    .featured-badge-dot {
-      width: 6px; height: 6px;
-      background: var(--acid); border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    .featured-badge-text {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--acid);
-    }
-
-    .featured-player {
-      border: 1px solid rgba(200,245,58,.12); overflow: hidden;
-    }
-    .featured-player iframe { width: 100%; display: block; }
-
-    /* ══════════════════════════════════════
-       STREAM
-    ══════════════════════════════════════ */
-    #stream { border-top: 1px solid var(--dim); }
-
-    .stream-grid {
-      display: flex; flex-direction: column; gap: 10px;
-      margin-top: var(--sp-lg);
-    }
-    @media (min-width: 600px) {
-      .stream-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    }
-
-    .stream-card {
-      position: relative;
-      display: flex; align-items: center; gap: 16px;
-      padding: 20px 22px;
-      border: 1px solid var(--dim); background: var(--mid);
-      overflow: hidden; transition: all .3s;
-      min-height: 70px;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .stream-card::before {
-      content: '';
-      position: absolute; left: 0; top: 0; bottom: 0;
-      width: 3px; background: var(--acid);
-      transform: scaleY(0); transition: transform .3s;
-    }
-    .stream-card:hover, .stream-card:active {
-      border-color: var(--acid); background: rgba(200,245,58,.04);
-    }
-    .stream-card:hover::before, .stream-card:active::before { transform: scaleY(1); }
-
-    .stream-icon {
-      width: 42px; height: 42px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 19px; flex-shrink: 0;
-    }
-    .si-sc { background: rgba(255,85,0,.15); }
-    .si-sp { background: rgba(29,185,84,.15); }
-    .si-yt { background: rgba(255,0,0,.15); }
-    .si-tr { background: rgba(200,245,58,.12); }
-
-    .stream-info { flex: 1; min-width: 0; }
-    .stream-name {
-      font-family: var(--font-display);
-      font-size: 20px; letter-spacing: 1px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .stream-desc {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 2px;
-      color: var(--muted); text-transform: uppercase; margin-top: 3px;
-    }
-    .stream-arrow {
-      font-size: 17px; color: var(--acid);
-      opacity: 0; transform: translateX(-6px); transition: all .3s;
-      flex-shrink: 0;
-    }
-    .stream-card:hover .stream-arrow { opacity: 1; transform: translateX(0); }
-
-    /* ══════════════════════════════════════
-       LABELS
-    ══════════════════════════════════════ */
-    #labels { background: var(--mid); border-top: 1px solid var(--dim); }
-
-    .labels-grid {
-      display: grid; grid-template-columns: 1fr; gap: 2px;
-      margin-top: var(--sp-lg);
-    }
-    @media (min-width: 480px) { .labels-grid { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 900px) { .labels-grid { grid-template-columns: repeat(4, 1fr); } }
-
-    .label-card {
-      padding: 30px 22px;
-      border: 1px solid var(--dim); background: var(--black);
-      display: flex; flex-direction: column; gap: 11px;
-      transition: all .3s; position: relative; overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .label-card::after {
-      content: '';
-      position: absolute; bottom: 0; left: 0; right: 0;
-      height: 2px; background: var(--acid);
-      transform: scaleX(0); transition: transform .3s;
-    }
-    .label-card:hover, .label-card:active {
-      border-color: rgba(200,245,58,.28); background: var(--mid);
-    }
-    .label-card:hover::after, .label-card:active::after { transform: scaleX(1); }
-
-    .label-role {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 3px;
-      text-transform: uppercase; color: var(--acid);
-    }
-    .label-name {
-      font-family: var(--font-display);
-      font-size: 22px; letter-spacing: 1px; line-height: 1.1;
-    }
-    .label-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
-    .label-link {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 2px;
-      color: var(--acid); text-transform: uppercase;
-    }
-
-    /* ══════════════════════════════════════
-       BOOKING
-    ══════════════════════════════════════ */
-    #booking { border-top: 1px solid var(--dim); text-align: center; }
-
-    .booking-inner { max-width: 580px; margin: 0 auto; }
-
-    .booking-headline {
-      font-family: var(--font-display);
-      font-size: clamp(52px, 15vw, 88px);
-      line-height: .9; letter-spacing: 2px;
-      margin: 18px 0 26px;
-    }
-    .booking-headline em {
-      display: block; color: var(--acid); font-style: normal;
-    }
-    .booking-sub {
-      font-size: 14px; color: var(--muted); line-height: 1.75; margin-bottom: 36px;
-    }
-    .booking-links {
-      display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
-    }
-
-    /* ══════════════════════════════════════
-       FOOTER
-    ══════════════════════════════════════ */
-    footer {
-      padding: 32px var(--sp-sm);
-      border-top: 1px solid var(--dim);
-      display: flex; flex-direction: column;
-      align-items: center; gap: 14px; text-align: center;
-    }
-    @media (min-width: 640px) {
-      footer {
-        flex-direction: row; justify-content: space-between;
-        padding: 28px 40px; text-align: left;
-      }
-    }
-    @media (min-width: 1024px) { footer { padding: 28px 60px; } }
-
-    .footer-logo {
-      font-family: var(--font-display);
-      font-size: 15px; letter-spacing: 3px; color: var(--acid);
-    }
-    .footer-social {
-      display: flex; gap: 18px; flex-wrap: wrap; justify-content: center;
-    }
-    .social-link {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 2px;
-      color: var(--muted); text-transform: uppercase; transition: color .2s;
-    }
-    .social-link:hover { color: var(--acid); }
-    .footer-copy {
-      font-family: var(--font-mono);
-      font-size: 9px; letter-spacing: 2px;
-      color: var(--muted); text-transform: uppercase;
-    }
-
-    /* Safe area (notched phones) */
-    @supports (padding: env(safe-area-inset-bottom)) {
-      footer { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
-    }
-
-    /* ══════════════════════════════════════
-       ANIMATIONS
-    ══════════════════════════════════════ */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(26px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes ticker {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: .4; transform: scale(.72); }
-    }
-  </style>
+/* ═══════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.72)}}
+</style>
 </head>
-
 <body>
 
-  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
 
-  <!-- Overlay for mobile drawer -->
-  <div class="nav-overlay" id="navOverlay" onclick="closeDrawer()"></div>
+<!-- ═══ NAV ═══ -->
+<nav class="main-nav" role="navigation" aria-label="Navegación principal">
+  <a href="#top" class="nav-logo" aria-label="Martin Bellomo — inicio">MB</a>
+  <ul class="nav-desktop">
+    <li><a href="#releases">Releases</a></li>
+    <li><a href="#videos">Videos</a></li>
+    <li><a href="#featured">Mix</a></li>
+    <li><a href="#stream">Stream</a></li>
+    <li><a href="#labels">Labels</a></li>
+    <li><a href="#events">Shows</a></li>
+    <li><a href="#booking">Booking</a></li>
+  </ul>
+  <button class="nav-burger" id="navBurger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navDrawer">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-  <!-- ═══ NAV ═══ -->
-  <nav>
-    <a href="#top" class="nav-logo" aria-label="Martin Bellomo — inicio">MB</a>
+<nav class="nav-drawer" id="navDrawer" aria-label="Menú móvil">
+  <a href="#releases" class="drawer-link">Releases</a>
+  <a href="#videos"   class="drawer-link">Videos</a>
+  <a href="#featured" class="drawer-link">Mix</a>
+  <a href="#stream"   class="drawer-link">Stream</a>
+  <a href="#labels"   class="drawer-link">Labels</a>
+  <a href="#events"   class="drawer-link">Shows</a>
+  <a href="#booking"  class="drawer-link">Booking</a>
+</nav>
 
-    <ul class="nav-links-desktop">
-      <li><a href="#releases">Releases</a></li>
-      <li><a href="#featured">Featured</a></li>
-      <li><a href="#stream">Stream</a></li>
-      <li><a href="#labels">Labels</a></li>
-      <li><a href="#booking">Booking</a></li>
-    </ul>
-
-    <button class="nav-burger" id="navBurger"
-      aria-label="Abrir menú" aria-expanded="false"
-      onclick="toggleDrawer()">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-
-  <!-- Mobile drawer -->
-  <nav class="nav-drawer" id="navDrawer" aria-label="Menú móvil">
-    <a href="#releases" onclick="closeDrawer()">Releases</a>
-    <a href="#featured" onclick="closeDrawer()">Featured</a>
-    <a href="#stream"   onclick="closeDrawer()">Stream</a>
-    <a href="#labels"   onclick="closeDrawer()">Labels</a>
-    <a href="#booking"  onclick="closeDrawer()">Booking</a>
-  </nav>
-
-  <!-- ═══ HERO + ABOUT — UNIFIED ═══ -->
-  <header class="hero-about" id="top">
-
-    <div class="hero-bg" aria-hidden="true">
-      <img
-        src="https://i1.sndcdn.com/avatars-6sFYYgLImOuzAKX6-FzylOw-t1080x1080.jpg"
-        alt=""
-        loading="eager"
-        fetchpriority="high"
-      >
+<!-- ═══ HERO + ABOUT ═══ -->
+<header class="hero-about" id="top">
+  <div class="hero-bg" aria-hidden="true">
+    <img src="https://i1.sndcdn.com/avatars-6sFYYgLImOuzAKX6-FzylOw-t1080x1080.jpg" alt="" loading="eager" fetchpriority="high">
+  </div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="glitch-badge" aria-hidden="true"><div class="glitch-badge-text">BAROQUE<br>BEATMAKER<br>★ CBA AR ★</div></div>
+  <div class="hero-content">
+    <div class="genre-pills" role="list">
+      <span class="genre-pill" role="listitem">Minimal House</span>
+      <span class="genre-pill" role="listitem">Electro</span>
+      <span class="genre-pill" role="listitem">Acid</span>
+      <span class="genre-pill" role="listitem">UK Garage</span>
     </div>
-    <div class="scanlines" aria-hidden="true"></div>
-
-    <div class="glitch-badge" aria-hidden="true">
-      <div class="glitch-badge-text">BAROQUE<br>BEATMAKER<br>★ CBA AR ★</div>
+    <p class="hero-tag">⬡ Córdoba, Argentina — DJ · Producer</p>
+    <h1 class="hero-title">MARTIN<br><span class="accent">BELLOMO</span></h1>
+    <p class="hero-bio">Baroque beatmaker from the good old republic of Argentina, Downtown Córdoba. Su sonido es inmediatamente distinguible: tracks profundos, espaciales y pulsantes con una calidad única que deleita y cautiva al oyente. Headmaster en Rationalism Records, Momentz Records y A&amp;R en MyHouse YourHouse.</p>
+    <div class="about-tags">
+      <span class="tag">Minimal House</span><span class="tag">Electro</span>
+      <span class="tag">Acid</span><span class="tag">UK Garage</span>
+      <span class="tag">Córdoba</span><span class="tag">Argentina</span>
+      <span class="tag">DJ Sets</span><span class="tag">Producer</span>
     </div>
-
-    <div class="hero-content">
-
-      <!-- Genres -->
-      <div class="genre-pills" role="list" aria-label="Géneros musicales">
-        <span class="genre-pill" role="listitem">Minimal House</span>
-        <span class="genre-pill" role="listitem">Electro</span>
-        <span class="genre-pill" role="listitem">Acid</span>
-        <span class="genre-pill" role="listitem">UK Garage</span>
-      </div>
-
-      <p class="hero-tag">⬡ Córdoba, Argentina — DJ · Producer</p>
-
-      <h1 class="hero-title">
-        MARTIN<br><span class="accent">BELLOMO</span>
-      </h1>
-
-      <p class="hero-bio">
-        Baroque beatmaker from the good old republic of Argentina, Downtown Córdoba.
-        Su sonido es inmediatamente distinguible: tracks profundos, espaciales y pulsantes
-        con una calidad única que deleita y cautiva al oyente, mientras sus DJ sets reflejan
-        un enfoque más amplio de la música. Headmaster en Rationalism Records,
-        Momentz Records y A&amp;R en MyHouse YourHouse.
-      </p>
-
-      <div class="about-tags">
-        <span class="tag">Minimal House</span>
-        <span class="tag">Electro</span>
-        <span class="tag">Acid</span>
-        <span class="tag">UK Garage</span>
-        <span class="tag">Córdoba</span>
-        <span class="tag">Argentina</span>
-        <span class="tag">DJ Sets</span>
-        <span class="tag">Producer</span>
-      </div>
-
-      <div class="hero-cta">
-        <a href="https://soundcloud.com/martinbellomo"
-           target="_blank" rel="noopener"
-           class="btn-primary">▶ SoundCloud</a>
-        <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy"
-           target="_blank" rel="noopener"
-           class="btn-secondary">Spotify →</a>
-      </div>
-
-      <div class="hero-stats" aria-label="Estadísticas del artista">
-        <div class="stat">
-          <div class="stat-num">83+</div>
-          <div class="stat-label">Tracks</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">1.8K</div>
-          <div class="stat-label">Seguidores</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">10+</div>
-          <div class="stat-label">Años</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">3</div>
-          <div class="stat-label">Labels</div>
-        </div>
-      </div>
-
+    <div class="hero-cta">
+      <a href="https://soundcloud.com/martinbellomo" target="_blank" rel="noopener" class="btn-primary">▶ SoundCloud</a>
+      <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy" target="_blank" rel="noopener" class="btn-secondary">Spotify →</a>
     </div>
-  </header>
-
-  <!-- ═══ TICKER ═══ -->
-  <div class="ticker-wrap" aria-hidden="true">
-    <div class="ticker-track">
-      <span class="ticker-item">MARTIN BELLOMO</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">MINIMAL HOUSE</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">ELECTRO</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">ACID</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">UK GARAGE</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">BAROQUE BEATMAKER</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">CÓRDOBA · ARGENTINA</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">RATIONALISM RECORDS</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">MOMENTZ RECORDS</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <!-- duplicate for seamless loop -->
-      <span class="ticker-item">MARTIN BELLOMO</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">MINIMAL HOUSE</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">ELECTRO</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">ACID</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">UK GARAGE</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">BAROQUE BEATMAKER</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">CÓRDOBA · ARGENTINA</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">RATIONALISM RECORDS</span>
-      <span class="ticker-item ticker-sep">✦</span>
-      <span class="ticker-item">MOMENTZ RECORDS</span>
-      <span class="ticker-item ticker-sep">✦</span>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">83+</div><div class="stat-label">Tracks</div></div>
+      <div class="stat"><div class="stat-num">1.8K</div><div class="stat-label">Seguidores</div></div>
+      <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Años</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Labels</div></div>
     </div>
   </div>
+</header>
 
-  <!-- ═══ RELEASES ═══ -->
-  <section id="releases">
-    <div class="releases-header reveal">
-      <div>
-        <p class="section-label">// 01 — Discografía</p>
-        <h2 class="section-title">Releases</h2>
+<!-- TICKER -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">MARTIN BELLOMO</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">MINIMAL HOUSE</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">ELECTRO</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">ACID</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">UK GARAGE</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">BAROQUE BEATMAKER</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">CÓRDOBA · ARGENTINA</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">RATIONALISM RECORDS</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">MOMENTZ RECORDS</span><span class="ticker-item ticker-sep">✦</span>
+    <!-- duplicate for loop -->
+    <span class="ticker-item">MARTIN BELLOMO</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">MINIMAL HOUSE</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">ELECTRO</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">ACID</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">UK GARAGE</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">BAROQUE BEATMAKER</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">CÓRDOBA · ARGENTINA</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">RATIONALISM RECORDS</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">MOMENTZ RECORDS</span><span class="ticker-item ticker-sep">✦</span>
+  </div>
+</div>
+
+<!-- ═══ RELEASES ═══ -->
+<section id="releases">
+  <div class="releases-header reveal">
+    <div><p class="section-label">// 01 — Discografía</p><h2 class="section-title">Releases</h2></div>
+    <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy" target="_blank" rel="noopener" class="btn-secondary">Ver todo en Spotify →</a>
+  </div>
+  <div class="releases-grid">
+    <a href="https://soundcloud.com/momentzrecords/martin-bellomo-friendzmaxxing" target="_blank" rel="noopener" class="release-card reveal">
+      <img src="https://img.tailwindapp.net/images/f7ae/cfa6/9cc2/16a3ad180cddc5d33b21-w236.jpg" alt="Friendzmaxxing EP" loading="lazy">
+      <div class="release-overlay"><div class="release-name">Friendzmaxxing EP</div><div class="release-label-tag">Momentz Records · 2026</div></div>
+      <div class="release-icon">▶</div>
+    </a>
+    <a href="https://ffm.to/revisitedep" target="_blank" rel="noopener" class="release-card reveal">
+      <img src="https://img.tailwindapp.net/images/4ea6/9a1d/6f56/2239c9fe106bdbcb79c7-w236.jpg" alt="Revisited EP" loading="lazy">
+      <div class="release-overlay"><div class="release-name">Revisited EP</div><div class="release-label-tag">Rationalism Records · 2024</div></div>
+      <div class="release-icon">▶</div>
+    </a>
+    <a href="https://soundcloud.com/sosrec/sets/sosrec048" target="_blank" rel="noopener" class="release-card reveal">
+      <img src="https://img.tailwindapp.net/images/4942/64e5/d227/31e6b09a2b2a72f292a3-w236.jpg" alt="SOSMEX048" loading="lazy">
+      <div class="release-overlay"><div class="release-name">SOSMEX048</div><div class="release-label-tag">SOS Records</div></div>
+      <div class="release-icon">▶</div>
+    </a>
+    <a href="https://momentzrecords.bandcamp.com/album/momentz005" target="_blank" rel="noopener" class="release-card reveal">
+      <img src="https://img.tailwindapp.net/images/f3c8/e1e9/1b20/4c6d09f9f59f6d6f4000-w236.jpg" alt="MM005 OИOИ" loading="lazy">
+      <div class="release-overlay"><div class="release-name">MM005 — OИOИ</div><div class="release-label-tag">Momentz Records</div></div>
+      <div class="release-icon">▶</div>
+    </a>
+    <a href="https://rnlsm.bandcamp.com/album/after-the-fog-lp" target="_blank" rel="noopener" class="release-card reveal">
+      <img src="https://img.tailwindapp.net/images/d8d6/2920/8bd0/f47853085e161c84daf0-w236.jpg" alt="After The Fog LP" loading="lazy">
+      <div class="release-overlay"><div class="release-name">After The Fog LP</div><div class="release-label-tag">Rationalism Records · 2020</div></div>
+      <div class="release-icon">▶</div>
+    </a>
+    <a href="https://www.youtube.com/@evan806vinylmusic" target="_blank" rel="noopener" class="release-card reveal">
+      <img src="https://img.tailwindapp.net/images/ba83/bd88/272d/f86c9e9cddc7d23f6a6b-w236.jpg" alt="HEX Full Mix" loading="lazy">
+      <div class="release-overlay"><div class="release-name">HEX Full Mix</div><div class="release-label-tag">YouTube · Live Set</div></div>
+      <div class="release-icon">▶</div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ VIDEOS ═══ -->
+<section id="videos" style="background:var(--mid)">
+  <div class="videos-header reveal">
+    <p class="section-label">// 02 — En Vivo</p>
+    <h2 class="section-title">Videos</h2>
+    <p style="margin-top:12px;font-size:13px;color:var(--muted);font-family:var(--fm);letter-spacing:1px">← Deslizá para ver más en mobile</p>
+  </div>
+  <div class="video-scroll-wrap">
+
+    <a href="https://youtu.be/48sZTmu6W4Y?si=GKJDqNMhdPUO5IVt" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/48sZTmu6W4Y/mqdefault.jpg" alt="Martin Bellomo Live Video" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
       </div>
-      <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy"
-         target="_blank" rel="noopener" class="btn-secondary">
-        Ver todo en Spotify →
-      </a>
+      <div class="video-info"><div class="video-title">HEX Full Mix</div><div class="video-meta">Live Set</div></div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=j7YsnrtsLMg&t=2172s" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/j7YsnrtsLMg/mqdefault.jpg" alt="Martin Bellomo Live" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
+      </div>
+      <div class="video-info"><div class="video-title">Live Set</div><div class="video-meta">YouTube</div></div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=CNleDMglLqg" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/CNleDMglLqg/mqdefault.jpg" alt="Martin Bellomo Live" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
+      </div>
+      <div class="video-info"><div class="video-title">Live Set</div><div class="video-meta">YouTube</div></div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=xHaAUoEiQJY&t=412s" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/xHaAUoEiQJY/mqdefault.jpg" alt="Undersound Peru - Lima" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
+      </div>
+      <div class="video-info"><div class="video-title">Undersound Peru</div><div class="video-meta">Lima · Live</div></div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=gPuJ8GYj7ac" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/gPuJ8GYj7ac/mqdefault.jpg" alt="Martin Bellomo Live" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
+      </div>
+      <div class="video-info"><div class="video-title">Live Set</div><div class="video-meta">YouTube</div></div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=uxwTeIDTH8M" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/uxwTeIDTH8M/mqdefault.jpg" alt="Martin Bellomo Live" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
+      </div>
+      <div class="video-info"><div class="video-title">Live Set</div><div class="video-meta">YouTube</div></div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=MBYEWgzuSRg" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/MBYEWgzuSRg/mqdefault.jpg" alt="Martin Bellomo Live" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
+      </div>
+      <div class="video-info"><div class="video-title">Live Set</div><div class="video-meta">YouTube</div></div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=la49pQtL8ww" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/la49pQtL8ww/mqdefault.jpg" alt="Martin Bellomo Live" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
+      </div>
+      <div class="video-info"><div class="video-title">Live Set</div><div class="video-meta">YouTube</div></div>
+    </a>
+
+    <a href="https://youtu.be/N4-MLcL8tCg" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/N4-MLcL8tCg/mqdefault.jpg" alt="Martin Bellomo Live" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
+      </div>
+      <div class="video-info"><div class="video-title">Live Set</div><div class="video-meta">YouTube</div></div>
+    </a>
+
+    <a href="https://youtu.be/sWPpho-l37I" target="_blank" rel="noopener" class="video-card reveal">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/sWPpho-l37I/mqdefault.jpg" alt="Martin Bellomo Live" loading="lazy">
+        <div class="video-play-btn"><div class="video-play-icon">▶</div></div>
+      </div>
+      <div class="video-info"><div class="video-title">Live Set</div><div class="video-meta">YouTube</div></div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ═══ TROMMEL ═══ -->
+<section id="featured">
+  <div class="featured-inner">
+    <div class="featured-text reveal">
+      <div class="featured-badge"><div class="featured-badge-dot"></div><span class="featured-badge-text">Featured Mix</span></div>
+      <p class="section-label">// 03 — Mix Destacado</p>
+      <h2 class="section-title">Trommel<br>InSession 061</h2>
+      <p style="margin-top:16px;font-size:14px;color:var(--muted);line-height:1.8;max-width:460px">Martin Bellomo fue seleccionado para el icónico mix-show de Trommel Music, referente internacional de la escena techno y house. Una hora de sonidos que definen su visión artística.</p>
+      <a href="https://soundcloud.com/trommelmusic/martin-bellomo-trommel-insession-061?in=martinbellomo/sets/martin-bellomo-trommel" target="_blank" rel="noopener" class="btn-primary" style="margin-top:24px;display:inline-flex">▶ Escuchar el Mix</a>
     </div>
-
-    <div class="releases-grid">
-      <a href="https://soundcloud.com/momentzrecords/martin-bellomo-friendzmaxxing"
-         target="_blank" rel="noopener"
-         class="release-card reveal"
-         aria-label="Friendzmaxxing EP en SoundCloud">
-        <img src="https://img.tailwindapp.net/images/f7ae/cfa6/9cc2/16a3ad180cddc5d33b21-w236.jpg"
-             alt="Martin Bellomo - Friendzmaxxing EP" loading="lazy">
-        <div class="release-overlay">
-          <div class="release-name">Friendzmaxxing EP</div>
-          <div class="release-label-tag">Momentz Records · 2026</div>
-        </div>
-        <div class="release-icon" aria-hidden="true">▶</div>
-      </a>
-
-      <a href="https://www.youtube.com/@evan806vinylmusic"
-         target="_blank" rel="noopener"
-         class="release-card reveal"
-         aria-label="Canal YouTube oficial">
-        <img src="https://img.tailwindapp.net/images/ba83/bd88/272d/f86c9e9cddc7d23f6a6b-w236.jpg"
-             alt="Martin Bellomo HEX Full Mix YouTube" loading="lazy">
-        <div class="release-overlay">
-          <div class="release-name">HEX Full Mix</div>
-          <div class="release-label-tag">YouTube · Live Set</div>
-        </div>
-        <div class="release-icon" aria-hidden="true">▶</div>
-      </a>
-
-      <a href="https://ffm.to/revisitedep"
-         target="_blank" rel="noopener"
-         class="release-card reveal"
-         aria-label="Revisited EP">
-        <img src="https://img.tailwindapp.net/images/4ea6/9a1d/6f56/2239c9fe106bdbcb79c7-w236.jpg"
-             alt="Martin Bellomo - Revisited EP" loading="lazy">
-        <div class="release-overlay">
-          <div class="release-name">Revisited EP</div>
-          <div class="release-label-tag">Rationalism Records · 2024</div>
-        </div>
-        <div class="release-icon" aria-hidden="true">▶</div>
-      </a>
-
-      <a href="https://soundcloud.com/sosrec/sets/sosrec048"
-         target="_blank" rel="noopener"
-         class="release-card reveal"
-         aria-label="SOSMEX048">
-        <img src="https://img.tailwindapp.net/images/4942/64e5/d227/31e6b09a2b2a72f292a3-w236.jpg"
-             alt="SOSMEX048 Martin Bellomo" loading="lazy">
-        <div class="release-overlay">
-          <div class="release-name">SOSMEX048</div>
-          <div class="release-label-tag">SOS Records</div>
-        </div>
-        <div class="release-icon" aria-hidden="true">▶</div>
-      </a>
-
-      <a href="https://momentzrecords.bandcamp.com/album/momentz005"
-         target="_blank" rel="noopener"
-         class="release-card reveal"
-         aria-label="MM005 OИOИ en Bandcamp">
-        <img src="https://img.tailwindapp.net/images/f3c8/e1e9/1b20/4c6d09f9f59f6d6f4000-w236.jpg"
-             alt="MM005 OИOИ Martin Bellomo Momentz Records" loading="lazy">
-        <div class="release-overlay">
-          <div class="release-name">MM005 — OИOИ</div>
-          <div class="release-label-tag">Momentz Records</div>
-        </div>
-        <div class="release-icon" aria-hidden="true">▶</div>
-      </a>
-
-      <a href="https://rnlsm.bandcamp.com/album/after-the-fog-lp"
-         target="_blank" rel="noopener"
-         class="release-card reveal"
-         aria-label="After The Fog LP en Bandcamp">
-        <img src="https://img.tailwindapp.net/images/d8d6/2920/8bd0/f47853085e161c84daf0-w236.jpg"
-             alt="Martin Bellomo After The Fog LP Rationalism Records" loading="lazy">
-        <div class="release-overlay">
-          <div class="release-name">After The Fog LP</div>
-          <div class="release-label-tag">Rationalism Records · 2020</div>
-        </div>
-        <div class="release-icon" aria-hidden="true">▶</div>
-      </a>
+    <div class="featured-player reveal">
+      <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay"
+        src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/trommelmusic/martin-bellomo-trommel-insession-061&color=%23c8f53a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
+        title="Martin Bellomo - Trommel InSession 061" loading="lazy"></iframe>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ═══ TROMMEL FEATURE ═══ -->
-  <section id="featured">
-    <div class="featured-inner">
+<!-- ═══ STREAM ═══ -->
+<section id="stream">
+  <div class="reveal">
+    <p class="section-label">// 04 — Dónde escuchar</p>
+    <h2 class="section-title">Stream</h2>
+  </div>
+  <div class="stream-grid">
 
-      <div class="featured-text reveal">
-        <div class="featured-badge">
-          <div class="featured-badge-dot"></div>
-          <span class="featured-badge-text">Featured Mix</span>
-        </div>
-        <p class="section-label">// 02 — Mix Destacado</p>
-        <h2 class="section-title">Trommel<br>InSession 061</h2>
-        <p style="margin-top:16px; font-size:14px; color:var(--muted); line-height:1.8; max-width:460px;">
-          Martin Bellomo fue seleccionado para el icónico mix-show de Trommel Music,
-          referente internacional de la escena techno y house. Una hora de sonidos que
-          definen su visión artística.
-        </p>
-        <a href="https://soundcloud.com/trommelmusic/martin-bellomo-trommel-insession-061?in=martinbellomo/sets/martin-bellomo-trommel"
-           target="_blank" rel="noopener"
-           class="btn-primary"
-           style="margin-top:26px; display:inline-flex;">
-          ▶ Escuchar el Mix
+    <a href="https://soundcloud.com/martinbellomo" target="_blank" rel="noopener" class="stream-card reveal">
+      <div class="stream-icon si-sc">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#ff5500" aria-hidden="true"><path d="M1.175 12.225c-.017 0-.034.002-.05.006L.76 12.23a.527.527 0 0 0-.459.519v.012l.212 2.26-.212 2.197a.527.527 0 0 0 .527.527h.136a.527.527 0 0 0 .527-.527V12.75a.527.527 0 0 0-.316-.525zm2.178-1.58a.527.527 0 0 0-.527.527v5.624a.527.527 0 0 0 1.054 0v-5.624a.527.527 0 0 0-.527-.527zm2.177-.704a.527.527 0 0 0-.527.527v7.031a.527.527 0 0 0 1.054 0V10.47a.527.527 0 0 0-.527-.529zm2.178 1.064a.527.527 0 0 0-.527.527v5.966a.527.527 0 0 0 1.054 0v-5.966a.527.527 0 0 0-.527-.527zm2.177-3.42c-.291 0-.527.236-.527.527v9.385a.527.527 0 0 0 1.054 0V8.112a.527.527 0 0 0-.527-.527zm2.178 1.02c-.291 0-.527.236-.527.527v8.365a.527.527 0 0 0 1.054 0V9.132a.527.527 0 0 0-.527-.527zm3.705-4.344c-1.193 0-2.27.484-3.057 1.264a.527.527 0 0 0-.148.367v9.94a.527.527 0 0 0 .527.527h5.864C21.134 16.37 24 13.504 24 9.9c0-3.604-2.866-6.47-6.47-6.47h-.317z"/></svg>
+      </div>
+      <div class="stream-info"><div class="stream-name">SoundCloud</div><div class="stream-desc">Tracks, Sets & Playlists · 1.8K</div></div>
+      <span class="stream-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy" target="_blank" rel="noopener" class="stream-card reveal">
+      <div class="stream-icon si-sp">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#1db954" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      </div>
+      <div class="stream-info"><div class="stream-name">Spotify</div><div class="stream-desc">Discografía completa · 253 Listeners</div></div>
+      <span class="stream-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="https://www.youtube.com/@evan806vinylmusic" target="_blank" rel="noopener" class="stream-card reveal">
+      <div class="stream-icon si-yt">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#ff0000" aria-hidden="true"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+      </div>
+      <div class="stream-info"><div class="stream-name">YouTube</div><div class="stream-desc">Canal Oficial · Vinyl &amp; Live Sets</div></div>
+      <span class="stream-arrow" aria-hidden="true">→</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ═══ LABELS ═══ -->
+<section id="labels">
+  <div class="reveal">
+    <p class="section-label">// 05 — Sellos</p>
+    <h2 class="section-title">Labels</h2>
+  </div>
+  <div class="labels-grid">
+
+    <a href="https://soundcloud.com/rationalism" target="_blank" rel="noopener" class="label-card reveal">
+      <div class="label-logo-wrap">
+        <img src="https://static.ra.co/images/labels/rationalismrecords.jpg?dateUpdated=1587245397047"
+             alt="Rationalism Records logo"
+             loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="label-logo-text" style="display:none">RNLSM</div>
+      </div>
+      <span class="label-role">Headmaster / Founder</span>
+      <div class="label-name">Rationalism Records</div>
+      <p class="label-desc">Sello fundado por Martin Bellomo. Casa de lanzamientos de música electrónica desde Córdoba, Argentina.</p>
+      <span class="label-link">Escuchar →</span>
+    </a>
+
+    <a href="https://soundcloud.com/momentzrecords" target="_blank" rel="noopener" class="label-card reveal">
+      <div class="label-logo-wrap">
+        <img src="https://i1.sndcdn.com/avatars-momentzrecords-t200x200.jpg"
+             alt="Momentz Records logo"
+             loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="label-logo-text" style="display:none">MM</div>
+      </div>
+      <span class="label-role">Headmaster / Co-founder</span>
+      <div class="label-name">Momentz Records</div>
+      <p class="label-desc">Co-fundado por Martin Bellomo. Home del Friendzmaxxing EP, MM005 y más releases del ecosistema.</p>
+      <span class="label-link">Escuchar →</span>
+    </a>
+
+    <a href="https://soundcloud.com/mhyh-records" target="_blank" rel="noopener" class="label-card reveal">
+      <div class="label-logo-wrap">
+        <img src="https://i1.sndcdn.com/avatars-mhyh-records-t200x200.jpg"
+             alt="MyHouse YourHouse Records logo"
+             loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="label-logo-text" style="display:none">MHYH</div>
+      </div>
+      <span class="label-role">A&amp;R</span>
+      <div class="label-name">MyHouse YourHouse</div>
+      <p class="label-desc">Sello de house donde Martin ejerce como A&amp;R, curando artistas y el sonido del roster.</p>
+      <span class="label-link">Escuchar →</span>
+    </a>
+
+    <a href="https://soundcloud.com/afterfxmusic" target="_blank" rel="noopener" class="label-card reveal">
+      <div class="label-logo-wrap">
+        <img src="https://i1.sndcdn.com/avatars-afterfxmusic-t200x200.jpg"
+             alt="After:Fx Music logo"
+             loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="label-logo-text" style="display:none">AFX</div>
+      </div>
+      <span class="label-role">Artist</span>
+      <div class="label-name">After:Fx Music</div>
+      <p class="label-desc">Plataforma donde Martin lanzó el AFX004 EP, expandiendo su sonido más allá de sus propios sellos.</p>
+      <span class="label-link">Escuchar →</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ═══ PAST EVENTS ═══ -->
+<section id="events" style="background:var(--mid)">
+  <div class="reveal">
+    <p class="section-label">// 06 — Historia</p>
+    <h2 class="section-title">Past Events</h2>
+  </div>
+
+  <div class="events-grid" style="margin-top:44px">
+
+    <!-- PERU -->
+    <div class="event-country reveal">
+      <div class="event-flag">🇵🇪</div>
+      <div class="event-country-name">PERU</div>
+      <div class="event-city-list">
+        <a href="https://www.youtube.com/watch?v=xHaAUoEiQJY&t=412s" target="_blank" rel="noopener" class="event-item">
+          <div class="event-venue">Undersound Peru</div>
+          <div class="event-details">Lima · Ver video →</div>
         </a>
       </div>
-
-      <div class="featured-player reveal">
-        <iframe
-          width="100%"
-          height="300"
-          scrolling="no"
-          frameborder="no"
-          allow="autoplay"
-          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/trommelmusic/martin-bellomo-trommel-insession-061&color=%23c8f53a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
-          title="Martin Bellomo - Trommel InSession 061"
-          loading="lazy"
-        ></iframe>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ═══ STREAM ═══ -->
-  <section id="stream">
-    <div class="reveal">
-      <p class="section-label">// 03 — Dónde escuchar</p>
-      <h2 class="section-title">Stream</h2>
     </div>
 
-    <div class="stream-grid">
-
-      <a href="https://soundcloud.com/martinbellomo"
-         target="_blank" rel="noopener"
-         class="stream-card reveal"
-         aria-label="SoundCloud oficial Martin Bellomo">
-        <div class="stream-icon si-sc">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="#ff5500" aria-hidden="true">
-            <path d="M1.175 12.225c-.017 0-.034.002-.05.006L.76 12.23a.527.527 0 0 0-.459.519v.012l.212 2.26-.212 2.197a.527.527 0 0 0 .527.527h.136a.527.527 0 0 0 .527-.527V12.75a.527.527 0 0 0-.316-.525zm2.178-1.58a.527.527 0 0 0-.527.527v5.624a.527.527 0 0 0 1.054 0v-5.624a.527.527 0 0 0-.527-.527zm2.177-.704a.527.527 0 0 0-.527.527v7.031a.527.527 0 0 0 1.054 0V10.47a.527.527 0 0 0-.527-.529zm2.178 1.064a.527.527 0 0 0-.527.527v5.966a.527.527 0 0 0 1.054 0v-5.966a.527.527 0 0 0-.527-.527zm2.177-3.42c-.291 0-.527.236-.527.527v9.385a.527.527 0 0 0 1.054 0V8.112a.527.527 0 0 0-.527-.527zm2.178 1.02c-.291 0-.527.236-.527.527v8.365a.527.527 0 0 0 1.054 0V9.132a.527.527 0 0 0-.527-.527zm3.705-4.344c-1.193 0-2.27.484-3.057 1.264a.527.527 0 0 0-.148.367v9.94a.527.527 0 0 0 .527.527h5.864C21.134 16.37 24 13.504 24 9.9c0-3.604-2.866-6.47-6.47-6.47h-.317z"/>
-          </svg>
+    <!-- SWITZERLAND -->
+    <div class="event-country reveal">
+      <div class="event-flag">🇨🇭</div>
+      <div class="event-country-name">SWITZERLAND</div>
+      <div class="event-city-list">
+        <div class="event-item">
+          <div class="event-venue">Funi Tonique Festival</div>
+          <div class="event-details">Gruyere</div>
         </div>
-        <div class="stream-info">
-          <div class="stream-name">SoundCloud</div>
-          <div class="stream-desc">Tracks, Sets & Playlists · 1.8K Followers</div>
-        </div>
-        <span class="stream-arrow" aria-hidden="true">→</span>
-      </a>
-
-      <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy"
-         target="_blank" rel="noopener"
-         class="stream-card reveal"
-         aria-label="Spotify oficial Martin Bellomo">
-        <div class="stream-icon si-sp">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="#1db954" aria-hidden="true">
-            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-          </svg>
-        </div>
-        <div class="stream-info">
-          <div class="stream-name">Spotify</div>
-          <div class="stream-desc">Discografía completa · 253 Monthly Listeners</div>
-        </div>
-        <span class="stream-arrow" aria-hidden="true">→</span>
-      </a>
-
-      <a href="https://www.youtube.com/@evan806vinylmusic"
-         target="_blank" rel="noopener"
-         class="stream-card reveal"
-         aria-label="Canal oficial YouTube Martin Bellomo">
-        <div class="stream-icon si-yt">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="#ff0000" aria-hidden="true">
-            <path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/>
-          </svg>
-        </div>
-        <div class="stream-info">
-          <div class="stream-name">YouTube</div>
-          <div class="stream-desc">Canal Oficial · Vinyl &amp; Live Sets</div>
-        </div>
-        <span class="stream-arrow" aria-hidden="true">→</span>
-      </a>
-
-      <a href="https://soundcloud.com/trommelmusic/martin-bellomo-trommel-insession-061?in=martinbellomo/sets/martin-bellomo-trommel"
-         target="_blank" rel="noopener"
-         class="stream-card reveal"
-         aria-label="Trommel InSession 061 con Martin Bellomo">
-        <div class="stream-icon si-tr">
-          <span style="font-size:18px;" aria-hidden="true">🎛</span>
-        </div>
-        <div class="stream-info">
-          <div class="stream-name">Trommel Mix</div>
-          <div class="stream-desc">InSession 061 · Guest Mix</div>
-        </div>
-        <span class="stream-arrow" aria-hidden="true">→</span>
-      </a>
-
-    </div>
-  </section>
-
-  <!-- ═══ LABELS ═══ -->
-  <section id="labels">
-    <div class="reveal">
-      <p class="section-label">// 04 — Sellos</p>
-      <h2 class="section-title">Labels</h2>
-    </div>
-
-    <div class="labels-grid">
-      <a href="https://soundcloud.com/rationalism"
-         target="_blank" rel="noopener"
-         class="label-card reveal"
-         aria-label="Rationalism Records en SoundCloud">
-        <span class="label-role">Headmaster / Founder</span>
-        <div class="label-name">Rationalism Records</div>
-        <p class="label-desc">Sello fundado por Martin Bellomo. Casa de lanzamientos de música electrónica desde Córdoba, Argentina.</p>
-        <span class="label-link">Escuchar →</span>
-      </a>
-
-      <a href="https://soundcloud.com/momentzrecords"
-         target="_blank" rel="noopener"
-         class="label-card reveal"
-         aria-label="Momentz Records en SoundCloud">
-        <span class="label-role">Headmaster / Co-founder</span>
-        <div class="label-name">Momentz Records</div>
-        <p class="label-desc">Co-fundado por Martin Bellomo. Home del Friendzmaxxing EP, MM005 y más releases del ecosistema.</p>
-        <span class="label-link">Escuchar →</span>
-      </a>
-
-      <a href="https://soundcloud.com/mhyh-records"
-         target="_blank" rel="noopener"
-         class="label-card reveal"
-         aria-label="MyHouse YourHouse Records en SoundCloud">
-        <span class="label-role">A&amp;R</span>
-        <div class="label-name">MyHouse YourHouse</div>
-        <p class="label-desc">Sello de house donde Martin ejerce como A&amp;R, curando artistas y el sonido del roster.</p>
-        <span class="label-link">Escuchar →</span>
-      </a>
-
-      <a href="https://soundcloud.com/afterfxmusic"
-         target="_blank" rel="noopener"
-         class="label-card reveal"
-         aria-label="After:Fx Music en SoundCloud">
-        <span class="label-role">Artist</span>
-        <div class="label-name">After:Fx Music</div>
-        <p class="label-desc">Plataforma donde Martin lanzó el AFX004 EP, expandiendo su sonido más allá de sus propios sellos.</p>
-        <span class="label-link">Escuchar →</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- ═══ BOOKING ═══ -->
-  <section id="booking">
-    <div class="booking-inner reveal">
-      <p class="section-label">// 05 — Contacto</p>
-      <h2 class="booking-headline">
-        BOOK<br><em>MARTIN</em>
-      </h2>
-      <p class="booking-sub">
-        ¿Interesado en contar con Martin Bellomo para tu evento, festival o club?
-        Conectá a través de sus plataformas oficiales.
-      </p>
-      <div class="booking-links">
-        <a href="https://soundcloud.com/martinbellomo"
-           target="_blank" rel="noopener" class="btn-primary">
-          SoundCloud Oficial
-        </a>
-        <a href="https://instagram.com/martinbellomo"
-           target="_blank" rel="noopener" class="btn-secondary">
-          Instagram →
-        </a>
-        <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy"
-           target="_blank" rel="noopener" class="btn-secondary">
-          Spotify →
-        </a>
       </div>
     </div>
-  </section>
 
-  <!-- ═══ FOOTER ═══ -->
-  <footer>
-    <div class="footer-logo">MARTIN BELLOMO</div>
-    <div class="footer-social">
-      <a href="https://soundcloud.com/martinbellomo"                      target="_blank" rel="noopener" class="social-link">SoundCloud</a>
-      <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy"  target="_blank" rel="noopener" class="social-link">Spotify</a>
-      <a href="https://www.youtube.com/@evan806vinylmusic"                target="_blank" rel="noopener" class="social-link">YouTube</a>
-      <a href="https://instagram.com/martinbellomo"                       target="_blank" rel="noopener" class="social-link">Instagram</a>
+    <!-- GERMANY -->
+    <div class="event-country reveal">
+      <div class="event-flag">🇩🇪</div>
+      <div class="event-country-name">GERMANY</div>
+      <div class="event-city-list">
+        <div class="event-item">
+          <div class="event-venue">Magdalena Berlin</div>
+          <div class="event-details">2012 · Rationalism Records Night</div>
+        </div>
+        <div class="event-item">
+          <div class="event-venue">Club der Visionaire</div>
+          <div class="event-details">2015 · Loosen Up · Minimal Bar</div>
+        </div>
+      </div>
     </div>
-    <p class="footer-copy">© 2026 Martin Bellomo · Córdoba, Argentina</p>
-  </footer>
 
-  <!-- ═══ SCRIPTS ═══ -->
-  <script>
-    /* ── Detect device type ── */
-    const isTouchDevice = ('ontouchstart' in window)
-      || window.matchMedia('(pointer: coarse)').matches
-      || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    <!-- MEXICO -->
+    <div class="event-country reveal">
+      <div class="event-flag">🇲🇽</div>
+      <div class="event-country-name">MEXICO</div>
+      <div class="event-city-list">
+        <div class="event-item">
+          <div class="event-venue">Rioma Bar · JagerRoom</div>
+          <div class="event-details">León</div>
+        </div>
+        <div class="event-item">
+          <div class="event-venue">Guadalajara</div>
+          <div class="event-details">Mexico</div>
+        </div>
+      </div>
+    </div>
 
-    /* ── Custom cursor (desktop/mouse only) ── */
-    if (!isTouchDevice) {
-      const dot = document.getElementById('cursorDot');
-      document.addEventListener('mousemove', e => {
-        dot.style.left = e.clientX + 'px';
-        dot.style.top  = e.clientY + 'px';
-      });
-      document.querySelectorAll('a, button').forEach(el => {
-        el.addEventListener('mouseenter', () => dot.style.transform = 'translate(-50%,-50%) scale(3)');
-        el.addEventListener('mouseleave', () => dot.style.transform = 'translate(-50%,-50%) scale(1)');
-      });
+    <!-- ARGENTINA — CÓRDOBA -->
+    <div class="event-country reveal">
+      <div class="event-flag">🇦🇷</div>
+      <div class="event-country-name">CÓRDOBA</div>
+      <div class="event-city-list">
+        <div class="event-item">
+          <div class="event-venue">BELA · Chilli Street Club</div>
+          <div class="event-details">Córdoba</div>
+        </div>
+        <div class="event-item">
+          <div class="event-venue">Dorian Gray · Infierno</div>
+          <div class="event-details">Córdoba</div>
+        </div>
+        <div class="event-item">
+          <div class="event-venue">Cosquin Rock · Fruta</div>
+          <div class="event-details">Córdoba</div>
+        </div>
+        <div class="event-item">
+          <div class="event-venue">Club Berlin · Riot</div>
+          <div class="event-details">Córdoba</div>
+        </div>
+        <div class="event-item">
+          <div class="event-venue">Musica en el Desierto</div>
+          <div class="event-details">Córdoba</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARGENTINA — BUENOS AIRES + SAN JUAN -->
+    <div class="event-country reveal">
+      <div class="event-flag">🇦🇷</div>
+      <div class="event-country-name">ARG +</div>
+      <div class="event-city-list">
+        <div class="event-item">
+          <div class="event-venue">Avant Garten</div>
+          <div class="event-details">Buenos Aires</div>
+        </div>
+        <div class="event-item">
+          <div class="event-venue">La Piramide</div>
+          <div class="event-details">Buenos Aires</div>
+        </div>
+        <div class="event-item">
+          <div class="event-venue">Beat</div>
+          <div class="event-details">San Juan</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ BOOKING ═══ -->
+<section id="booking">
+  <div class="booking-inner reveal">
+    <p class="section-label">// 07 — Contacto</p>
+    <h2 class="booking-headline">BOOK<br><em>MARTIN</em></h2>
+    <p class="booking-sub">¿Interesado en contar con Martin Bellomo para tu evento, festival o club? Conectá a través de sus plataformas oficiales.</p>
+    <div class="booking-links">
+      <a href="https://soundcloud.com/martinbellomo" target="_blank" rel="noopener" class="btn-primary">SoundCloud Oficial</a>
+      <a href="https://instagram.com/martinbellomo" target="_blank" rel="noopener" class="btn-secondary">Instagram →</a>
+      <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy" target="_blank" rel="noopener" class="btn-secondary">Spotify →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-logo">MARTIN BELLOMO</div>
+  <div class="footer-social">
+    <a href="https://soundcloud.com/martinbellomo" target="_blank" rel="noopener" class="social-link">SoundCloud</a>
+    <a href="https://open.spotify.com/artist/73Ytk38MuQT0SX3Kf6GIZy" target="_blank" rel="noopener" class="social-link">Spotify</a>
+    <a href="https://www.youtube.com/@evan806vinylmusic" target="_blank" rel="noopener" class="social-link">YouTube</a>
+    <a href="https://instagram.com/martinbellomo" target="_blank" rel="noopener" class="social-link">Instagram</a>
+  </div>
+  <p class="footer-copy">© 2026 Martin Bellomo · Córdoba, Argentina</p>
+</footer>
+
+<script>
+/* ── Device detection ── */
+const isTouch = ('ontouchstart' in window) || window.matchMedia('(pointer:coarse)').matches;
+
+/* ── Custom cursor ── */
+if (!isTouch) {
+  const dot = document.getElementById('cursorDot');
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px';
+    dot.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,button').forEach(el => {
+    el.addEventListener('mouseenter', () => dot.style.transform = 'translate(-50%,-50%) scale(3)');
+    el.addEventListener('mouseleave', () => dot.style.transform = 'translate(-50%,-50%) scale(1)');
+  });
+}
+
+/* ── Mobile drawer ── */
+const burger  = document.getElementById('navBurger');
+const drawer  = document.getElementById('navDrawer');
+const overlay = document.getElementById('navOverlay');
+
+function openDrawer() {
+  drawer.classList.add('is-open');
+  burger.classList.add('is-open');
+  overlay.classList.add('is-open');
+  burger.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  drawer.classList.remove('is-open');
+  burger.classList.remove('is-open');
+  overlay.classList.remove('is-open');
+  burger.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+burger.addEventListener('click', () => {
+  drawer.classList.contains('is-open') ? closeDrawer() : openDrawer();
+});
+overlay.addEventListener('click', closeDrawer);
+document.querySelectorAll('.drawer-link').forEach(l => l.addEventListener('click', closeDrawer));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+/* ── Scroll reveal ── */
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); }});
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(r => ro.observe(r));
+
+/* ── Active nav ── */
+const allSec  = document.querySelectorAll('section[id]');
+const allNavA = document.querySelectorAll('.nav-desktop a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  allSec.forEach(s => { if (window.scrollY >= s.offsetTop - 150) cur = s.id; });
+  allNavA.forEach(l => { l.style.color = l.getAttribute('href') === '#'+cur ? 'var(--acid)' : ''; });
+}, { passive: true });
+
+/* ── Touch: tap release card to reveal info, second tap opens link ── */
+if (isTouch) {
+  let lastTapped = null;
+  document.querySelectorAll('.release-card').forEach(card => {
+    card.addEventListener('click', e => {
+      if (lastTapped !== card) {
+        e.preventDefault();
+        document.querySelectorAll('.release-card').forEach(c => c.classList.remove('tapped'));
+        card.classList.add('tapped');
+        lastTapped = card;
+      }
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.release-card')) {
+      document.querySelectorAll('.release-card').forEach(c => c.classList.remove('tapped'));
+      lastTapped = null;
     }
-
-    /* ── Mobile drawer ── */
-    function toggleDrawer() {
-      const open = document.getElementById('navDrawer').classList.toggle('open');
-      document.getElementById('navBurger').classList.toggle('open', open);
-      document.getElementById('navOverlay').classList.toggle('open', open);
-      document.getElementById('navBurger').setAttribute('aria-expanded', String(open));
-      document.body.style.overflow = open ? 'hidden' : '';
-    }
-    function closeDrawer() {
-      document.getElementById('navDrawer').classList.remove('open');
-      document.getElementById('navBurger').classList.remove('open');
-      document.getElementById('navOverlay').classList.remove('open');
-      document.getElementById('navBurger').setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
-
-    /* ── Scroll reveal ── */
-    const revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          revealObserver.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.07 });
-    document.querySelectorAll('.reveal').forEach(r => revealObserver.observe(r));
-
-    /* ── Active nav highlight ── */
-    const allSections = document.querySelectorAll('section[id]');
-    const allNavLinks = document.querySelectorAll('.nav-links-desktop a, .nav-drawer a');
-    window.addEventListener('scroll', () => {
-      let cur = '';
-      allSections.forEach(s => {
-        if (window.scrollY >= s.offsetTop - 150) cur = s.id;
-      });
-      allNavLinks.forEach(l => {
-        l.style.color = l.getAttribute('href') === '#' + cur ? 'var(--acid)' : '';
-      });
-    }, { passive: true });
-
-    /* ── Touch: tap release card to reveal overlay, second tap navigates ── */
-    if (isTouchDevice) {
-      let lastTapped = null;
-      document.querySelectorAll('.release-card').forEach(card => {
-        card.addEventListener('click', e => {
-          if (lastTapped !== card) {
-            e.preventDefault();
-            document.querySelectorAll('.release-card').forEach(c => c.classList.remove('tapped'));
-            card.classList.add('tapped');
-            lastTapped = card;
-          }
-          // second tap: allow default navigation
-        });
-      });
-      // Remove tapped state when tapping elsewhere
-      document.addEventListener('click', e => {
-        if (!e.target.closest('.release-card')) {
-          document.querySelectorAll('.release-card').forEach(c => c.classList.remove('tapped'));
-          lastTapped = null;
-        }
-      });
-    }
-  </script>
-
+  });
+}
+</script>
 </body>
 </html>
