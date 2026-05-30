@@ -7,612 +7,1143 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --acid:#b8ff00;
-  --acid2:#00ffe5;
-  --acid3:#ff2d78;
-  --bg:#050505;
-  --surface:#0d0d0d;
-  --surface2:#161616;
-  --border:#1a1a1a;
-  --border-acid:rgba(184,255,0,0.2);
-  --text:#c8c8c8;
-  --muted:#484848;
-  --font:'Share Tech Mono',monospace;
-  --font2:'Orbitron',sans-serif;
-  --card-min:180px;
-}
-html,body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+/* =============================================================
+   DESIGN TOKENS
+   ============================================================= */
+:root {
+  --acid:       #b8ff00;
+  --acid2:      #00ffe5;
+  --acid3:      #ff2d78;
+  --bg:         #050505;
+  --surface:    #0d0d0d;
+  --surface2:   #161616;
+  --border:     #1a1a1a;
+  --border-acid: rgba(184,255,0,0.2);
+  --text:       #c8c8c8;
+  --muted:      #484848;
+  --font:       'Share Tech Mono', monospace;
+  --font2:      'Orbitron', sans-serif;
+  --card-min:   180px;
 
-/* SCANLINES */
-body::before{
-  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);
-  pointer-events:none;z-index:9999;
-}
-
-/* NOISE TEXTURE */
-body::after{
-  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:9998;opacity:0.4;
+  /* Pill colour map — consumed by JS and CSS alike */
+  --pill-AR:    var(--acid2);
+  --pill-INT:   var(--acid3);
+  --pill-MX:    #ffaa00;
+  --pill-AR-border:  rgba(0,255,229,0.5);
+  --pill-INT-border: rgba(255,45,120,0.5);
+  --pill-MX-border:  rgba(255,170,0,0.5);
 }
 
-/* HEADER */
-.hdr{
-  padding:clamp(16px,4vw,40px) clamp(16px,4vw,40px) clamp(12px,3vw,28px);
-  border-bottom:1px solid var(--border-acid);
-  position:relative;overflow:hidden;
-}
-.hdr::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--acid) 30%,var(--acid2) 70%,transparent);
-  animation:glide 4s linear infinite;background-size:200%;
-}
-@keyframes glide{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* =============================================================
+   RESET
+   ============================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.hdr-logo{
-  display:block;
-  height:clamp(28px,5vw,52px);
-  width:auto;
-  filter:invert(1) brightness(0) invert(1) sepia(1) saturate(100) hue-rotate(50deg) brightness(1.2);
-  /* Acid green tint on white logo */
-  filter: brightness(0) saturate(100%) invert(84%) sepia(49%) saturate(500%) hue-rotate(32deg) brightness(103%) contrast(104%);
-  margin-bottom:clamp(10px,2vw,20px);
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-.sys-tag{font-size:clamp(7px,1.5vw,9px);letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:clamp(4px,1vw,8px)}
-.sys-tag span{color:var(--acid);animation:blink 1.2s step-end infinite}
-@keyframes blink{50%{opacity:0}}
-
-.stats-row{display:flex;gap:clamp(10px,3vw,28px);flex-wrap:wrap;margin-top:clamp(8px,2vw,16px)}
-.stat{font-size:clamp(8px,1.5vw,10px);color:var(--muted);letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
-.stat b{color:var(--acid2);font-family:var(--font2);font-size:clamp(9px,1.8vw,12px)}
-
-/* CONTROLS */
-.controls{
-  padding:clamp(8px,2vw,12px) clamp(16px,4vw,40px);
-  display:flex;gap:clamp(5px,1.5vw,8px);flex-wrap:wrap;align-items:center;
-  border-bottom:1px solid var(--border);
-  background:rgba(5,5,5,0.95);
-  backdrop-filter:blur(8px);
-  position:sticky;top:0;z-index:100;
-}
-.search{
-  flex:1;min-width:140px;
-  font-family:var(--font);font-size:clamp(10px,2vw,12px);letter-spacing:1px;
-  padding:clamp(6px,1.5vw,9px) clamp(10px,2vw,14px);
-  background:var(--surface);
-  border:1px solid var(--border);
-  color:var(--acid);
-  outline:none;
-  transition:border-color 0.2s,box-shadow 0.2s;
-}
-.search::placeholder{color:var(--muted)}
-.search:focus{border-color:var(--acid);box-shadow:0 0 12px rgba(184,255,0,0.12)}
-.fbtn{
-  font-family:var(--font);font-size:clamp(8px,1.5vw,10px);letter-spacing:2px;text-transform:uppercase;
-  padding:clamp(5px,1.2vw,7px) clamp(8px,1.5vw,12px);
-  background:transparent;border:1px solid var(--border);
-  color:var(--muted);cursor:pointer;transition:all 0.15s;
-  white-space:nowrap;
-}
-.fbtn:hover{border-color:var(--acid);color:var(--acid)}
-.fbtn.on{border-color:var(--acid);color:var(--bg);background:var(--acid);font-weight:700}
-.cnt{font-family:var(--font2);font-size:clamp(8px,1.5vw,10px);color:var(--muted);margin-left:auto;letter-spacing:2px;white-space:nowrap}
-.cnt b{color:var(--acid)}
-
-/* GRID — responsive columns */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(var(--card-min),1fr));
-  gap:1px;
-  background:var(--border);
-  padding:0;
+/* =============================================================
+   GLOBAL OVERLAY EFFECTS (scanlines + noise)
+   Both use fixed pseudo-elements on body so they overlay
+   everything without participating in layout.
+   ============================================================= */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 2px,
+    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
 }
 
-/* CARD */
-.card{
-  background:var(--surface);
-  display:flex;flex-direction:column;
-  transition:background 0.15s;
-  position:relative;overflow:hidden;
-}
-.card:hover{background:var(--surface2)}
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--acid),var(--acid2));
-  transform:scaleX(0);transform-origin:left;
-  transition:transform 0.35s cubic-bezier(.22,1,.36,1);
-  z-index:2;
-}
-.card:hover::before{transform:scaleX(1)}
-
-/* PHOTO */
-.photo-wrap{
-  width:100%;aspect-ratio:1;
-  position:relative;overflow:hidden;
-  background:var(--bg);
-  border-bottom:1px solid var(--border);
-}
-.photo-wrap img{
-  width:100%;height:100%;object-fit:cover;
-  filter:grayscale(100%) contrast(1.1);
-  transition:filter 0.4s;display:block;
-}
-.card:hover .photo-wrap img{filter:grayscale(40%) contrast(1.05)}
-.photo-fallback{
-  width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font2);
-  font-size:clamp(22px,5vw,32px);
-  font-weight:900;
-  color:rgba(184,255,0,0.18);
-  background:var(--bg);
-  letter-spacing:-1px;
-  user-select:none;
-}
-.photo-num{
-  position:absolute;top:7px;left:7px;
-  font-size:8px;color:var(--acid);letter-spacing:2px;
-  background:rgba(0,0,0,0.75);padding:2px 6px;
-  z-index:1;
-}
-.photo-rel{
-  position:absolute;top:7px;right:7px;
-  font-family:var(--font2);font-size:9px;
-  background:var(--acid);color:#000;
-  padding:2px 7px;font-weight:900;
-  z-index:1;
-}
-.rpill{
-  position:absolute;bottom:7px;left:7px;
-  font-size:7px;letter-spacing:2px;padding:2px 6px;border:1px solid;
-  z-index:1;
-}
-.rpill-AR{color:var(--acid2);border-color:rgba(0,255,229,0.5)}
-.rpill-INT{color:var(--acid3);border-color:rgba(255,45,120,0.5)}
-.rpill-MX{color:#ffaa00;border-color:rgba(255,170,0,0.5)}
-
-/* CARD BODY */
-.card-body{padding:clamp(8px,2vw,12px) clamp(10px,2.5vw,14px) clamp(10px,2.5vw,14px)}
-.aname{
-  font-family:var(--font2);
-  font-size:clamp(9px,2vw,11px);
-  font-weight:700;color:#f0f0f0;
-  letter-spacing:0.3px;margin-bottom:2px;
-  line-height:1.3;
-}
-.aaka{font-size:8px;color:var(--acid2);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
-.aorigin{
-  font-size:8px;color:var(--muted);letter-spacing:1px;
-  margin-bottom:clamp(8px,2vw,12px);
-  display:flex;align-items:center;gap:5px;
-}
-.origin-dot{width:3px;height:3px;background:var(--acid3);flex-shrink:0;transform:rotate(45deg)}
-.links{display:flex;gap:4px}
-.lbtn{
-  display:inline-flex;align-items:center;gap:3px;
-  font-family:var(--font);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;
-  padding:clamp(4px,1vw,5px) clamp(6px,1.5vw,9px);
-  border:1px solid var(--border);
-  color:var(--muted);text-decoration:none;
-  transition:all 0.15s;flex:1;justify-content:center;
-}
-.lbtn:hover{color:var(--acid);border-color:var(--acid);background:rgba(184,255,0,0.06)}
-.lbtn.ig:hover{color:var(--acid3);border-color:var(--acid3);background:rgba(255,45,120,0.06)}
-.lbtn.na{opacity:0.15;pointer-events:none}
-
-/* LOADING */
-.img-loading{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--bg);z-index:1;
-}
-.pulse{width:18px;height:18px;border:1px solid var(--acid);animation:pulse 1s ease infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.2;transform:scale(0.75)}}
-
-/* EMPTY */
-.empty{
-  grid-column:1/-1;padding:5rem 2rem;
-  text-align:center;color:var(--muted);
-  font-family:var(--font2);font-size:11px;letter-spacing:4px;
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.4;
 }
 
-/* FOOTER */
-.footer{
-  padding:clamp(16px,4vw,28px) clamp(16px,4vw,40px);
-  border-top:1px solid var(--border-acid);
-  display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
-  font-size:8px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;
-}
-.footer a{color:var(--acid);text-decoration:none;transition:text-shadow 0.2s}
-.footer a:hover{text-shadow:0 0 10px var(--acid)}
-.footer-logo{
-  height:clamp(16px,3vw,24px);width:auto;
-  filter:brightness(0) saturate(100%) invert(84%) sepia(49%) saturate(500%) hue-rotate(32deg) brightness(103%) contrast(104%);
-  opacity:0.5;
+/* =============================================================
+   ANIMATIONS — gathered in one place
+   ============================================================= */
+@keyframes glide  { 0%   { background-position: 200% 0 }  100% { background-position: -200% 0 } }
+@keyframes blink  { 50%  { opacity: 0 } }
+@keyframes pulse  { 0%, 100% { opacity: 1; transform: scale(1) }  50% { opacity: 0.2; transform: scale(0.75) } }
+@keyframes slide-in { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: translateY(0) } }
+
+/* =============================================================
+   HEADER
+   ============================================================= */
+.hdr {
+  padding: clamp(16px,4vw,40px) clamp(16px,4vw,40px) clamp(12px,3vw,28px);
+  border-bottom: 1px solid var(--border-acid);
+  position: relative;
+  overflow: hidden;
 }
 
-/* VIEW TOGGLE BUTTON */
-.view-toggle{
-  font-family:var(--font);font-size:clamp(7px,1.3vw,9px);letter-spacing:2px;text-transform:uppercase;
-  padding:clamp(4px,1vw,6px) clamp(7px,1.5vw,11px);
-  background:transparent;border:1px solid var(--acid2);
-  color:var(--acid2);cursor:pointer;transition:all 0.15s;
-  white-space:nowrap;position:relative;overflow:hidden;
-  margin-left:auto;
-}
-.view-toggle::before{content:'';position:absolute;inset:0;background:var(--acid2);transform:scaleX(0);transform-origin:left;transition:transform 0.2s;z-index:-1}
-.view-toggle:hover{color:#000;background:var(--acid2)}
-.view-toggle .vt-icon{display:inline-block;margin-right:4px;font-style:normal}
-
-/* PC MODE forced override */
-body.pc-mode{
-  min-width:1100px;
-}
-body.pc-mode .hdr{padding:32px 48px 24px}
-body.pc-mode .controls{padding:10px 48px}
-body.pc-mode .footer{padding:24px 48px}
-body.pc-mode{--card-min:190px}
-body.pc-mode .cnt{display:flex!important}
-
-/* ===== MOBILE OVERRIDES ===== */
-@media(max-width:480px){
-  :root{--card-min:42vw}
-  .controls{padding:8px 12px;gap:4px}
-  .search{min-width:100px;padding:7px 10px}
-  .cnt{display:none}
-  .hdr{padding:14px 14px 12px}
-  .stats-row{gap:8px}
-  .stat b{font-size:10px}
-  .footer{flex-direction:column;align-items:flex-start;gap:8px}
-}
-@media(max-width:360px){
-  :root{--card-min:100%}
-  .grid{grid-template-columns:1fr 1fr}
+/* Animated gradient border at bottom of header */
+.hdr::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--acid) 30%, var(--acid2) 70%, transparent);
+  background-size: 200%;
+  animation: glide 4s linear infinite;
 }
 
-/* ===== TABLET ===== */
-@media(min-width:481px) and (max-width:768px){
-  :root{--card-min:160px}
+.hdr-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: clamp(10px,2vw,20px);
 }
 
-/* ===== DESKTOP WIDE ===== */
-@media(min-width:1200px){
-  :root{--card-min:190px}
-  .hdr{padding:32px 48px 24px}
-  .controls{padding:10px 48px}
-  .footer{padding:24px 48px}
-  .grid{max-width:100%}
+/* Logo — a single shared filter is defined once via CSS variable trick
+   so the identical filter string isn't duplicated across .hdr-logo and .footer-logo */
+.logo-img {
+  --logo-filter: brightness(0) saturate(100%) invert(84%) sepia(49%) saturate(500%) hue-rotate(32deg) brightness(103%) contrast(104%);
+  filter: var(--logo-filter);
 }
-@media(min-width:1600px){
-  :root{--card-min:200px}
+
+.hdr-logo {
+  display: block;
+  height: clamp(28px,5vw,52px);
+  width: auto;
 }
+
+.sys-tag {
+  font-size: clamp(7px,1.5vw,9px);
+  letter-spacing: 4px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: clamp(4px,1vw,8px);
+}
+
+.sys-tag span {
+  color: var(--acid);
+  animation: blink 1.2s step-end infinite;
+}
+
+.stats-row {
+  display: flex;
+  gap: clamp(10px,3vw,28px);
+  flex-wrap: wrap;
+  margin-top: clamp(8px,2vw,16px);
+}
+
+.stat {
+  font-size: clamp(8px,1.5vw,10px);
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat b {
+  color: var(--acid2);
+  font-family: var(--font2);
+  font-size: clamp(9px,1.8vw,12px);
+}
+
+/* =============================================================
+   CONTROLS BAR
+   ============================================================= */
+.controls {
+  padding: clamp(8px,2vw,12px) clamp(16px,4vw,40px);
+  display: flex;
+  gap: clamp(5px,1.5vw,8px);
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  background: rgba(5,5,5,0.95);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.search {
+  flex: 1;
+  min-width: 140px;
+  font-family: var(--font);
+  font-size: clamp(10px,2vw,12px);
+  letter-spacing: 1px;
+  padding: clamp(6px,1.5vw,9px) clamp(10px,2vw,14px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--acid);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search::placeholder { color: var(--muted); }
+
+.search:focus {
+  border-color: var(--acid);
+  box-shadow: 0 0 12px rgba(184,255,0,0.12);
+}
+
+/* Filter buttons share a single rule set */
+.fbtn {
+  font-family: var(--font);
+  font-size: clamp(8px,1.5vw,10px);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: clamp(5px,1.2vw,7px) clamp(8px,1.5vw,12px);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.fbtn:hover            { border-color: var(--acid); color: var(--acid); }
+.fbtn[aria-pressed="true"] {
+  border-color: var(--acid);
+  color: var(--bg);
+  background: var(--acid);
+  font-weight: 700;
+}
+
+.entry-count {
+  font-family: var(--font2);
+  font-size: clamp(8px,1.5vw,10px);
+  color: var(--muted);
+  margin-left: auto;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.entry-count b { color: var(--acid); }
+
+/* =============================================================
+   VIEW TOGGLE
+   ============================================================= */
+.view-toggle {
+  font-family: var(--font);
+  font-size: clamp(7px,1.3vw,9px);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: clamp(4px,1vw,6px) clamp(7px,1.5vw,11px);
+  background: transparent;
+  border: 1px solid var(--acid2);
+  color: var(--acid2);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.view-toggle:hover { color: #000; background: var(--acid2); }
+
+.vt-icon {
+  display: inline-block;
+  margin-right: 4px;
+  font-style: normal;
+}
+
+/* =============================================================
+   ARTIST GRID
+   ============================================================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-min), 1fr));
+  gap: 1px;
+  background: var(--border);
+}
+
+/* =============================================================
+   CARD
+   ============================================================= */
+.card {
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  transition: background 0.15s;
+  position: relative;
+  overflow: hidden;
+  animation: slide-in 0.25s ease both;
+}
+
+.card:hover { background: var(--surface2); }
+
+/* Animated top accent bar */
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--acid), var(--acid2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(.22,1,.36,1);
+  z-index: 2;
+}
+
+.card:hover::before { transform: scaleX(1); }
+
+/* --- Photo wrapper --- */
+.photo-wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.photo-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.1);
+  transition: filter 0.4s;
+  display: block;
+}
+
+.card:hover .photo-wrap img { filter: grayscale(40%) contrast(1.05); }
+
+.photo-fallback {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font2);
+  font-size: clamp(22px,5vw,32px);
+  font-weight: 900;
+  color: rgba(184,255,0,0.18);
+  background: var(--bg);
+  letter-spacing: -1px;
+  user-select: none;
+}
+
+/* Overlay badges */
+.badge {
+  position: absolute;
+  z-index: 1;
+  font-size: 8px;
+  letter-spacing: 2px;
+  padding: 2px 6px;
+}
+
+.badge--num {
+  top: 7px; left: 7px;
+  color: var(--acid);
+  background: rgba(0,0,0,0.75);
+}
+
+.badge--rel {
+  top: 7px; right: 7px;
+  font-family: var(--font2);
+  font-size: 9px;
+  font-weight: 900;
+  background: var(--acid);
+  color: #000;
+}
+
+.badge--region {
+  bottom: 7px; left: 7px;
+  border: 1px solid;
+}
+
+/* Region colours driven by data attribute — no per-class duplication */
+.badge--region[data-region="AR"]  { color: var(--pill-AR);  border-color: var(--pill-AR-border); }
+.badge--region[data-region="INT"] { color: var(--pill-INT); border-color: var(--pill-INT-border); }
+.badge--region[data-region="MX"]  { color: var(--pill-MX);  border-color: var(--pill-MX-border); }
+
+/* --- Card body --- */
+.card-body {
+  padding: clamp(8px,2vw,12px) clamp(10px,2.5vw,14px) clamp(10px,2.5vw,14px);
+}
+
+.artist-name {
+  font-family: var(--font2);
+  font-size: clamp(9px,2vw,11px);
+  font-weight: 700;
+  color: #f0f0f0;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.artist-aka    { font-size: 8px; color: var(--acid2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+.artist-origin {
+  font-size: 8px; color: var(--muted); letter-spacing: 1px;
+  margin-bottom: clamp(8px,2vw,12px);
+  display: flex; align-items: center; gap: 5px;
+}
+
+.origin-dot {
+  width: 3px; height: 3px;
+  background: var(--acid3);
+  flex-shrink: 0;
+  transform: rotate(45deg);
+}
+
+/* --- Link buttons --- */
+.links { display: flex; gap: 4px; }
+
+.lbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font);
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: clamp(4px,1vw,5px) clamp(6px,1.5vw,9px);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  flex: 1;
+  justify-content: center;
+}
+
+.lbtn:hover                { color: var(--acid);  border-color: var(--acid);  background: rgba(184,255,0,0.06); }
+.lbtn[data-platform="ig"]:hover { color: var(--acid3); border-color: var(--acid3); background: rgba(255,45,120,0.06); }
+.lbtn[aria-disabled="true"]     { opacity: 0.15; pointer-events: none; }
+
+/* =============================================================
+   LOADING SPINNER
+   ============================================================= */
+.img-loading {
+  position: absolute; inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  z-index: 1;
+}
+
+.pulse {
+  width: 18px; height: 18px;
+  border: 1px solid var(--acid);
+  animation: pulse 1s ease infinite;
+}
+
+/* =============================================================
+   EMPTY STATE
+   ============================================================= */
+.empty {
+  grid-column: 1 / -1;
+  padding: 5rem 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-family: var(--font2);
+  font-size: 11px;
+  letter-spacing: 4px;
+}
+
+/* =============================================================
+   FOOTER
+   ============================================================= */
+.footer {
+  padding: clamp(16px,4vw,28px) clamp(16px,4vw,40px);
+  border-top: 1px solid var(--border-acid);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 8px;
+  color: var(--muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.footer a        { color: var(--acid); text-decoration: none; transition: text-shadow 0.2s; }
+.footer a:hover  { text-shadow: 0 0 10px var(--acid); }
+
+.footer-logo {
+  height: clamp(16px,3vw,24px);
+  width: auto;
+  opacity: 0.5;
+}
+
+.footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* =============================================================
+   RESPONSIVE OVERRIDES
+   ============================================================= */
+/* Mobile (≤ 480 px) */
+@media (max-width: 480px) {
+  :root { --card-min: 42vw; }
+  .controls  { padding: 8px 12px; gap: 4px; }
+  .search    { min-width: 100px; padding: 7px 10px; }
+  .entry-count { display: none; }
+  .hdr       { padding: 14px 14px 12px; }
+  .stats-row { gap: 8px; }
+  .stat b    { font-size: 10px; }
+  .footer    { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+/* Very small (≤ 360 px) */
+@media (max-width: 360px) {
+  :root { --card-min: 100%; }
+  .grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Tablet (481 – 768 px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  :root { --card-min: 160px; }
+}
+
+/* Desktop wide (≥ 1200 px) */
+@media (min-width: 1200px) {
+  :root { --card-min: 190px; }
+  .hdr      { padding: 32px 48px 24px; }
+  .controls { padding: 10px 48px; }
+  .footer   { padding: 24px 48px; }
+}
+
+@media (min-width: 1600px) {
+  :root { --card-min: 200px; }
+}
+
+/* =============================================================
+   PC MODE (forced desktop layout on mobile)
+   ============================================================= */
+body.pc-mode {
+  min-width: 1100px;
+  --card-min: 190px;
+}
+
+body.pc-mode .hdr      { padding: 32px 48px 24px; }
+body.pc-mode .controls { padding: 10px 48px; }
+body.pc-mode .footer   { padding: 24px 48px; }
+body.pc-mode .entry-count { display: flex !important; }
 </style>
 </head>
 <body>
+
+<!-- Screen-reader heading (visually hidden) -->
 <h1 class="sr-only" style="position:absolute;left:-9999px">Rationalism Records — 110 Artists Database</h1>
 
-<div class="hdr">
-  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:clamp(10px,2vw,20px)"><img class="hdr-logo" src="data:image/png;base64,LOGO_B64" alt="Rationalism Records 10 años" style="margin-bottom:0"><button class="view-toggle" id="viewToggle" onclick="toggleView()"><i class="vt-icon">⊞</i><span id="vtLabel">PC VIEW</span></button></div>
-  <div class="sys-tag">SYS:RNLSM_DB v3.0 <span>█</span> CÓRDOBA, ARG — 10 YEARS</div>
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header class="hdr">
+  <div class="hdr-top">
+    <img
+      class="hdr-logo logo-img"
+      src="data:image/png;base64,LOGO_B64"
+      alt="Rationalism Records 10 años"
+    >
+    <button
+      class="view-toggle"
+      id="viewToggle"
+      aria-pressed="false"
+      aria-label="Toggle PC view"
+    >
+      <i class="vt-icon" aria-hidden="true">⊞</i>
+      <span id="vtLabel">PC VIEW</span>
+    </button>
+  </div>
+
+  <div class="sys-tag">
+    SYS:RNLSM_DB v3.0 <span aria-hidden="true">█</span> CÓRDOBA, ARG — 10 YEARS
+  </div>
+
   <div class="stats-row">
     <div class="stat">ARTISTAS <b>110</b></div>
-    <div class="stat">AR <b>88</b></div>
+    <div class="stat">AR  <b>88</b></div>
     <div class="stat">INT <b>22</b></div>
     <div class="stat">EST. <b>2015</b></div>
     <div class="stat">SHOWN <b id="shown">—</b></div>
   </div>
-</div>
+</header>
 
-<div class="controls">
-  <input class="search" id="search" placeholder="> BUSCAR..." oninput="render()" autocomplete="off" spellcheck="false">
-  <button class="fbtn on" onclick="setF('all',this)">ALL</button>
-  <button class="fbtn" onclick="setF('AR',this)">ARG</button>
-  <button class="fbtn" onclick="setF('INT',this)">INT</button>
-  <span class="cnt"><b id="cnt-shown">—</b> ENTRIES</span>
-</div>
+<!-- ============================================================
+     CONTROLS BAR
+     ============================================================ -->
+<nav class="controls" aria-label="Filter and search">
+  <input
+    class="search"
+    id="search"
+    type="search"
+    placeholder="> BUSCAR..."
+    autocomplete="off"
+    spellcheck="false"
+    aria-label="Search artists"
+  >
+  <button class="fbtn" data-filter="all" aria-pressed="true">ALL</button>
+  <button class="fbtn" data-filter="AR"  aria-pressed="false">ARG</button>
+  <button class="fbtn" data-filter="INT" aria-pressed="false">INT</button>
+  <span class="entry-count" aria-live="polite">
+    <b id="cnt-shown">—</b> ENTRIES
+  </span>
+</nav>
 
-<div class="grid" id="grid"></div>
+<!-- ============================================================
+     ARTIST GRID  (populated by JS)
+     ============================================================ -->
+<main class="grid" id="grid" aria-label="Artist grid"></main>
 
-<div class="footer">
-  <img class="footer-logo" src="data:image/png;base64,LOGO_B64" alt="Rationalism">
-  <div style="display:flex;gap:16px;flex-wrap:wrap">
-    <a href="https://soundcloud.com/rationalism" target="_blank">SOUNDCLOUD</a>
-    <a href="https://rnlsm.bandcamp.com" target="_blank">BANDCAMP</a>
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <img
+    class="footer-logo logo-img"
+    src="data:image/png;base64,LOGO_B64"
+    alt="Rationalism Records"
+  >
+  <div class="footer-links">
+    <a href="https://soundcloud.com/rationalism" target="_blank" rel="noopener">SOUNDCLOUD</a>
+    <a href="https://rnlsm.bandcamp.com"         target="_blank" rel="noopener">BANDCAMP</a>
     <span>MINIMAL · DEEP TECH · HOUSE · CBA · ARG</span>
   </div>
-</div>
+</footer>
 
 <script>
-const artists=[
-{n:"Martin Bellomo",o:"Córdoba, AR",r:"AR",rel:24,sc:"martinbellomo",ig:"martinbellomo"},
-{n:"Mild Bang",o:"Mexico",r:"INT",rel:7,sc:"mild-bang",ig:null},
-{n:"Lucianno Villarreal",o:"Córdoba, AR",r:"AR",rel:6,aka:"RYPLI",sc:"rypli_sound",ig:"rypli_sound"},
-{n:"Pedro D'Alessandro",o:"Argentina",r:"AR",rel:6,sc:"pedrodalessandro",ig:"pedrodaless"},
-{n:"Kaesar",o:"Argentina",r:"AR",rel:4,sc:null,ig:"kaesar___"},
-{n:"Tabiuss",o:"Argentina",r:"AR",rel:4,sc:"tabiuss_",ig:null},
-{n:"Hernan Bass",o:"Argentina",r:"AR",rel:4,sc:"hernanbass",ig:null},
-{n:"Mauro Batista",o:"Argentina",r:"AR",rel:4,sc:null,ig:null},
-{n:"Duky",o:"Argentina",r:"AR",rel:3,sc:null,ig:null},
-{n:"Pedro Zoy",o:"Argentina",r:"AR",rel:3,sc:null,ig:null},
-{n:"Bodeler",o:"Córdoba, AR",r:"AR",rel:3,sc:"bodeler",ig:"bodelermusic"},
-{n:"Lucianno V",o:"Córdoba, AR",r:"AR",rel:3,sc:null,ig:null},
-{n:"Du Sant",o:"Argentina",r:"AR",rel:3,sc:null,ig:null},
-{n:"MiniMora",o:"Argentina",r:"AR",rel:3,sc:null,ig:null},
-{n:"Nicolas Diez",o:"Argentina",r:"AR",rel:3,sc:"nicolasdiez",ig:"nicolasdiezdesign"},
-{n:"LuvClap",o:"Argentina",r:"AR",rel:3,sc:"luvclap",ig:"luvclap.producer"},
-{n:"Trentz",o:"Córdoba, AR",r:"AR",rel:3,sc:"dj-trentz",ig:"trntzx"},
-{n:"Cajal",o:"Córdoba, AR",r:"AR",rel:3,sc:"cajalmusic",ig:"cajal.music"},
-{n:"Juzel",o:"Mar del Plata, AR",r:"AR",rel:3,sc:"juzelmusic",ig:"juzelmusic"},
-{n:"Tom Pooks",o:"Internacional",r:"INT",rel:2,sc:"tompooksofficial",ig:null},
-{n:"Mario Franca",o:"Argentina",r:"AR",rel:2,sc:null,ig:null},
-{n:"Alexis Cabrera",o:"Argentina",r:"AR",rel:2,sc:"alexiscabrera",ig:null},
-{n:"Rodrigo Rivera",o:"Argentina",r:"AR",rel:2,sc:null,ig:null},
-{n:"Topper",o:"Argentina",r:"AR",rel:2,sc:"topper",ig:"topperanza"},
-{n:"Ale Castro",o:"Argentina",r:"AR",rel:2,sc:"alecastro",ig:null},
-{n:"Nicolas Cuer",o:"Internacional",r:"INT",rel:2,sc:null,ig:null},
-{n:"Rodrigo Dp",o:"Argentina",r:"AR",rel:2,sc:null,ig:null},
-{n:"P. Lopez",o:"Argentina",r:"AR",rel:2,sc:"plopezofficial",ig:null},
-{n:"Akvo",o:"Mexico",r:"INT",rel:2,sc:null,ig:null},
-{n:"Lucas Perazzi",o:"Argentina",r:"AR",rel:2,aka:"LUPZ",sc:null,ig:null},
-{n:"Nico Cano",o:"Argentina",r:"AR",rel:2,sc:null,ig:null},
-{n:"Facu Avenali",o:"Argentina",r:"AR",rel:2,sc:null,ig:null},
-{n:"Esteban Gutierrez",o:"Argentina",r:"AR",rel:2,sc:null,ig:null},
-{n:"Wally Stryk",o:"Internacional",r:"INT",rel:2,sc:null,ig:null},
-{n:"Rodrigo",o:"Argentina",r:"AR",rel:2,sc:null,ig:null},
-{n:"Furz",o:"Córdoba, AR",r:"AR",rel:2,sc:"furz",ig:"furzmusic"},
-{n:"Smoothless",o:"Argentina",r:"AR",rel:2,sc:null,ig:null},
-{n:"Gruuv'",o:"Argentina",r:"AR",rel:2,sc:null,ig:null},
-{n:"Lautaro Scavuzzo",o:"Rosario, AR",r:"AR",rel:2,sc:"lautaroscavuzzo",ig:"lautaroscavuzzo"},
-{n:"Dellacasa",o:"Argentina",r:"AR",rel:2,sc:"dellacasa",ig:"lautaro.dellacasa"},
-{n:"Pablo Brizzio",o:"Argentina",r:"AR",rel:2,sc:"pablo-brizzio",ig:null},
-{n:"Prodot",o:"Córdoba, AR",r:"AR",rel:2,sc:"prodotmusik",ig:"prodot__"},
-{n:"Fran Piussi",o:"Mar del Plata, AR",r:"AR",rel:2,sc:"franpiussi",ig:"franpiussi"},
-{n:"TxL",o:"Berlín, DE",r:"INT",rel:2,aka:"BER",sc:null,ig:null},
-{n:"DT",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Rick Wade",o:"Detroit, USA",r:"INT",rel:1,sc:"rick-wade",ig:"rickwade1986"},
-{n:"Patrick Zigon",o:"Francia",r:"INT",rel:1,sc:"patrickzigon",ig:null},
-{n:"Mikael Stavostrand",o:"Suecia",r:"INT",rel:1,sc:"mikael_stavostrand",ig:null},
-{n:"Justin Drake",o:"Canada",r:"INT",rel:1,sc:"justin-drake",ig:null},
-{n:"Vernon",o:"Internacional",r:"INT",rel:1,sc:null,ig:null},
-{n:"Cossmos",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Iron1",o:"Argentina",r:"AR",rel:1,sc:"iron_10",ig:"iron1___dj"},
-{n:"Slacks",o:"USA",r:"INT",rel:1,sc:"slacksss",ig:"slacksbro"},
-{n:"Sebbe",o:"Suecia",r:"INT",rel:1,sc:"sebbe-music",ig:"sebbemusic"},
-{n:"Jesper Tjarnfors",o:"Suecia",r:"INT",rel:1,sc:"jespertjarnfors",ig:"jespertjarnfors"},
-{n:"Mathieu Basi",o:"Francia",r:"INT",rel:1,sc:"mathieubasi",ig:"mathieubasi"},
-{n:"Only Slave Nation",o:"Francia",r:"INT",rel:1,sc:"onlyslavenation",ig:null},
-{n:"Danush",o:"Internacional",r:"INT",rel:1,sc:"danush",ig:"danush_music"},
-{n:"Castoldi",o:"Argentina",r:"AR",rel:1,aka:"Nico",sc:"nicocastoldi",ig:"nicocastoldi"},
-{n:"Castelo",o:"Argentina",r:"AR",rel:1,sc:"castelo-music",ig:"castelo_music"},
-{n:"Agus Ferreyra",o:"Córdoba, AR",r:"AR",rel:1,sc:"agusferreyra",ig:"agusferreyraaudio"},
-{n:"Juan Panza",o:"Argentina",r:"AR",rel:1,sc:"juanpanza",ig:null},
-{n:"Gus Bonani",o:"Argentina",r:"AR",rel:1,sc:"gusbonani",ig:null},
-{n:"Sergio Jr.",o:"Argentina",r:"AR",rel:1,sc:"sergiodesargentomusic",ig:"sergio_jr_music"},
-{n:"ro_mo",o:"Argentina",r:"AR",rel:1,sc:"ro-mo",ig:null},
-{n:"Alexis Rodriguez",o:"Argentina",r:"AR",rel:1,sc:"alexisrodriguezmusic",ig:"alexisrodriguezmusic"},
-{n:"Tato Piatti",o:"Argentina",r:"AR",rel:1,sc:"tatopiatti",ig:"tatopiatti"},
-{n:"Lupz",o:"Argentina",r:"AR",rel:1,sc:"lupz",ig:null},
-{n:"Moodbeat",o:"Mar del Plata, AR",r:"AR",rel:1,sc:"moodbeat",ig:"moodbeat_music"},
-{n:"Bürkle",o:"Internacional",r:"INT",rel:1,sc:"burkle-music",ig:"burkle_music"},
-{n:"Etienné B.",o:"Internacional",r:"INT",rel:1,sc:"benjaminetienne",ig:"iametienneb"},
-{n:"Chuki Juri",o:"Argentina",r:"AR",rel:1,sc:"chukijuri",ig:"chukijuri"},
-{n:"Brandub",o:"Córdoba, AR",r:"AR",rel:1,sc:"brandub",ig:"brandub_"},
-{n:"Gustavo Sierra",o:"Córdoba, AR",r:"AR",rel:1,sc:"gustavo-sierra",ig:null},
-{n:"Ezequiel Esley",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Espen Lauritzen",o:"Noruega",r:"INT",rel:1,sc:"espenlauritzen",ig:"espenkrill"},
-{n:"Glasidum",o:"Córdoba, AR",r:"AR",rel:1,sc:"glasidum",ig:"glasidum"},
-{n:"Mathias Woot",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Sean Rooney",o:"Internacional",r:"INT",rel:1,sc:null,ig:null},
-{n:"Adrian Kiliszek",o:"Internacional",r:"INT",rel:1,sc:null,ig:null},
-{n:"ZRK",o:"Internacional",r:"INT",rel:1,sc:null,ig:null},
-{n:"ZippiE",o:"Internacional",r:"INT",rel:1,sc:null,ig:null},
-{n:"Yeark",o:"Argentina",r:"AR",rel:1,sc:"yeark",ig:null},
-{n:"Ema Geerez",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Yanny Villar",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Bombilla",o:"Germany",r:"INT",rel:1,sc:null,ig:null},
-{n:"Duo",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Dual T",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Franck Valat",o:"Francia",r:"INT",rel:1,sc:null,ig:null},
-{n:"Plusculaar",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Geoff Wichmann",o:"Internacional",r:"INT",rel:1,sc:null,ig:null},
-{n:"AndrewS",o:"Internacional",r:"INT",rel:1,sc:null,ig:null},
-{n:"PM",o:"Chipre",r:"INT",rel:1,aka:"Cyprus",sc:null,ig:null},
-{n:"Gonza Algue",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Frank Jr",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"[Aura]",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Sebastian Oviedo",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Agustin Cooper",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"DJ Tato Acosta",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"G-Zzer",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Emiliano Ferreyra",o:"Córdoba, AR",r:"AR",rel:1,sc:null,ig:null},
-{n:"Luis Bustos",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Maxi Fried",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Pedro Lambert",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Detax",o:"Argentina",r:"AR",rel:1,sc:null,ig:null},
-{n:"Yusuke Yamamoto",o:"Japón",r:"INT",rel:1,sc:"yusukeyamamoto_dj",ig:"yusukeyamamoto_dj"},
-{n:"Sukenobu",o:"Japón",r:"INT",rel:1,sc:null,ig:null},
-{n:"R.A.P.",o:"Argentina",r:"AR",rel:1,sc:"rapmusicarg",ig:"rapmusicarg"},
-{n:"Los Loopers",o:"Argentina",r:"AR",rel:1,sc:"los-loopers",ig:null},
-{n:"Cordero",o:"Argentina",r:"AR",rel:1,sc:null,ig:null}
+/* ================================================================
+   RATIONALISM RECORDS — Artist Database
+   ----------------------------------------------------------------
+   Architecture overview
+   ─────────────────────
+   CONSTANTS          Immutable config: API endpoints, timeouts, limits
+   DATA               Artist array (source of truth)
+   ImageService       Stateful singleton — handles fetch, cache, dedup
+   ArtistCard         Pure function — artist → HTML string
+   FilterController   Manages filter / search state
+   UI                 DOM wiring (events, render, update stats)
+   ================================================================ */
+
+'use strict';
+
+/* ================================================================
+   CONSTANTS
+   ================================================================ */
+const CONFIG = Object.freeze({
+  PROBE_TIMEOUT_MS:   6_000,
+  PROXY_TIMEOUT_MS:   5_000,
+  LASTFM_KEY:         'b25b959554ed76058ac220b7b2e0a026',
+  SC_CLIENT_ID:       'iZIs9mchVcX5lhVRyQGGAYlNPVldzAoX',
+
+  // Ordered list of image providers. Each entry is a method name on ImageService.
+  IMAGE_PROVIDERS: ['soundcloudOEmbed', 'soundcloudResolve', 'lastfm', 'residentAdvisor', 'discogs', 'beatport'],
+
+  ALLORIGINS: 'https://api.allorigins.win/get?url=',
+
+  // Last.fm placeholder hash — not a real artist image
+  LASTFM_PLACEHOLDER: '2a96cbd8b46e442fc41c2b86b821562f',
+
+  REGION_LABELS: { AR: 'ARG', INT: 'INT', MX: 'MX' },
+});
+
+
+/* ================================================================
+   ARTIST DATA
+   ================================================================ */
+const ARTISTS = [
+  {n:"Martin Bellomo",     o:"Córdoba, AR",    r:"AR",  rel:24, sc:"martinbellomo",         ig:"martinbellomo"},
+  {n:"Mild Bang",          o:"Mexico",          r:"INT", rel:7,  sc:"mild-bang",              ig:null},
+  {n:"Lucianno Villarreal",o:"Córdoba, AR",    r:"AR",  rel:6,  aka:"RYPLI",sc:"rypli_sound",ig:"rypli_sound"},
+  {n:"Pedro D'Alessandro", o:"Argentina",       r:"AR",  rel:6,  sc:"pedrodalessandro",       ig:"pedrodaless"},
+  {n:"Kaesar",             o:"Argentina",       r:"AR",  rel:4,  sc:null,                     ig:"kaesar___"},
+  {n:"Tabiuss",            o:"Argentina",       r:"AR",  rel:4,  sc:"tabiuss_",               ig:null},
+  {n:"Hernan Bass",        o:"Argentina",       r:"AR",  rel:4,  sc:"hernanbass",             ig:null},
+  {n:"Mauro Batista",      o:"Argentina",       r:"AR",  rel:4,  sc:null,                     ig:null},
+  {n:"Duky",               o:"Argentina",       r:"AR",  rel:3,  sc:null,                     ig:null},
+  {n:"Pedro Zoy",          o:"Argentina",       r:"AR",  rel:3,  sc:null,                     ig:null},
+  {n:"Bodeler",            o:"Córdoba, AR",    r:"AR",  rel:3,  sc:"bodeler",                ig:"bodelermusic"},
+  {n:"Lucianno V",         o:"Córdoba, AR",    r:"AR",  rel:3,  sc:null,                     ig:null},
+  {n:"Du Sant",            o:"Argentina",       r:"AR",  rel:3,  sc:null,                     ig:null},
+  {n:"MiniMora",           o:"Argentina",       r:"AR",  rel:3,  sc:null,                     ig:null},
+  {n:"Nicolas Diez",       o:"Argentina",       r:"AR",  rel:3,  sc:"nicolasdiez",            ig:"nicolasdiezdesign"},
+  {n:"LuvClap",            o:"Argentina",       r:"AR",  rel:3,  sc:"luvclap",                ig:"luvclap.producer"},
+  {n:"Trentz",             o:"Córdoba, AR",    r:"AR",  rel:3,  sc:"dj-trentz",              ig:"trntzx"},
+  {n:"Cajal",              o:"Córdoba, AR",    r:"AR",  rel:3,  sc:"cajalmusic",             ig:"cajal.music"},
+  {n:"Juzel",              o:"Mar del Plata, AR",r:"AR", rel:3, sc:"juzelmusic",             ig:"juzelmusic"},
+  {n:"Tom Pooks",          o:"Internacional",   r:"INT", rel:2,  sc:"tompooksofficial",       ig:null},
+  {n:"Mario Franca",       o:"Argentina",       r:"AR",  rel:2,  sc:null,                     ig:null},
+  {n:"Alexis Cabrera",     o:"Argentina",       r:"AR",  rel:2,  sc:"alexiscabrera",          ig:null},
+  {n:"Rodrigo Rivera",     o:"Argentina",       r:"AR",  rel:2,  sc:null,                     ig:null},
+  {n:"Topper",             o:"Argentina",       r:"AR",  rel:2,  sc:"topper",                 ig:"topperanza"},
+  {n:"Ale Castro",         o:"Argentina",       r:"AR",  rel:2,  sc:"alecastro",              ig:null},
+  {n:"Nicolas Cuer",       o:"Internacional",   r:"INT", rel:2,  sc:null,                     ig:null},
+  {n:"Rodrigo Dp",         o:"Argentina",       r:"AR",  rel:2,  sc:null,                     ig:null},
+  {n:"P. Lopez",           o:"Argentina",       r:"AR",  rel:2,  sc:"plopezofficial",         ig:null},
+  {n:"Akvo",               o:"Mexico",          r:"INT", rel:2,  sc:null,                     ig:null},
+  {n:"Lucas Perazzi",      o:"Argentina",       r:"AR",  rel:2,  aka:"LUPZ",sc:null,          ig:null},
+  {n:"Nico Cano",          o:"Argentina",       r:"AR",  rel:2,  sc:null,                     ig:null},
+  {n:"Facu Avenali",       o:"Argentina",       r:"AR",  rel:2,  sc:null,                     ig:null},
+  {n:"Esteban Gutierrez",  o:"Argentina",       r:"AR",  rel:2,  sc:null,                     ig:null},
+  {n:"Wally Stryk",        o:"Internacional",   r:"INT", rel:2,  sc:null,                     ig:null},
+  {n:"Rodrigo",            o:"Argentina",       r:"AR",  rel:2,  sc:null,                     ig:null},
+  {n:"Furz",               o:"Córdoba, AR",    r:"AR",  rel:2,  sc:"furz",                   ig:"furzmusic"},
+  {n:"Smoothless",         o:"Argentina",       r:"AR",  rel:2,  sc:null,                     ig:null},
+  {n:"Gruuv'",             o:"Argentina",       r:"AR",  rel:2,  sc:null,                     ig:null},
+  {n:"Lautaro Scavuzzo",   o:"Rosario, AR",     r:"AR",  rel:2,  sc:"lautaroscavuzzo",        ig:"lautaroscavuzzo"},
+  {n:"Dellacasa",          o:"Argentina",       r:"AR",  rel:2,  sc:"dellacasa",              ig:"lautaro.dellacasa"},
+  {n:"Pablo Brizzio",      o:"Argentina",       r:"AR",  rel:2,  sc:"pablo-brizzio",          ig:null},
+  {n:"Prodot",             o:"Córdoba, AR",    r:"AR",  rel:2,  sc:"prodotmusik",            ig:"prodot__"},
+  {n:"Fran Piussi",        o:"Mar del Plata, AR",r:"AR", rel:2, sc:"franpiussi",             ig:"franpiussi"},
+  {n:"TxL",                o:"Berlín, DE",      r:"INT", rel:2,  aka:"BER",sc:null,           ig:null},
+  {n:"DT",                 o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Rick Wade",          o:"Detroit, USA",    r:"INT", rel:1,  sc:"rick-wade",              ig:"rickwade1986"},
+  {n:"Patrick Zigon",      o:"Francia",         r:"INT", rel:1,  sc:"patrickzigon",           ig:null},
+  {n:"Mikael Stavostrand", o:"Suecia",          r:"INT", rel:1,  sc:"mikael_stavostrand",     ig:null},
+  {n:"Justin Drake",       o:"Canada",          r:"INT", rel:1,  sc:"justin-drake",           ig:null},
+  {n:"Vernon",             o:"Internacional",   r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"Cossmos",            o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Iron1",              o:"Argentina",       r:"AR",  rel:1,  sc:"iron_10",                ig:"iron1___dj"},
+  {n:"Slacks",             o:"USA",             r:"INT", rel:1,  sc:"slacksss",               ig:"slacksbro"},
+  {n:"Sebbe",              o:"Suecia",          r:"INT", rel:1,  sc:"sebbe-music",            ig:"sebbemusic"},
+  {n:"Jesper Tjarnfors",   o:"Suecia",          r:"INT", rel:1,  sc:"jespertjarnfors",        ig:"jespertjarnfors"},
+  {n:"Mathieu Basi",       o:"Francia",         r:"INT", rel:1,  sc:"mathieubasi",            ig:"mathieubasi"},
+  {n:"Only Slave Nation",  o:"Francia",         r:"INT", rel:1,  sc:"onlyslavenation",        ig:null},
+  {n:"Danush",             o:"Internacional",   r:"INT", rel:1,  sc:"danush",                 ig:"danush_music"},
+  {n:"Castoldi",           o:"Argentina",       r:"AR",  rel:1,  aka:"Nico",sc:"nicocastoldi",ig:"nicocastoldi"},
+  {n:"Castelo",            o:"Argentina",       r:"AR",  rel:1,  sc:"castelo-music",          ig:"castelo_music"},
+  {n:"Agus Ferreyra",      o:"Córdoba, AR",    r:"AR",  rel:1,  sc:"agusferreyra",           ig:"agusferreyraaudio"},
+  {n:"Juan Panza",         o:"Argentina",       r:"AR",  rel:1,  sc:"juanpanza",              ig:null},
+  {n:"Gus Bonani",         o:"Argentina",       r:"AR",  rel:1,  sc:"gusbonani",              ig:null},
+  {n:"Sergio Jr.",         o:"Argentina",       r:"AR",  rel:1,  sc:"sergiodesargentomusic",  ig:"sergio_jr_music"},
+  {n:"ro_mo",              o:"Argentina",       r:"AR",  rel:1,  sc:"ro-mo",                  ig:null},
+  {n:"Alexis Rodriguez",   o:"Argentina",       r:"AR",  rel:1,  sc:"alexisrodriguezmusic",   ig:"alexisrodriguezmusic"},
+  {n:"Tato Piatti",        o:"Argentina",       r:"AR",  rel:1,  sc:"tatopiatti",             ig:"tatopiatti"},
+  {n:"Lupz",               o:"Argentina",       r:"AR",  rel:1,  sc:"lupz",                   ig:null},
+  {n:"Moodbeat",           o:"Mar del Plata, AR",r:"AR", rel:1, sc:"moodbeat",               ig:"moodbeat_music"},
+  {n:"Bürkle",             o:"Internacional",   r:"INT", rel:1,  sc:"burkle-music",           ig:"burkle_music"},
+  {n:"Etienné B.",         o:"Internacional",   r:"INT", rel:1,  sc:"benjaminetienne",        ig:"iametienneb"},
+  {n:"Chuki Juri",         o:"Argentina",       r:"AR",  rel:1,  sc:"chukijuri",              ig:"chukijuri"},
+  {n:"Brandub",            o:"Córdoba, AR",    r:"AR",  rel:1,  sc:"brandub",                ig:"brandub_"},
+  {n:"Gustavo Sierra",     o:"Córdoba, AR",    r:"AR",  rel:1,  sc:"gustavo-sierra",         ig:null},
+  {n:"Ezequiel Esley",     o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Espen Lauritzen",    o:"Noruega",         r:"INT", rel:1,  sc:"espenlauritzen",         ig:"espenkrill"},
+  {n:"Glasidum",           o:"Córdoba, AR",    r:"AR",  rel:1,  sc:"glasidum",               ig:"glasidum"},
+  {n:"Mathias Woot",       o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Sean Rooney",        o:"Internacional",   r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"Adrian Kiliszek",    o:"Internacional",   r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"ZRK",                o:"Internacional",   r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"ZippiE",             o:"Internacional",   r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"Yeark",              o:"Argentina",       r:"AR",  rel:1,  sc:"yeark",                  ig:null},
+  {n:"Ema Geerez",         o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Yanny Villar",       o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Bombilla",           o:"Germany",         r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"Duo",                o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Dual T",             o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Franck Valat",       o:"Francia",         r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"Plusculaar",         o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Geoff Wichmann",     o:"Internacional",   r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"AndrewS",            o:"Internacional",   r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"PM",                 o:"Chipre",          r:"INT", rel:1,  aka:"Cyprus",sc:null,         ig:null},
+  {n:"Gonza Algue",        o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Frank Jr",           o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"[Aura]",             o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Sebastian Oviedo",   o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Agustin Cooper",     o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"DJ Tato Acosta",     o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"G-Zzer",             o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Emiliano Ferreyra",  o:"Córdoba, AR",    r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Luis Bustos",        o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Maxi Fried",         o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Pedro Lambert",      o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Detax",              o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
+  {n:"Yusuke Yamamoto",    o:"Japón",           r:"INT", rel:1,  sc:"yusukeyamamoto_dj",      ig:"yusukeyamamoto_dj"},
+  {n:"Sukenobu",           o:"Japón",           r:"INT", rel:1,  sc:null,                     ig:null},
+  {n:"R.A.P.",             o:"Argentina",       r:"AR",  rel:1,  sc:"rapmusicarg",            ig:"rapmusicarg"},
+  {n:"Los Loopers",        o:"Argentina",       r:"AR",  rel:1,  sc:"los-loopers",            ig:null},
+  {n:"Cordero",            o:"Argentina",       r:"AR",  rel:1,  sc:null,                     ig:null},
 ];
 
-const imgCache={};
 
-// Probe an img URL — resolves true if loads, false otherwise
-function probeImg(url){
-  return new Promise(res=>{
-    const img=new Image();
-    img.onload=()=>res(true);
-    img.onerror=()=>res(false);
-    img.src=url;
-    setTimeout(()=>res(false),6000);
-  });
-}
+/* ================================================================
+   IMAGE SERVICE
+   Responsibilities:
+   - In-memory cache (key = artist name)
+   - In-flight deduplication (prevents parallel fetches for same key)
+   - Sequential provider fallback chain
+   - Image URL validation via HEAD-less img probe
+   ================================================================ */
+const ImageService = (() => {
+  const cache    = new Map();   // name → url | null
+  const inflight = new Map();   // name → Promise<url|null>
 
-async function fetchImage(a){
-  const k=a.n;
-  if(imgCache[k]!==undefined)return imgCache[k];
-  imgCache[k]=null;
+  /* Shared URL probe — resolves true if the image loads */
+  function probeUrl(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      const timer = setTimeout(() => resolve(false), CONFIG.PROBE_TIMEOUT_MS);
+      img.onload  = () => { clearTimeout(timer); resolve(true); };
+      img.onerror = () => { clearTimeout(timer); resolve(false); };
+      img.src = url;
+    });
+  }
 
-  // 1. SoundCloud public API (no key needed via resolve endpoint)
-  if(a.sc){
-    try{
-      const r=await fetch(`https://soundcloud.com/oembed?url=https://soundcloud.com/${a.sc}&format=json`);
-      if(r.ok){
-        const d=await r.json();
-        let u=d.thumbnail_url||'';
-        if(u&&!u.includes('default')){
-          // upgrade to t300x300
-          u=u.replace(/t\d+x\d+/,'t300x300').replace('-large','-t300x300');
-          if(await probeImg(u)){imgCache[k]=u;return u;}
-        }
+  /* Fetch JSON with a timeout, returns null on any failure */
+  async function fetchJson(url, options = {}) {
+    try {
+      const res = await fetch(url, options);
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      return null;
+    }
+  }
+
+  /* Build a slug from an artist name (used by RA + Beatport) */
+  function toSlug(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  /* Build a compact slug (used as fallback for RA) */
+  function toCompactSlug(name) {
+    return name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+  }
+
+  /* Extract og:image from raw HTML string */
+  function extractOgImage(html) {
+    const m = html.match(/property="og:image"\s+content="([^"]+)"/);
+    return m?.[1] ?? null;
+  }
+
+  /* ---- Individual providers ---- */
+
+  async function soundcloudOEmbed(artist) {
+    if (!artist.sc) return null;
+    const data = await fetchJson(
+      `https://soundcloud.com/oembed?url=https://soundcloud.com/${artist.sc}&format=json`
+    );
+    let url = data?.thumbnail_url ?? '';
+    if (!url || url.includes('default')) return null;
+    url = url.replace(/t\d+x\d+/, 't300x300').replace('-large', '-t300x300');
+    return (await probeUrl(url)) ? url : null;
+  }
+
+  async function soundcloudResolve(artist) {
+    if (!artist.sc) return null;
+    const data = await fetchJson(
+      `https://api.soundcloud.com/resolve?url=https://soundcloud.com/${artist.sc}&client_id=${CONFIG.SC_CLIENT_ID}`
+    );
+    const url = (data?.avatar_url ?? '').replace('-large', '-t300x300');
+    if (!url || url.includes('default')) return null;
+    return (await probeUrl(url)) ? url : null;
+  }
+
+  async function lastfm(artist) {
+    const data = await fetchJson(
+      `https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(artist.n)}&api_key=${CONFIG.LASTFM_KEY}&format=json`
+    );
+    const images = data?.artist?.image;
+    if (!images) return null;
+    const url = (images.find(i => i.size === 'extralarge') ?? images[images.length - 1])?.['#text'];
+    if (!url || url.length <= 4 || url.includes(CONFIG.LASTFM_PLACEHOLDER)) return null;
+    return url;
+  }
+
+  async function residentAdvisor(artist) {
+    const slugs = [
+      artist.sc ?? toSlug(artist.n),
+      toCompactSlug(artist.n),
+    ];
+
+    for (const slug of [...new Set(slugs)]) {
+      const proxyUrl = `${CONFIG.ALLORIGINS}${encodeURIComponent(`https://ra.co/dj/${slug}`)}`;
+      try {
+        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(CONFIG.PROXY_TIMEOUT_MS) });
+        if (!res.ok) continue;
+        const data = await res.json();
+        const html = data.contents ?? '';
+
+        const og = extractOgImage(html);
+        if (og && !og.includes('ra.co/images/logotype')) return og;
+
+        const jld = html.match(/"imageUrl"\s*:\s*"([^"]+)"/)?.[1];
+        if (jld) return jld;
+
+        const cdn = html.match(/https:\/\/[^"']*(?:cloudfront|imgix|cdn)[^"']*\.(?:jpg|jpeg|png|webp)[^"']*/i)?.[0];
+        if (cdn) return cdn;
+      } catch { /* next slug */ }
+    }
+    return null;
+  }
+
+  async function discogs(artist) {
+    const data = await fetchJson(
+      `https://api.discogs.com/database/search?q=${encodeURIComponent(artist.n)}&type=artist&per_page=1`,
+      { headers: { 'User-Agent': 'RationalismDB/1.0' } }
+    );
+    const url = data?.results?.[0]?.cover_image ?? data?.results?.[0]?.thumb;
+    if (!url || url.includes('spacer') || url.includes('placeholder')) return null;
+    return url;
+  }
+
+  async function beatport(artist) {
+    const slug = artist.sc ?? toSlug(artist.n);
+    const proxyUrl = `${CONFIG.ALLORIGINS}${encodeURIComponent(`https://www.beatport.com/artist/${slug}/0`)}`;
+    try {
+      const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(CONFIG.PROXY_TIMEOUT_MS) });
+      if (!res.ok) return null;
+      const data = await res.json();
+      const og = extractOgImage(data.contents ?? '');
+      if (og && !og.includes('default')) return og;
+    } catch { /* ignore */ }
+    return null;
+  }
+
+  const PROVIDERS = { soundcloudOEmbed, soundcloudResolve, lastfm, residentAdvisor, discogs, beatport };
+
+  /* ---- Public API ---- */
+
+  /**
+   * Fetch an image URL for an artist, trying providers in order.
+   * Results are cached; concurrent requests for the same key share one Promise.
+   */
+  async function fetchFor(artist) {
+    const key = artist.n;
+    if (cache.has(key)) return cache.get(key);
+    if (inflight.has(key)) return inflight.get(key);
+
+    const promise = (async () => {
+      for (const name of CONFIG.IMAGE_PROVIDERS) {
+        try {
+          const url = await PROVIDERS[name](artist);
+          if (url) { cache.set(key, url); return url; }
+        } catch { /* provider failed — try next */ }
       }
-    }catch{}
-    // SoundCloud avatar via known CDN pattern
-    try{
-      const r=await fetch(`https://api.soundcloud.com/resolve?url=https://soundcloud.com/${a.sc}&client_id=iZIs9mchVcX5lhVRyQGGAYlNPVldzAoX`);
-      if(r.ok){const d=await r.json();const u=(d.avatar_url||'').replace('-large','-t300x300');if(u&&!u.includes('default')){imgCache[k]=u;return u;}}
-    }catch{}
+      cache.set(key, null);
+      return null;
+    })();
+
+    inflight.set(key, promise);
+    const result = await promise;
+    inflight.delete(key);
+    return result;
   }
 
-  // 2. Last.fm
-  try{
-    const r=await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(a.n)}&api_key=b25b959554ed76058ac220b7b2e0a026&format=json`);
-    if(r.ok){
-      const d=await r.json();const imgs=d?.artist?.image;
-      if(imgs){const u=(imgs.find(i=>i.size==='extralarge')||imgs[imgs.length-1])?.['#text'];
-      if(u&&u.length>4&&!u.includes('2a96cbd8b46e442fc41c2b86b821562f')){imgCache[k]=u;return u;}}
-    }
-  }catch{}
-
-  // 3. Resident Advisor via allorigins CORS proxy
-  const raSlug=a.sc||(a.n.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''));
-  const raUrls=[
-    `https://ra.co/dj/${raSlug}`,
-    `https://ra.co/dj/${a.n.toLowerCase().replace(/\s+/g,'').replace(/[^a-z0-9]/g,'')}`,
-  ];
-  for(const raUrl of raUrls){
-    try{
-      const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(raUrl)}`;
-      const r=await fetch(proxy,{signal:AbortSignal.timeout(5000)});
-      if(r.ok){
-        const d=await r.json();
-        const html=d.contents||'';
-        // RA uses og:image meta and also image URLs in JSON-LD
-        const ogMatch=html.match(/property="og:image"\s+content="([^"]+)"/);
-        if(ogMatch&&ogMatch[1]&&!ogMatch[1].includes('ra.co/images/logotype')){
-          imgCache[k]=ogMatch[1];return ogMatch[1];
-        }
-        // Try JSON-LD imageUrl
-        const jldMatch=html.match(/"imageUrl"\s*:\s*"([^"]+)"/);
-        if(jldMatch&&jldMatch[1]){imgCache[k]=jldMatch[1];return jldMatch[1];}
-        // Try any cloudfront URL in page
-        const cfMatch=html.match(/https:\/\/[^"']*(?:cloudfront|imgix|cdn)[^"']*\.(?:jpg|jpeg|png|webp)[^"']*/i);
-        if(cfMatch&&cfMatch[0]){imgCache[k]=cfMatch[0];return cfMatch[0];}
-      }
-    }catch{}
+  function getCached(artistName) {
+    return cache.has(artistName) ? cache.get(artistName) : undefined;
   }
 
-  // 4. Discogs search image
-  try{
-    const r=await fetch(`https://api.discogs.com/database/search?q=${encodeURIComponent(a.n)}&type=artist&per_page=1`,{headers:{'User-Agent':'RationalismDB/1.0'}});
-    if(r.ok){
-      const d=await r.json();
-      const u=d?.results?.[0]?.cover_image||d?.results?.[0]?.thumb;
-      if(u&&!u.includes('spacer')&&!u.includes('placeholder')){imgCache[k]=u;return u;}
-    }
-  }catch{}
+  return { fetchFor, getCached };
+})();
 
-  // 5. Beatport artist search via allorigins
-  try{
-    const bpUrl=`https://www.beatport.com/artist/${raSlug}/0`;
-    const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(bpUrl)}`;
-    const r=await fetch(proxy,{signal:AbortSignal.timeout(5000)});
-    if(r.ok){
-      const d=await r.json();const html=d.contents||'';
-      const m=html.match(/property="og:image"\s+content="([^"]+)"/);
-      if(m&&m[1]&&!m[1].includes('default')){imgCache[k]=m[1];return m[1];}
-    }
-  }catch{}
 
-  return null;
-}
+/* ================================================================
+   ARTIST CARD  — pure function, returns an HTML string
+   ================================================================ */
+function renderCardHTML(artist, index) {
+  const cachedUrl = ImageService.getCached(artist.n);
+  const regionLabel = CONFIG.REGION_LABELS[artist.r] ?? artist.r;
 
-async function loadImg(a,i){
-  const w=document.getElementById(`pw${i}`);if(!w)return;
-  const u=await fetchImage(a);
-  if(u){
-    const img=new Image();img.alt=a.n;img.crossOrigin='anonymous';
-    img.onload=()=>{
-      w.querySelector('.img-loading')?.remove();
-      w.querySelector('.photo-fallback')?.remove();
-      w.insertBefore(img,w.firstChild);
-    };
-    img.onerror=()=>w.querySelector('.img-loading')?.remove();
-    img.src=u;
-  }else{
-    w.querySelector('.img-loading')?.remove();
+  /* Photo area content — show cached image immediately, else show spinner + initials */
+  let photoContent;
+  if (cachedUrl) {
+    photoContent = `<img src="${cachedUrl}" alt="${artist.n}" crossorigin="anonymous">`;
+  } else {
+    photoContent = `
+      <div class="img-loading" aria-hidden="true"><div class="pulse"></div></div>
+      <div class="photo-fallback" aria-hidden="true">${initials(artist.n)}</div>`;
   }
-}
 
-function ini(n){return n.replace(/[[\]]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';}
+  /* Optional AKA line */
+  const akaLine = artist.aka
+    ? `<div class="artist-aka">// ${artist.aka}</div>`
+    : '';
 
-let filt='all';
-function setF(f,btn){filt=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');render();}
+  /* Social link buttons */
+  const scBtn = artist.sc
+    ? `<a class="lbtn" data-platform="sc" href="https://soundcloud.com/${artist.sc}" target="_blank" rel="noopener" aria-label="${artist.n} on SoundCloud">SC</a>`
+    : `<span class="lbtn" data-platform="sc" aria-disabled="true" role="img" aria-label="SoundCloud unavailable">SC</span>`;
 
-let pcMode=false;
-function toggleView(){
-  pcMode=!pcMode;
-  document.body.classList.toggle('pc-mode',pcMode);
-  const lbl=document.getElementById('vtLabel');
-  const btn=document.getElementById('viewToggle');
-  if(pcMode){lbl.textContent='MOBILE VIEW';btn.style.borderColor='var(--acid3)';btn.style.color='var(--acid3)';}
-  else{lbl.textContent='PC VIEW';btn.style.borderColor='';btn.style.color='';}
-}
+  const igBtn = artist.ig
+    ? `<a class="lbtn" data-platform="ig" href="https://www.instagram.com/${artist.ig}/" target="_blank" rel="noopener" aria-label="${artist.n} on Instagram">IG</a>`
+    : `<span class="lbtn" data-platform="ig" aria-disabled="true" role="img" aria-label="Instagram unavailable">IG</span>`;
 
-function render(){
-  const q=(document.getElementById('search').value||'').toLowerCase();
-  const list=artists.filter(a=>{
-    if(filt!=='all'&&a.r!==filt)return false;
-    return!q||a.n.toLowerCase().includes(q)||a.o.toLowerCase().includes(q)||(a.aka||'').toLowerCase().includes(q);
-  });
-  document.getElementById('shown').textContent=list.length;
-  document.getElementById('cnt-shown').textContent=list.length;
-  const g=document.getElementById('grid');
-  if(!list.length){g.innerHTML='<div class="empty">> NO ENTRIES FOUND_</div>';return;}
-
-  g.innerHTML=list.map((a,i)=>{
-    const cached=imgCache[a.n];
-    const imgHtml=cached
-      ?`<img src="${cached}" alt="${a.n}">`
-      :`<div class="img-loading"><div class="pulse"></div></div><div class="photo-fallback">${ini(a.n)}</div>`;
-    return`<div class="card">
-      <div class="photo-wrap" id="pw${i}">
-        ${imgHtml}
-        <div class="photo-num">${String(i+1).padStart(3,'0')}</div>
-        <div class="photo-rel">${a.rel}</div>
-        <div class="rpill rpill-${a.r}">${a.r==='AR'?'ARG':a.r}</div>
+  return `
+    <article class="card">
+      <div class="photo-wrap" id="pw${index}">
+        ${photoContent}
+        <div class="badge badge--num" aria-hidden="true">${String(index + 1).padStart(3, '0')}</div>
+        <div class="badge badge--rel"  aria-hidden="true">${artist.rel}</div>
+        <div class="badge badge--region" data-region="${artist.r}" aria-label="Region: ${regionLabel}">${regionLabel}</div>
       </div>
       <div class="card-body">
-        <div class="aname">${a.n}</div>
-        ${a.aka?`<div class="aaka">// ${a.aka}</div>`:''}
-        <div class="aorigin"><span class="origin-dot"></span>${a.o}</div>
-        <div class="links">
-          ${a.sc?`<a class="lbtn sc" href="https://soundcloud.com/${a.sc}" target="_blank" rel="noopener">SC</a>`:`<span class="lbtn na">SC</span>`}
-          ${a.ig?`<a class="lbtn ig" href="https://www.instagram.com/${a.ig}/" target="_blank" rel="noopener">IG</a>`:`<span class="lbtn na">IG</span>`}
+        <div class="artist-name">${artist.n}</div>
+        ${akaLine}
+        <div class="artist-origin">
+          <span class="origin-dot" aria-hidden="true"></span>
+          ${artist.o}
         </div>
+        <div class="links">${scBtn}${igBtn}</div>
       </div>
-    </div>`;
-  }).join('');
-
-  list.forEach((a,i)=>{if(!imgCache[a.n])loadImg(a,i);});
+    </article>`;
 }
 
-render();
+
+/* ================================================================
+   INITIALS HELPER
+   Extracts up to 2 initial characters from an artist name.
+   Strips surrounding brackets before splitting.
+   ================================================================ */
+function initials(name) {
+  return name
+    .replace(/[[\]]/g, '')
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(w => w[0] ?? '')
+    .join('')
+    .toUpperCase() || '?';
+}
+
+
+/* ================================================================
+   FILTER CONTROLLER
+   Holds filter + search state as a plain object.
+   Filtering is a pure function of state + data.
+   ================================================================ */
+const FilterController = (() => {
+  const state = { region: 'all', query: '' };
+
+  function setRegion(region) { state.region = region; }
+  function setQuery(query)   { state.query = query.toLowerCase().trim(); }
+
+  function getFiltered() {
+    return ARTISTS.filter(a => {
+      if (state.region !== 'all' && a.r !== state.region) return false;
+      if (!state.query) return true;
+      return (
+        a.n.toLowerCase().includes(state.query) ||
+        a.o.toLowerCase().includes(state.query) ||
+        (a.aka ?? '').toLowerCase().includes(state.query)
+      );
+    });
+  }
+
+  return { setRegion, setQuery, getFiltered };
+})();
+
+
+/* ================================================================
+   IMAGE LOADER — applies a fetched URL to an already-rendered card
+   ================================================================ */
+async function loadImageIntoCard(artist, cardIndex) {
+  const wrap = document.getElementById(`pw${cardIndex}`);
+  if (!wrap) return;
+
+  const url = await ImageService.fetchFor(artist);
+  if (!url) {
+    wrap.querySelector('.img-loading')?.remove();
+    return;
+  }
+
+  const img = new Image();
+  img.alt = artist.n;
+  img.crossOrigin = 'anonymous';
+
+  img.onload = () => {
+    wrap.querySelector('.img-loading')?.remove();
+    wrap.querySelector('.photo-fallback')?.remove();
+    wrap.insertBefore(img, wrap.firstChild);
+  };
+  img.onerror = () => wrap.querySelector('.img-loading')?.remove();
+  img.src = url;
+}
+
+
+/* ================================================================
+   UI — DOM wiring + render loop
+   ================================================================ */
+const UI = (() => {
+  const gridEl   = document.getElementById('grid');
+  const searchEl = document.getElementById('search');
+  const shownEl  = document.getElementById('shown');
+  const cntEl    = document.getElementById('cnt-shown');
+
+  /* Debounce search to avoid re-rendering on every keystroke */
+  let searchTimer;
+  function onSearch() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      FilterController.setQuery(searchEl.value);
+      render();
+    }, 120);
+  }
+
+  /* Filter button clicks — uses event delegation on the controls bar */
+  function onFilterClick(e) {
+    const btn = e.target.closest('.fbtn');
+    if (!btn) return;
+
+    const region = btn.dataset.filter;
+    FilterController.setRegion(region);
+
+    document.querySelectorAll('.fbtn').forEach(b => {
+      b.setAttribute('aria-pressed', String(b === btn));
+    });
+
+    render();
+  }
+
+  /* PC / Mobile view toggle */
+  function onViewToggle() {
+    const btn = document.getElementById('viewToggle');
+    const active = document.body.classList.toggle('pc-mode');
+    btn.setAttribute('aria-pressed', String(active));
+    document.getElementById('vtLabel').textContent = active ? 'MOBILE VIEW' : 'PC VIEW';
+
+    if (active) {
+      btn.style.borderColor = 'var(--acid3)';
+      btn.style.color       = 'var(--acid3)';
+    } else {
+      btn.style.borderColor = '';
+      btn.style.color       = '';
+    }
+  }
+
+  /* Main render — called on init and on any state change */
+  function render() {
+    const list = FilterController.getFiltered();
+    const count = String(list.length);
+
+    shownEl.textContent = count;
+    cntEl.textContent   = count;
+
+    if (!list.length) {
+      gridEl.innerHTML = '<div class="empty">> NO ENTRIES FOUND_</div>';
+      return;
+    }
+
+    gridEl.innerHTML = list.map(renderCardHTML).join('');
+
+    /* Kick off async image loads only for cards without a cached image */
+    list.forEach((artist, i) => {
+      if (ImageService.getCached(artist.n) === undefined) {
+        loadImageIntoCard(artist, i);
+      }
+    });
+  }
+
+  /* Wire up all events once */
+  function init() {
+    searchEl.addEventListener('input', onSearch);
+    document.querySelector('.controls').addEventListener('click', onFilterClick);
+    document.getElementById('viewToggle').addEventListener('click', onViewToggle);
+    render();
+  }
+
+  return { init };
+})();
+
+/* ================================================================
+   BOOT
+   ================================================================ */
+UI.init();
 </script>
 </body>
 </html>
