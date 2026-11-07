@@ -1,0 +1,175 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>RESONANCE gray-box</title>
+<style>
+:root{--bg:#0b0d12;--fg:#d7dbe6;--a:#7cf;--b:#f7a}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;overflow:hidden;touch-action:none}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(11,13,18,.88);padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);text-align:center;overflow:auto;touch-action:pan-y}
+.ov.hide{display:none}
+button,select,input{font:inherit;color:var(--fg);background:#1a1f2b;border:1px solid #3a4258;border-radius:8px;padding:10px 16px}
+button:active{background:#2a3350}
+#songs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#songs button.sel{border-color:var(--a);color:var(--a)}
+#pulse{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));width:96px;height:96px;border-radius:50%;font-weight:700;display:none}
+body.play #pulse{display:block}
+#ver{position:fixed;left:8px;top:6px;font-size:11px;opacity:.6;z-index:5}
+#err{position:fixed;left:0;right:0;top:0;background:#b00020;color:#fff;font:12px monospace;padding:6px;z-index:9;display:none;white-space:pre-wrap}
+#log{font:11px monospace;opacity:.6;max-width:90vw}
+small{opacity:.7}
+</style></head><body>
+<div id="ver">RESONANCE gray-box w2-v1</div><div id="err"></div>
+<canvas id="c"></canvas>
+<button id="pulse">PULSE</button>
+<div class="ov" id="menu">
+  <h2 style="margin:0">RESONANCE <small>gray-box</small></h2>
+  <div id="songs"></div>
+  <div>Difficulty <select id="tier"><option>easy</option><option selected>normal</option><option>elite</option></select>
+   &nbsp;Latency <input id="cal" type="number" value="0" step="10" style="width:80px"> ms</div>
+  <button id="go">Start</button>
+  <small>Mouse/touch-drag or WASD/arrows to fly · Space / click / PULSE button for pulses · add ?bot=1 for autoplay</small>
+  <div id="msg"></div><div id="log"></div>
+</div>
+<div class="ov hide" id="res"><h2 id="rt"></h2><div id="rs"></div><button id="again">Menu</button></div>
+<script src="core/core.js"></script>
+<script>
+const VER='w2-v1', $=id=>document.getElementById(id), logEl=$('log');
+const log=s=>{logEl.textContent+=s+' · '};
+function showErr(e){const b=$('err');b.style.display='block';b.textContent=VER+' ERROR: '+(e&&e.stack||e)}
+addEventListener('error',e=>showErr(e.error||e.message));addEventListener('unhandledrejection',e=>showErr(e.reason));
+log('js ok');
+const WORLDS=[['cry-me-a-reverb','Cry Me A Reverb'],['nueva-anormalidad','Nueva Anormalidad'],['ganimedes','Ganimedes']];
+const BOT=/[?&]bot=1/.test(location.search), LOOK=2.0, CH=60;
+let world=WORLDS[0][0], state='menu', run=null, cm=null, man=null, aud=null, clock=null, bot=null, lastF=0,lastT=0, hollowUntil=0, flash=0, widen=1;
+
+/* ---------- audio director: chunk streaming on AudioContext clock, 3-band hollow mix ---------- */
+class Audio3{
+  constructor(w,m,musicStart){this.w=w;this.m=m;this.ms=musicStart;this.buf={};this.sched={};this.ok=true;
+    const C=window.AudioContext||window.webkitAudioContext;this.ctx=new C();
+    const x=this.ctx,bus=x.createGain(),mk=(t,f)=>{const n=x.createBiquadFilter();n.type=t;n.frequency.value=f;n.Q.value=.707;return n};
+    this.master=x.createGain();this.gL=x.createGain();this.gM=x.createGain();this.gH=x.createGain();
+    bus.connect(mk('lowpass',200)).connect(this.gL);
+    bus.connect(mk('highpass',200)).connect(mk('lowpass',3000)).connect(this.gM);
+    bus.connect(mk('highpass',3000)).connect(this.gH);
+    [this.gL,this.gM,this.gH].forEach(g=>g.connect(this.master));this.master.connect(x.destination);this.bus=bus}
+  async load(i){if(i>=this.m.n||this.buf[i])return this.buf[i];
+    this.buf[i]=fetch(`audio/${this.w}_${i}.mp3`).then(r=>{if(!r.ok)throw new Error('audio '+r.status);return r.arrayBuffer()}).then(a=>this.ctx.decodeAudioData(a));return this.buf[i]}
+  async start(){await this.ctx.resume();await Promise.all([this.load(0),this.load(1)]);this.T0=this.ctx.currentTime+0.3;this.tick()}
+  now(){return this.ms+(this.ctx.currentTime-this.T0)}
+  tick(){const cur=Math.max(0,Math.floor((this.ctx.currentTime-this.T0)/CH));
+    for(let i=cur;i<=cur+2&&i<this.m.n;i++){ if(this.sched[i])continue; this.sched[i]=1;
+      this.load(i).then(b=>{const s=this.ctx.createBufferSource();s.buffer=b;s.connect(this.bus);
+        let when=this.T0+i*CH,off=0,n=this.ctx.currentTime;if(when<n){off=n-when;when=n}s.start(when,off)}).catch(e=>{this.ok=false;showErr(e)})}}
+  hollow(untilSongT){const x=this.ctx,t=x.currentTime;
+    [this.gM,this.gH].forEach(g=>{g.gain.cancelScheduledValues(t);g.gain.setTargetAtTime(0,t,0.03);
+      g.gain.setTargetAtTime(1,Math.max(t+0.1,this.T0+(untilSongT-this.ms)),0.05)})}
+  fade(){const t=this.ctx.currentTime;this.master.gain.setTargetAtTime(0,t,0.5);setTimeout(()=>this.ctx.close().catch(()=>{}),2500)}
+  stop(){try{this.ctx.close()}catch(e){}}
+}
+
+/* ---------- input ---------- */
+const cv=$('c'),g=cv.getContext('2d');let W=0,H=0,dpr=1;
+function resize(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;g.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize);addEventListener('orientationchange',resize);resize();
+const keys={};let touchLast=null;
+function corr(){const portrait=H>W;const hw=Math.min(W*.42,H*.5*(portrait?1:1.4))*widen,hh=Math.min(H*.3,W*.4)*widen;return{hw,hh,cx:W/2,cy:H*.42}}
+function pressNow(){if(run&&clock)RES.press(run,clock())}
+cv.addEventListener('pointermove',e=>{if(!run||BOT)return;if(e.pointerType==='touch'){if(touchLast){const c=corr();run.target.x=clamp(run.target.x+(e.clientX-touchLast.x)/c.hw*1.3);run.target.y=clamp(run.target.y-(e.clientY-touchLast.y)/c.hh*1.3)}touchLast={x:e.clientX,y:e.clientY}}
+  else{const c=corr();run.target.x=clamp((e.clientX-c.cx)/c.hw);run.target.y=clamp(-(e.clientY-c.cy)/c.hh)}});
+cv.addEventListener('pointerdown',e=>{touchLast={x:e.clientX,y:e.clientY};if(e.pointerType!=='touch')pressNow()});
+cv.addEventListener('pointerup',()=>touchLast=null);
+$('pulse').addEventListener('pointerdown',e=>{e.stopPropagation();pressNow()});
+addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();if(!e.repeat)pressNow()}keys[e.code]=1});
+addEventListener('keyup',e=>keys[e.code]=0);
+const clamp=v=>Math.max(-1,Math.min(1,v));
+
+/* ---------- menu ---------- */
+WORLDS.forEach(([id,name])=>{const b=document.createElement('button');b.textContent=name;b.dataset.id=id;if(id===world)b.className='sel';
+  b.onclick=()=>{world=id;document.querySelectorAll('#songs button').forEach(x=>x.className=x.dataset.id===id?'sel':'')};$('songs').appendChild(b)});
+$('go').onclick=()=>begin().catch(e=>{showErr(e);$('msg').textContent='Could not start: '+e.message});
+$('again').onclick=()=>{$('res').classList.add('hide');$('menu').classList.remove('hide');state='menu';document.body.classList.remove('play')};
+log('menu ok');
+
+async function begin(){
+  $('msg').textContent='Loading…';
+  cm=await (await fetch(`cuemaps/${world}.json`)).json();man=(await (await fetch('audio/manifest.json')).json())[world];
+  run=RES.createRun(cm,$('tier').value,{calibMs:+$('cal').value||0});
+  bot=BOT?RES.makeBot(run,0.9,3):null;hollowUntil=0;widen=1;
+  let silent=false;
+  try{aud=new Audio3(world,man,man.musicStart);await aud.start();clock=()=>aud.now()}
+  catch(e){silent=true;aud=null;$('msg').textContent='Audio unavailable ('+e.message+'): playing silent.';const t0=performance.now()+300;clock=()=>man.musicStart+(performance.now()-t0)/1000}
+  $('menu').classList.add('hide');document.body.classList.add('play');state='play';lastT=clock();$('msg').textContent=silent?$('msg').textContent:'';
+  requestAnimationFrame(frame);
+}
+
+/* ---------- frame ---------- */
+function frame(now){
+  if(state!=='play')return;
+  const t=clock();const dt=Math.min(0.25,Math.max(0,t-lastT));lastT=t;
+  if(keys.KeyA||keys.ArrowLeft)run.target.x=clamp(run.target.x-dt*1.6);if(keys.KeyD||keys.ArrowRight)run.target.x=clamp(run.target.x+dt*1.6);
+  if(keys.KeyW||keys.ArrowUp)run.target.y=clamp(run.target.y+dt*1.6);if(keys.KeyS||keys.ArrowDown)run.target.y=clamp(run.target.y-dt*1.6);
+  if(bot)bot(t);
+  RES.step(run,t,dt);
+  for(const e of run.events.splice(0)){
+    if(e.type==='miss'){flash=1;const p=run.phr[e.phrase];if(aud&&aud.ok)aud.hollow(p.t1)}
+  }
+  if(aud&&aud.ok)aud.tick();
+  widen+=((run.silence?1.35:1)-widen)*Math.min(1,dt*3);flash=Math.max(0,flash-dt*3);
+  draw(t);
+  if(t>cm.duration+0.5||(t>cm.duration-0.2&&run.phr.every(p=>p.done)))return finish();
+  requestAnimationFrame(frame);
+}
+function finish(){
+  state='res';document.body.classList.remove('play');if(aud)aud.fade();
+  const r=RES.result(run);window.RES_LAST=r;
+  $('rt').textContent=r.full?'FULL RESONANCE':'Heard '+r.heard+' / '+r.phrases+' phrases';
+  $('rs').innerHTML=`Energy ${r.energy}<br>Perfect ${r.stats.perfect} · Good ${r.stats.good} · Miss ${r.stats.miss} · Best combo ${r.stats.max}`;
+  $('res').classList.remove('hide');
+}
+
+/* ---------- gray-box render ---------- */
+function proj(c,z){const s=1/(1+z*4);return{s,x:c.cx+0,y:c.cy}}
+function draw(t){
+  g.clearRect(0,0,W,H);g.fillStyle='#0b0d12';g.fillRect(0,0,W,H);
+  const c=corr(),sil=run.silence;
+  // corridor frame
+  g.strokeStyle=sil?'#2a3a55':'#3a4258';g.lineWidth=1;
+  const r0={x:c.cx-c.hw,y:c.cy-c.hh,w:c.hw*2,h:c.hh*2},s1=1/(1+4);
+  const r1={x:c.cx-c.hw*s1,y:c.cy-c.hh*s1,w:c.hw*2*s1,h:c.hh*2*s1};
+  g.strokeRect(r0.x,r0.y,r0.w,r0.h);g.strokeRect(r1.x,r1.y,r1.w,r1.h);
+  g.beginPath();[[0,0],[1,0],[1,1],[0,1]].forEach(([a,b])=>{g.moveTo(r0.x+a*r0.w,r0.y+b*r0.h);g.lineTo(r1.x+a*r1.w,r1.y+b*r1.h)});g.stroke();
+  if(sil){g.fillStyle='#7cf';g.globalAlpha=.5;for(let i=0;i<40;i++){const k=(i*97.3+t*(10+i%7))%1,a=i*2.4;g.fillRect(c.cx+Math.cos(a)*c.hw*k*1.2,c.cy+Math.sin(a)*c.hh*k*1.2,2,2)}g.globalAlpha=1;
+    g.fillStyle='#7cf';g.font='14px system-ui';g.textAlign='center';g.fillText('SILENCE',c.cx,c.cy-c.hh-12)}
+  // cues
+  const cues=run.cues;
+  for(let i=Math.max(0,run.next-8);i<cues.length;i++){
+    const q=cues[i],z=(q.t-t)/LOOK;if(z>1)break;if(z<-0.2)continue;
+    const s=1/(1+Math.max(0,z)*4),a=z<0?1+z*5:1;g.globalAlpha=Math.max(0,a);
+    const col=q.state==='perfect'?'#8f8':q.state==='good'?'#fd6':q.state==='miss'?'#f55':'#cfd3e0';g.strokeStyle=col;g.lineWidth=Math.max(1,3*s);
+    if(q.type==='ring'){g.beginPath();g.arc(c.cx+q.x*c.hw*s,c.cy-q.y*c.hh*s,run.cfg.span*c.hw*s,0,7);g.stroke()}
+    else{const y=c.cy+c.hh*s*0.9;g.beginPath();g.moveTo(c.cx-c.hw*s,y);g.lineTo(c.cx+c.hw*s,y);g.stroke()}
+  }
+  g.globalAlpha=1;
+  // ship
+  const sx=c.cx+run.ship.x*c.hw,sy=c.cy-run.ship.y*c.hh;g.fillStyle='#fff';g.beginPath();g.moveTo(sx,sy-12);g.lineTo(sx+10,sy+9);g.lineTo(sx-10,sy+9);g.closePath();g.fill();
+  // HUD
+  g.fillStyle='#d7dbe6';g.textAlign='left';g.font='13px system-ui';
+  const lead=cm.startMark-t;g.fillText(`${cm.title}  ${t<cm.startMark?'lead-in '+lead.toFixed(1)+'s':fmt(t-cm.startMark)}`,12,34);
+  g.fillText(`combo ${run.stats.combo}  miss ${run.stats.miss}`,12,52);
+  if(flash>0){g.fillStyle=`rgba(255,60,60,${flash*.25})`;g.fillRect(0,0,W,H)}
+  vinyl(t);
+}
+const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+function vinyl(t){
+  const R=42,cx=14+R+6,cy=H-Math.max(14,12)-R-4,n=run.phr.length;
+  g.save();g.translate(cx,cy);g.rotate(t*3.4);
+  g.fillStyle='#14171f';g.beginPath();g.arc(0,0,R,0,7);g.fill();
+  for(let i=0;i<n;i++){const p=run.phr[i],a0=i/n*6.2832-1.5708,a1=(i+1)/n*6.2832-1.5708-0.02;
+    g.strokeStyle=!p.done&&p.missed===0?(t>=p.t0?'#7cf':'#3a4258'):p.missed===0?'#7cf':(p.missed?'#6a2030':'#3a4258');
+    if(!p.done&&p.missed===0&&t<p.t0)g.strokeStyle='#2a3040';
+    g.lineWidth=5;g.beginPath();g.arc(0,0,R-4,a0,a1);g.stroke()}
+  g.fillStyle='#f7a';g.beginPath();g.arc(0,0,10,0,7);g.fill();g.fillStyle='#fff';g.fillRect(12,-1,3,3);g.restore();
+}
+window.RES_DEBUG={get run(){return run},get t(){return clock&&clock()}};
+log('webgl n/a (canvas2d gray-box)');
+</script></body></html>
