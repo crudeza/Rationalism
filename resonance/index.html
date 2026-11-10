@@ -18,7 +18,7 @@ body.play #pulse{display:block}
 #log{font:11px monospace;opacity:.6;max-width:90vw}
 small{opacity:.7}
 </style></head><body>
-<div id="ver">RESONANCE gray-box w2-v4</div><div id="err"></div>
+<div id="ver">RESONANCE gray-box w2-v5</div><div id="err"></div>
 <canvas id="c"></canvas>
 <button id="pulse">PULSE</button>
 <div class="ov" id="menu">
@@ -27,21 +27,21 @@ small{opacity:.7}
   <div>Difficulty <select id="tier"><option>easy</option><option selected>normal</option><option>elite</option></select>
    &nbsp;Latency <input id="cal" type="number" value="0" step="10" style="width:80px"> ms</div>
   <button id="go">Start</button>
-  <small>Move mouse / drag finger / A-D or arrows to steer left-right (instant) · Space / click / PULSE button for pulses · add ?bot=1 for autoplay</small>
+  <small>Move mouse / drag finger / A-D or arrows to steer left-right (instant) · Space / click / PULSE button for pulses · silences = flip special · add ?bot=1 for autoplay</small>
   <div id="msg"></div><div id="log"></div>
 </div>
 <div class="ov hide" id="res"><h2 id="rt"></h2><div id="rs"></div><button id="again">Menu</button></div>
 <script>if(!/\/[^\/]*\.[a-z]+$/i.test(location.pathname)&&!location.pathname.endsWith('/'))location.replace(location.pathname+'/'+location.search+location.hash)</script>
 <script src="core/core.js"></script>
 <script>
-const VER='w2-v4', $=id=>document.getElementById(id), logEl=$('log');
+const VER='w2-v5', $=id=>document.getElementById(id), logEl=$('log');
 const log=s=>{logEl.textContent+=s+' · '};
 function showErr(e){const b=$('err');b.style.display='block';b.textContent=VER+' ERROR: '+(e&&e.stack||e)}
 addEventListener('error',e=>showErr(e.error||e.message));addEventListener('unhandledrejection',e=>showErr(e.reason));
 log('js ok');
 const WORLDS=[['cry-me-a-reverb','Cry Me A Reverb'],['nueva-anormalidad','Nueva Anormalidad'],['ganimedes','Ganimedes']];
 const BOT=/[?&]bot=1/.test(location.search), LOOK=2.0, CH=60;
-let world=WORLDS[0][0], state='menu', run=null, cm=null, man=null, aud=null, clock=null, bot=null, lastF=0,lastT=0, hollowUntil=0, flash=0, widen=1, burst=0, dustFx=0;
+let world=WORLDS[0][0], state='menu', run=null, cm=null, man=null, aud=null, clock=null, bot=null, lastF=0,lastT=0, hollowUntil=0, flash=0, burst=0;
 
 /* ---------- audio director: chunk streaming on AudioContext clock, 3-band hollow mix ---------- */
 class Audio3{
@@ -73,7 +73,10 @@ const cv=$('c'),g=cv.getContext('2d');let W=0,H=0,dpr=1;
 function resize(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;g.setTransform(dpr,0,0,dpr,0,0)}
 addEventListener('resize',resize);addEventListener('orientationchange',resize);resize();
 const keys={};let touchLast=null;
+const lerp=(a,b,u)=>a+(b-a)*u;
 function corr(){return{cx:W/2,rw:Math.min(W*.44,H*.5),hy:H*.30,sy:H*.82}}
+/* close-follow camera: lower horizon, ship nearer the middle of the screen, road a little wider. cam 0..1 comes from the core */
+function corrCam(cam){const c=corr();return{cx:c.cx,rw:c.rw*(1+.45*cam),hy:lerp(c.hy,H*.38,cam),sy:lerp(c.sy,H*.74,cam)}}
 function pressNow(){if(run&&clock)RES.press(run,clock())}
 const setX=e=>{if(run&&!BOT){const c=corr();run.target.x=clamp((e.clientX-c.cx)/c.rw)}};
 cv.addEventListener('pointermove',setX);
@@ -95,7 +98,7 @@ async function begin(){
   $('msg').textContent='Loading…';
   cm=await getJSON(`cuemaps/${world}.json`);man=(await getJSON('audio/manifest.json'))[world];
   run=RES.createRun(cm,$('tier').value,{calibMs:+$('cal').value||0});
-  bot=BOT?RES.makeBot(run,0.9,3):null;hollowUntil=0;widen=1;burst=0;dustFx=0;
+  bot=BOT?RES.makeBot(run,0.9,3):null;hollowUntil=0;burst=0;
   let silent=false;
   try{aud=new Audio3(world,man,man.musicStart);await aud.start();clock=()=>aud.now()}
   catch(e){silent=true;aud=null;$('msg').textContent='Audio unavailable ('+e.message+'): playing silent.';const t0=performance.now()+300;clock=()=>man.musicStart+(performance.now()-t0)/1000}
@@ -114,10 +117,10 @@ function frame(now){
     if(e.type==='miss')flash=Math.max(flash,.5);
     if(e.type==='hollow'){flash=1;if(aud&&aud.ok)aud.hollow(e.until)}
     if(e.type==='land')burst=1;
-    if(e.type==='dust')dustFx=1;
+    if(e.type==='flip')burst=Math.max(burst,.55);
   }
   if(aud&&aud.ok)aud.tick();
-  widen+=((run.flying?1.35:1)-widen)*Math.min(1,dt*(run.flying?3:12));flash=Math.max(0,flash-dt*3);burst=Math.max(0,burst-dt*2.5);dustFx=Math.max(0,dustFx-dt*4);
+  flash=Math.max(0,flash-dt*3);burst=Math.max(0,burst-dt*2.5);
   draw(t);
   if(t>cm.duration+0.5||(t>cm.duration-0.2&&run.phr.every(p=>p.done)))return finish();
   requestAnimationFrame(frame);
@@ -126,34 +129,56 @@ function finish(){
   state='res';document.body.classList.remove('play');if(aud)aud.fade();
   const r=RES.result(run);window.RES_LAST=r;
   $('rt').textContent=r.full?'FULL RESONANCE':'Heard '+r.heard+' / '+r.phrases+' phrases';
-  $('rs').innerHTML=`Energy ${r.energy} (incl. ${r.stats.dust} stardust)<br>Perfect ${r.stats.perfect} · Good ${r.stats.good} · Miss ${r.stats.miss} · Best combo ${r.stats.max}`;
+  $('rs').innerHTML=`Energy ${r.energy}<br>Perfect ${r.stats.perfect} · Good ${r.stats.good} · Miss ${r.stats.miss} · Best combo ${r.stats.max}`;
   $('res').classList.remove('hide');
+}
+
+/* ---------- tiny 3D ship: pitch loop / barrel roll, seen from behind and above ---------- */
+const SV={N:[0,0,1.7],L:[-1.15,0,-1],R:[1.15,0,-1],C:[0,0,-.55],T:[0,.5,-.75],B:[0,-.28,-.7],E:[0,0,-1.05]};
+const SF=[['N','L','T',1],['N','T','R',1],['T','L','C',1],['T','C','R',1],['N','B','L',0],['N','R','B',0],['B','C','L',0],['B','R','C',0]];
+function drawShip(X,Y,S,pitch,roll){
+  const tilt=.5,cp=Math.cos(pitch+tilt),sp=Math.sin(pitch+tilt),cr=Math.cos(roll),sr=Math.sin(roll),D=7,tv={};
+  for(const k in SV){const[x,y,z]=SV[k];const x1=x*cr-y*sr,y1=x*sr+y*cr;tv[k]=[x1,y1*cp+z*sp,-y1*sp+z*cp]}
+  const pr=v=>{const s=D/(v[2]+D);return[X+v[0]*s*S,Y-v[1]*s*S]};
+  const L=[.35,.75,-.55],ll=Math.hypot(...L);
+  const faces=SF.map(f=>{const a=tv[f[0]],b=tv[f[1]],c=tv[f[2]];
+    let n=[(b[1]-a[1])*(c[2]-a[2])-(b[2]-a[2])*(c[1]-a[1]),(b[2]-a[2])*(c[0]-a[0])-(b[0]-a[0])*(c[2]-a[2]),(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])];
+    const m=Math.hypot(...n)||1,ct=[(a[0]+b[0]+c[0])/3,(a[1]+b[1]+c[1])/3,(a[2]+b[2]+c[2])/3];
+    n=n.map(v=>v/m);if(n[0]*ct[0]+n[1]*ct[1]+n[2]*ct[2]<0)n=n.map(v=>-v);   // outward
+    return{f,n,z:ct[2]}}).filter(q=>q.n[2]<.05).sort((p,q)=>q.z-p.z);
+  g.lineJoin='round';
+  for(const q of faces){const br=.3+.7*Math.max(0,(q.n[0]*L[0]+q.n[1]*L[1]+q.n[2]*L[2])/ll),base=q.f[3]?[215,232,255]:[96,170,225];
+    g.fillStyle=`rgb(${base.map(v=>v*br|0).join(',')})`;g.strokeStyle='rgba(124,204,255,.9)';g.lineWidth=Math.max(1,S*.05);
+    g.beginPath();q.f.slice(0,3).forEach((k,i)=>{const p=pr(tv[k]);i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1])});g.closePath();g.fill();g.stroke()}
+  if(tv.E[2]>-.4||true){const e=pr(tv.E);g.save();g.globalCompositeOperation='lighter';g.fillStyle='rgba(124,204,255,.75)';g.beginPath();g.arc(e[0],e[1],S*.26,0,7);g.fill();g.restore()}
 }
 
 /* ---------- gray-box render: a road, cues lie on it ---------- */
 function P(c,d,x){const s=1/(1+d*4);return{x:c.cx+x*c.rw*s,y:c.hy+(c.sy-c.hy)*s,s}}
 function draw(t){
   g.clearRect(0,0,W,H);g.fillStyle='#0b0d12';g.fillRect(0,0,W,H);
-  const c=corr(),k=Math.max(0,Math.min(1,(widen-1)/0.35)),sil=run.flying;
+  const cam=run.cam,c=corrCam(cam);
+  g.save();g.translate(W/2,H/2);g.rotate(-Math.sin(run.roll)*.06*cam);g.translate(-W/2,-H/2);   // slight bank during barrel rolls
   // horizon glow
-  g.fillStyle='#10141d';g.fillRect(0,c.hy-1,W,2);
-  // road (fades during silence, re-forms after)
-  g.globalAlpha=1-0.8*k;
+  g.fillStyle='#10141d';g.fillRect(-20,c.hy-1,W+40,2);
+  // road
   const far=P(c,1.6,0),near={s:(H-c.hy)/(c.sy-c.hy),y:H};
   g.fillStyle='#1b2030';g.beginPath();g.moveTo(c.cx-c.rw*far.s,far.y);g.lineTo(c.cx+c.rw*far.s,far.y);g.lineTo(c.cx+c.rw*near.s,near.y);g.lineTo(c.cx-c.rw*near.s,near.y);g.fill();
   g.strokeStyle='#5a6688';g.lineWidth=2;g.beginPath();g.moveTo(c.cx-c.rw*far.s,far.y);g.lineTo(c.cx-c.rw*near.s,near.y);g.moveTo(c.cx+c.rw*far.s,far.y);g.lineTo(c.cx+c.rw*near.s,near.y);g.stroke();
-  // scrolling dashes + beat lines
+  // beat lines
   const per=60/cm.bpm;g.strokeStyle='#2e3650';g.lineWidth=1;
   for(let i=-1;i<12;i++){const tb=Math.ceil((t-cm.beatOffset)/per+i)*per+cm.beatOffset,d=(tb-t)/LOOK;if(d<-0.12||d>1.6)continue;
     const l=P(c,d,-1),r=P(c,d,1);g.beginPath();g.moveTo(l.x,l.y);g.lineTo(r.x,r.y);g.stroke()}
-  g.globalAlpha=1;
-  if(sil){g.fillStyle='#7cf';g.globalAlpha=.55;for(let i=0;i<50;i++){const f=(i*97.3+t*(.12+(i%7)*.03))%1,a=(i*2.399)%6.283,p=P(c,f*1.4,Math.cos(a)*1.4);g.fillRect(p.x,p.y-Math.abs(Math.sin(a))*40*p.s,2,2)}g.globalAlpha=1;
-    g.font='14px system-ui';g.textAlign='center';g.fillText('FLIGHT',c.cx,c.hy-14)}
+  // speed streaks from the vanishing point while the camera is close
+  if(cam>.01){g.strokeStyle='#7cf';g.lineWidth=1.5;
+    for(let i=0;i<36;i++){const a=(i*2.399)%6.283,f=((i*.173)+t*1.6)%1,r0=H*.05+f*f*W*.7,r1=r0+(20+f*160)*cam;
+      g.globalAlpha=cam*.35*f;g.beginPath();g.moveTo(c.cx+Math.cos(a)*r0,c.hy+Math.sin(a)*r0*.55);g.lineTo(c.cx+Math.cos(a)*r1,c.hy+Math.sin(a)*r1*.55);g.stroke()}
+    g.globalAlpha=1}
   // cues lying on the road
   const cues=run.cues;
   for(let i=Math.max(0,run.next-8);i<cues.length;i++){
     const q=cues[i],d=(q.t-t)/LOOK;if(d>1.6)break;if(d<-0.2)continue;
-    g.globalAlpha=Math.max(0,d<0?1+d*5:1)*(1-0.8*k);
+    g.globalAlpha=Math.max(0,d<0?1+d*5:1);
     const col=q.state==='perfect'?'#8f8':q.state==='good'?'#fd6':q.state==='miss'?'#f55':'#e6e9f2';
     g.strokeStyle=col;g.fillStyle=col;g.lineWidth=Math.max(1,3.5*P(c,Math.max(d,0),0).s);
     if(q.type==='ring'){const p=P(c,Math.max(d,0)*1,q.x),rx=run.cfg.span*c.rw*p.s;g.beginPath();g.ellipse(p.x,p.y,rx,rx*0.35,0,0,7);g.stroke();
@@ -161,21 +186,17 @@ function draw(t){
     else{const l=P(c,Math.max(d,0),-1),r=P(c,Math.max(d,0),1);g.beginPath();g.moveTo(l.x,l.y);g.lineTo(r.x,r.y);g.stroke()}
   }
   g.globalAlpha=1;
-  // stardust (only meaningful during flights)
-  for(let i=Math.max(0,run.di-3);i<run.dust.length;i++){const m=run.dust[i],d=(m.t-t)/LOOK;if(d>1.6)break;if(d<-0.15)continue;
-    const p=P(c,Math.max(d,0),m.x),lift=40*p.s*(0.4+0.6*Math.min(1,Math.max(0,1-d)));g.globalAlpha=m.got?Math.max(0,1+d*6)*.6:(d<0?Math.max(0,1+d*6):1);g.fillStyle=m.got?'#8f8':'#7cf';
-    g.beginPath();g.moveTo(p.x,p.y-lift-7*p.s-2);g.lineTo(p.x+5*p.s+2,p.y-lift);g.lineTo(p.x,p.y-lift+7*p.s+2);g.lineTo(p.x-5*p.s-2,p.y-lift);g.fill()}
-  g.globalAlpha=1;
-  // landing burst on the downbeat
-  if(burst>0){const b=P(c,0,run.ship.x);g.strokeStyle=`rgba(255,255,255,${burst})`;g.lineWidth=3;g.beginPath();g.ellipse(b.x,b.y+6,30+(1-burst)*120,(30+(1-burst)*120)*.3,0,0,7);g.stroke()}
-  // ship on the road (lifts and rolls during flights)
-  const sh=P(c,0,run.ship.x),ly=sh.y-run.lift*H*.2,wx=Math.cos(run.roll);
-  g.fillStyle=`rgba(255,255,255,${.14*(1-run.lift*.6)})`;g.beginPath();g.ellipse(sh.x,sh.y+10,18*(1-run.lift*.3),5,0,0,7);g.fill();
-  g.fillStyle='#fff';g.beginPath();g.moveTo(sh.x,ly-26);g.lineTo(sh.x+16*wx,ly+6);g.lineTo(sh.x,ly-2);g.lineTo(sh.x-16*wx,ly+6);g.closePath();g.fill();
+  // flip / landing burst on the road
+  if(burst>0){const b=P(c,0,run.ship.x),sc=1+cam*1.6;g.strokeStyle=`rgba(255,255,255,${burst})`;g.lineWidth=3;g.beginPath();g.ellipse(b.x,b.y+6,(30+(1-burst)*120)*sc,(30+(1-burst)*120)*sc*.3,0,0,7);g.stroke()}
+  // ship: bigger and nearer while the camera is close, hops off the road during each flip
+  const sh=P(c,0,run.ship.x),S=14*(1+2.4*cam),hop=run.lift*H*(.10+.08*cam);
+  g.fillStyle=`rgba(255,255,255,${.14*(1-run.lift*.5)})`;g.beginPath();g.ellipse(sh.x,sh.y+6,18*S/14*(1-run.lift*.35),5*S/14,0,0,7);g.fill();
+  drawShip(sh.x,sh.y-S*.7-hop,S,run.pitch,run.roll);
+  g.restore();
   // HUD
   g.fillStyle='#d7dbe6';g.textAlign='left';g.font='13px system-ui';
   const lead=cm.startMark-t;g.fillText(`${cm.title}  ${t<cm.startMark?'lead-in '+lead.toFixed(1)+'s':fmt(t-cm.startMark)}`,12,34);
-  g.fillText(`combo ${run.stats.combo}  miss ${run.stats.miss}  dust ${run.stats.dust}`,12,52);
+  g.fillText(`combo ${run.stats.combo}  miss ${run.stats.miss}`,12,52);
   if(flash>0){g.fillStyle=`rgba(255,60,60,${flash*.25})`;g.fillRect(0,0,W,H)}
   vinyl(t);
 }
