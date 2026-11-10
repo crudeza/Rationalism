@@ -2,37 +2,48 @@
 (function (root) {
   const BASE_SPEED = 1.6; // normalised corridor units/s, same as validate_cuemap.py
   const HEAR_RATIO = 0.7; // [TUNE] share of a phrase's cues that must be hit for it to stay full
+  const CAM_EDGE = 0.45;  // [TUNE] seconds to push the camera in / pull it back
+  const FLIP_LEAD = 0.3, FLIP_TAIL = 0.35, FLIP_BEATS = 4; // [TUNE] one flip per 4 beats, never touching the landing
+  const OUTRO_MAX = 8;    // [TUNE] seconds of flips in the final silence
   const TIERS = { easy: { easy: 1 }, normal: { easy: 1, normal: 1 }, elite: { easy: 1, normal: 1, elite: 1 } };
+  const ss = u => u * u * (3 - 2 * u);
 
-  /* Silence flights: each silence (merged if landing would overlap the next) becomes a flight that
-     ends exactly on the next downbeat (bar line). The final silence of the track is an outro glide (land = null). */
+  /* Silence specials: each silence (merged if the landing would overlap the next) becomes one flip sequence that
+     ends exactly on the next downbeat (bar line). The final silence of the track is an outro (land = null). */
   function buildFlights(cm) {
-    const bar = cm.beatsPerBar * 60 / cm.bpm, ss = cm.silences.slice().sort((a, b) => a.t0 - b.t0), out = [];
+    const bar = cm.beatsPerBar * 60 / cm.bpm, sl = cm.silences.slice().sort((a, b) => a.t0 - b.t0), out = [];
     const nextDown = t => cm.startMark + Math.ceil((t - cm.startMark) / bar - 0.02) * bar;
-    for (let i = 0; i < ss.length; i++) {
-      let t0 = ss[i].t0, t1 = ss[i].t1;
+    for (let i = 0; i < sl.length; i++) {
+      let t0 = sl[i].t0, t1 = sl[i].t1;
       if (t1 >= cm.duration - 1) { out.push({ t0, land: null, end: cm.duration }); continue; }
       let land = nextDown(t1);
-      while (i + 1 < ss.length && ss[i + 1].t0 < land) { i++; t1 = ss[i].t1; if (t1 >= cm.duration - 1) { land = null; break; } land = nextDown(t1); }
+      while (i + 1 < sl.length && sl[i + 1].t0 < land) { i++; t1 = sl[i].t1; if (t1 >= cm.duration - 1) { land = null; break; } land = nextDown(t1); }
       if (land === null) { out.push({ t0, land: null, end: cm.duration }); continue; }
       out.push({ t0, land, end: land });
     }
     return out;
   }
 
+  /* Flip plan for one special: flips fill [s0,s1], n whole flips of equal length (about FLIP_BEATS beats each). */
+  function flipPlan(cm, F) {
+    const per = 60 / cm.bpm, s0 = F.t0 + FLIP_LEAD;
+    const s1 = F.land === null ? Math.min(F.end - 0.5, F.t0 + OUTRO_MAX) : F.land - FLIP_TAIL;
+    const w = Math.max(0.5, s1 - s0), n = Math.max(1, Math.round(w / (per * FLIP_BEATS)));
+    return { s0, s1: s0 + w, n, d: w / n };
+  }
+
   function createRun(cm, tier, opt) {
     opt = opt || {};
     const flights = buildFlights(cm);
+    flights.forEach(f => { f.plan = flipPlan(cm, f); });
     const inFlight = t => flights.some(f => t >= f.t0 && t < f.end);
     const cues = cm.cues.filter(c => TIERS[tier][c.tier || 'easy'] && !inFlight(c.t)).map((c, i) => Object.assign({ id: i, state: 'pending' }, c));
     const phr = cm.phrases.map(p => ({ id: p.id, t0: p.t0, t1: p.t1, total: 0, hit: 0, missed: 0, allowed: 0, hollow: false, done: false }));
     cues.forEach(c => { phr[c.phrase].total++; });
     phr.forEach(p => { p.allowed = Math.floor(p.total * (1 - HEAR_RATIO)); }); // may miss up to 30% of a phrase and still hear it
-    // stardust: one mote per beat inside each flight (not on the landing beat), seeded smooth path
-    const dust = []; let sd = 12345, rx = 0; const per = 60 / cm.bpm;
-    flights.forEach(f => { const end = (f.land === null ? Math.min(f.end, f.t0 + 8) : f.land - 0.4); for (let t = f.t0 + 0.5; t < end; t += per) { sd = (sd * 16807) % 2147483647; rx = Math.max(-0.8, Math.min(0.8, rx + ((sd / 2147483647) - 0.5) * 1.1)); dust.push({ t, x: +rx.toFixed(3), got: false }); } });
     return {
-      cm, tier, cues, phr, flights, dust, fi: 0, di: 0, flight: null, flying: false, lift: 0, roll: 0, landings: [],
+      cm, tier, cues, phr, flights, fi: 0, flight: null, flying: false,
+      cam: 0, lift: 0, pitch: 0, roll: 0, flipI: -1, flipKind: 'pitch', flipCount: 0, landings: [],
       ship: { x: 0, y: 0 }, target: { x: 0, y: 0 },
       presses: [], events: [], next: 0, silence: false,
       stats: { perfect: 0, good: 0, miss: 0, combo: 0, max: 0, dust: 0 },
@@ -54,35 +65,43 @@
 
   function inSilence(cm, t) { return cm.silences.some(s => t >= s.t0 && t < s.t1); }
 
+  function resetPose(run) { run.cam = 0; run.lift = 0; run.pitch = 0; run.roll = 0; run.flipI = -1; }
+
+  /* Pose of the ship and camera during a special. cam: 0 = normal chase view, 1 = close follow. */
+  function poseFlight(run, F, t) {
+    const a = Math.min(1, (t - F.t0) / CAM_EDGE), b = F.land === null ? 1 : Math.min(1, (F.land - t) / CAM_EDGE);
+    run.cam = ss(Math.max(0, Math.min(a, b)));
+    const P = F.plan; run.lift = 0; run.pitch = 0; run.roll = 0;
+    if (t >= P.s0 && t < P.s1) {
+      const u = (t - P.s0) / P.d, i = Math.min(P.n - 1, Math.floor(u)), fu = u - i, e = ss(fu), ang = Math.PI * 2 * e;
+      const kind = i % 2 === 0 ? 'pitch' : 'roll';
+      if (i !== run.flipI) { run.flipI = i; run.flipKind = kind; run.flipCount++; run.events.push({ type: 'flip', i, n: P.n, kind, t }); }
+      if (kind === 'pitch') run.pitch = ang; else run.roll = ang * (i % 4 === 1 ? 1 : -1);
+      run.lift = Math.sin(Math.PI * fu);
+    }
+  }
+
   /* t = track time in seconds (same timeline as cue.t). Call every frame with a monotonic t. */
   function step(run, t, dt) {
-    // road mode: left/right only, instant. During a silence flight the ship leaves the road and lands exactly on the next downbeat.
+    // Road mode: left/right only, instant. Silences are flips: the ship stays under the player's control, does a
+    // special flip with the camera close behind it, and the road game resumes exactly on the next downbeat.
     const tx = Math.max(-1, Math.min(1, run.target.x));
-    let f = run.flights[run.fi];
-    if (f && !run.flight && t >= f.t0) { run.flight = { f, x0: run.ship.x }; run.flying = true; run.events.push({ type: 'takeoff', t }); }
+    const f = run.flights[run.fi];
+    if (f && !run.flight && t >= f.t0) { run.flight = { f }; run.flying = true; run.events.push({ type: 'takeoff', t }); }
+    run.ship.x = tx; run.ship.y = 0;
     if (run.flight) {
       const F = run.flight.f;
       if (F.land !== null && t >= F.land) { // landing: first frame at or after the downbeat
-        run.ship.x = tx; run.lift = 0; run.roll = 0; run.flight = null; run.flying = false; run.fi++;
+        resetPose(run); run.flight = null; run.flying = false; run.fi++;
         run.landings.push(t - F.land); run.events.push({ type: 'land', t, land: F.land, err: t - F.land });
-      } else if (F.land === null) { run.ship.x = tx; run.lift = Math.min(1, (t - F.t0) / 1.5) * 0.7; run.roll = 0; }
-      else {
-        const u = (t - F.t0) / (F.land - F.t0), e = u * u * (3 - 2 * u); // smoothstep from take-off x to wherever the player points
-        run.ship.x = run.flight.x0 + (tx - run.flight.x0) * e; run.lift = Math.sin(Math.PI * u); run.roll = u * Math.PI * 4;
-      }
-    } else { run.ship.x = tx; run.lift = 0; run.roll = 0; }
-    run.ship.y = 0;
-    for (; run.di < run.dust.length && run.dust[run.di].t <= t; run.di++) { // stardust collected if the ship is under it
-      const m = run.dust[run.di];
-      if (Math.abs(run.ship.x - m.x) < 0.2) { m.got = true; run.stats.dust++; run.events.push({ type: 'dust', t: m.t }); }
-    }
+      } else poseFlight(run, F, t);
+    } else resetPose(run);
     run.silence = inSilence(run.cm, t);
     const cf = run.cfg;
     for (; run.next < run.cues.length; run.next++) {
       const c = run.cues[run.next], tj = c.t + cf.calib;
       if (c.type === 'pulse') {
-        // look for a press within the good window
-        let bi = -1, bd = 9;
+        let bi = -1, bd = 9; // look for a press within the good window
         run.presses.forEach((p, i) => { const e = Math.abs(p - tj); if (e <= cf.good && e < bd) { bd = e; bi = i; } });
         if (bi >= 0) { run.presses.splice(bi, 1); grade(run, c, bd <= cf.perfect ? 'perfect' : 'good'); continue; }
         if (t > tj + cf.good) { grade(run, c, 'miss'); continue; }
@@ -117,7 +136,6 @@
         if (q.type === 'pulse' && Math.abs(q.t + run.cfg.calib - t) < 1 / 30) { if (rnd() <= skill) press(run, q.t + run.cfg.calib); }
         if (q.t - t > 1.5) break;
       }
-      if (run.flying) { const m = run.dust.slice(run.di).find(d => d.t >= t); if (m) run.target.x = m.x; return; }
       if (c) { run.target.x = c.x; run.target.y = c.y; }
     };
   }
@@ -125,11 +143,11 @@
   function simulate(cm, tier, skill, seed, dtFn) {
     const run = createRun(cm, tier), bot = makeBot(run, skill, seed); let dt = 1 / 60;
     let t = cm.startMark - 2;
-    for (; t < cm.duration; t += dt) { if (dtFn) dt = dtFn(); bot(t); step(run, t, dt); if (isNaN(run.ship.x) || isNaN(run.ship.y)) throw new Error('NaN ship'); }
+    for (; t < cm.duration; t += dt) { if (dtFn) dt = dtFn(); bot(t); step(run, t, dt); if (isNaN(run.ship.x) || isNaN(run.pitch) || isNaN(run.roll) || isNaN(run.cam)) throw new Error('NaN'); }
     step(run, t + 1, dt);
-    const r = result(run); r.landings = run.landings; r.flights = run.flights.length; r.outro = run.flights.filter(f => f.land === null).length; r.maxDt = 0; return r;
+    const r = result(run); r.landings = run.landings; r.flights = run.flights.length; r.outro = run.flights.filter(f => f.land === null).length; r.flips = run.flipCount; r.maxDt = 0; return r;
   }
 
-  root.RES = { buildFlights, createRun, step, press, result, makeBot, simulate, inSilence, BASE_SPEED };
+  root.RES = { buildFlights, flipPlan, createRun, step, press, result, makeBot, simulate, inSilence, BASE_SPEED };
   if (typeof module !== 'undefined') module.exports = root.RES;
 })(typeof window !== 'undefined' ? window : globalThis);
