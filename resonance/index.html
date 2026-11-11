@@ -18,7 +18,7 @@ body.play #pulse{display:block}
 #log{font:11px monospace;opacity:.6;max-width:90vw}
 small{opacity:.7}
 </style></head><body>
-<div id="ver">RESONANCE gray-box w2-v7</div><div id="err"></div>
+<div id="ver">RESONANCE gray-box w2-v8</div><div id="err"></div>
 <canvas id="c"></canvas>
 <button id="pulse">PULSE</button>
 <div class="ov" id="menu">
@@ -34,7 +34,7 @@ small{opacity:.7}
 <script>if(!/\/[^\/]*\.[a-z]+$/i.test(location.pathname)&&!location.pathname.endsWith('/'))location.replace(location.pathname+'/'+location.search+location.hash)</script>
 <script src="core/core.js"></script>
 <script>
-const VER='w2-v7', $=id=>document.getElementById(id), logEl=$('log');
+const VER='w2-v8', $=id=>document.getElementById(id), logEl=$('log');
 const log=s=>{logEl.textContent+=s+' · '};
 function showErr(e){const b=$('err');b.style.display='block';b.textContent=VER+' ERROR: '+(e&&e.stack||e)}
 addEventListener('error',e=>showErr(e.error||e.message));addEventListener('unhandledrejection',e=>showErr(e.reason));
@@ -116,6 +116,8 @@ async function begin(){
 
 /* ---------- stimulus ladder: visual and audio follow one level 0..4 ---------- */
 const HITS_UP=9, GRACE_S=6, FADE_S=1.5;   // [TUNE]
+const OUTRO_S=4;   // last seconds of the track: the ship speeds up and fades into the horizon [TUNE]
+function outroP(t){if(!cm)return 0;const a=cm.duration-OUTRO_S;return t<=a?0:Math.min(1,(t-a)/OUTRO_S)}
 function updateLadder(t){
   const h=(run.stats.perfect||0)+(run.stats.good||0), m=run.stats.miss||0;
   if(h>lastHits){hitRun+=h-lastHits;lastHits=h}
@@ -188,7 +190,7 @@ function S(d){return 1-(1-FAR)*Math.min(Math.max(d,0),DMAX)/DMAX}
 function P(c,d,x){const dd=Math.min(Math.max(d,0),DMAX);const s=S(dd),y=c.sy-(c.sy-c.hy)*(dd/DMAX);return{x:c.cx+x*c.rw*s,y,s}}
 function draw(t){
   g.clearRect(0,0,W,H);g.fillStyle='#0b0d12';g.fillRect(0,0,W,H);
-  const cam=run.cam,c=corrCam(cam);
+  const cam=run.cam,c=corrCam(cam),op=outroP(t);   // op: 0..1 over the last OUTRO_S seconds
   g.save();g.translate(W/2,H/2);g.rotate(-Math.sin(run.roll)*.06*cam);g.translate(-W/2,-H/2);   // slight bank during barrel rolls
   drawSides(t,c);
   // road: from the lane top (far) to the ship line (near)
@@ -200,9 +202,10 @@ function draw(t){
   for(let i=-1;i<12;i++){const tb=Math.ceil((t-cm.beatOffset)/per+i)*per+cm.beatOffset,d=(tb-t)/LOOK;if(d<-0.12||d>1.6)continue;
     const l=P(c,d,-1),r=P(c,d,1);g.beginPath();g.moveTo(l.x,l.y);g.lineTo(r.x,r.y);g.stroke()}
   // speed streaks from the vanishing point while the camera is close
-  if(cam>.01){g.strokeStyle='#7cf';g.lineWidth=1.5;
-    for(let i=0;i<36;i++){const a=(i*2.399)%6.283,f=((i*.173)+t*1.6)%1,r0=H*.05+f*f*W*.7,r1=r0+(20+f*160)*cam;
-      g.globalAlpha=cam*.35*f;g.beginPath();g.moveTo(c.cx+Math.cos(a)*r0,c.hy+Math.sin(a)*r0*.55);g.lineTo(c.cx+Math.cos(a)*r1,c.hy+Math.sin(a)*r1*.55);g.stroke()}
+  const sk=Math.max(cam,op);
+  if(sk>.01){g.strokeStyle='#7cf';g.lineWidth=1.5;
+    for(let i=0;i<36;i++){const a=(i*2.399)%6.283,f=((i*.173)+t*1.6)%1,r0=H*.05+f*f*W*.7,r1=r0+(20+f*160)*sk;
+      g.globalAlpha=sk*.35*f;g.beginPath();g.moveTo(c.cx+Math.cos(a)*r0,c.hy+Math.sin(a)*r0*.55);g.lineTo(c.cx+Math.cos(a)*r1,c.hy+Math.sin(a)*r1*.55);g.stroke()}
     g.globalAlpha=1}
   // cues lying on the road
   const cues=run.cues;
@@ -219,9 +222,11 @@ function draw(t){
   // flip / landing burst on the road
   if(burst>0){const b=P(c,0,run.ship.x),sc2=1+cam*1.6;g.strokeStyle=`rgba(255,255,255,${burst})`;g.lineWidth=3;g.beginPath();g.ellipse(b.x,b.y+6,(30+(1-burst)*120)*sc2,(30+(1-burst)*120)*sc2*.3,0,0,7);g.stroke()}
   // ship: bigger and nearer while the camera is close, hops off the road during each flip
-  const sh=P(c,0,run.ship.x),SZ=14*(1+2.4*cam),hop=run.lift*H*(.10+.08*cam);
-  g.fillStyle=`rgba(255,255,255,${.14*(1-run.lift*.5)})`;g.beginPath();g.ellipse(sh.x,sh.y+6,18*SZ/14*(1-run.lift*.35),5*SZ/14,0,0,7);g.fill();
-  drawShip(sh.x,sh.y-SZ*.7-hop,SZ,run.pitch,run.roll);
+  const ease=op*op*(3-2*op);   // 0..1, smooth
+  const sh0=P(c,0,run.ship.x), sh={x:sh0.x,y:lerp(sh0.y,c.hy+6,ease)};
+  const SZ=14*(1+2.4*cam)*(1-.6*ease), hop=run.lift*H*(.10+.08*cam)*(1-op);
+  g.fillStyle=`rgba(255,255,255,${(.14*(1-run.lift*.5))*(1-op)})`;g.beginPath();g.ellipse(sh.x,sh.y+6,18*SZ/14*(1-run.lift*.35),5*SZ/14,0,0,7);g.fill();
+  g.save();g.globalAlpha=1-ease;drawShip(sh.x,sh.y-SZ*.7-hop,SZ,run.pitch,run.roll);g.restore();
   g.restore();
 
   g.fillStyle='#d7dbe6';g.textAlign='left';g.font='13px system-ui';

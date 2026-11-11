@@ -1,35 +1,56 @@
 # 00_STATE — RESONANCE
 
-Last updated: 2026-11-09 (musical cue layer + flip specials)
-Version: w2-v5 (Canvas 2D gray-box)
-Phase: P2 built; owner playtested v1/v2. Game Sheet APPROVED; schemas v1 FROZEN (no schema change in v5).
+Last updated: 2026-11-11 (carril vertical, escalera de estímulo, final de pista)
+Version: w2-v8 (Canvas 2D gray-box)
+Phase: P2 gray-box. Game Sheet APPROVED; schemas v1 FROZEN (no schema change in w2-v8).
 
 ## Owner changes in force
 - D-14 (2026-11-08): road, left/right only, instant movement; cue y ignored.
 - D-15 (2026-11-09): hollow only when 70% of a phrase's cues can no longer be hit; silences land on the next downbeat within one frame.
-- D-16 (2026-11-09): silences are a flip special with a close-follow camera, then back to normal. Replaces the leave-the-road flight and the stardust.
+- D-16 (2026-11-09): silences are a flip special with a close-follow camera, then back to normal.
+- D-17 (2026-11-11): the action uses the full height of the screen, on phone too. The lane is a central column; the sides are for parallax, cinematics and effects.
+- D-18 (2026-11-11): stimulus ladder 0 to 4. 9 hits in a row go up one level; a miss goes down one; the first 6 s of a run are a grace period (misses do not drop level or end the run); a miss at level 0 fades to black and ends the run. Visual and audio follow the same level.
+- D-19 (2026-11-11): end of track. In the last 4 s the ship speeds up, shrinks and fades into the horizon.
+- D-20 (2026-11-10): cinematics are hybrid. Big camera or ship moments pause the cues and only run in silences or phrase boundaries, aligned to a downbeat. Atmosphere and parallax run in parallel and never move the camera in a dense (elite) window.
+- P-01 amended (by D-18): total silence can happen only at level 0, as a consequence of the ladder. Misses do not cause silence otherwise.
 
-## Delivered in w2-v5
-- core.js: each silence (merged when the landing would overlap the next) is a flip sequence. Flips are pitch loop, then barrel roll, alternating, one per about 4 beats, never touching the last 0.35 s. Camera pushes in over 0.45 s and pulls back by the landing. Core exposes run.cam, run.pitch, run.roll, run.lift and a flip event. Landing logic unchanged. Final silence = outro with up to 8 s of flips, camera stays close.
-- index.html: close-follow camera (lower horizon, nearer and larger ship, speed streaks, slight bank on rolls), small 3D low-poly ship, ring burst on each flip and on landing. Stardust removed (Energy is now heard% only).
-- scripts/relayout_cues.py (P-10, PROPOSED): rings follow one smooth path with an anchor per bar, 4-bar motifs (sweep, answer, zigzag, resolve), lane width follows phrase density, small beat bounce. Only ring x changes. All 3 cue maps regenerated.
+## Delivered in w2-v8
+- index.html (file index_outro_w2-v8.html; NOT yet in the repo, see Repo status):
+  - Lane: central column, full height (top about 7% of H, ship line about 86% of H). Desktop lane 40% of W; portrait lane 72% of W.
+  - Perspective: y is linear in time-to-arrival over the lane height (P), width shrinks toward the top with FAR 0.45. Equal time gaps give equal screen gaps.
+  - Sides: parallax columns (drawSides), more with a higher level. Placeholder for the cinematic layer.
+  - Ladder: updateLadder reads run.stats (perfect, good, miss); no change to core.js.
+  - Audio: Audio3.setLevel with level gains (kL, kM, kH) in series with the D-15 hollow gains. Level 1 lows at 45%, level 2 lows, level 3 adds mids, level 4 adds highs, level 0 silence.
+  - Fail: fade to black over FADE_S, then results.
+  - Outro: last OUTRO_S seconds, ship eases to the horizon and fades; speed streaks ramp up.
+- Fisheye pass (WebGL) tried in w2-v6 and removed at the owner's request. Not in w2-v8.
 
-## Tested (headless)
-- 3 maps x 3 tiers: perfect bot hears 100%; noisy bot at 30-144 fps: landing error at most 22 ms (under one frame at 30 fps), no NaN, flips counted (6-8 per song).
-- Reachability: worst speed in the new maps 0.56 u/s (limit used 0.6, old random walk allowed 0.96); validate_cuemap.py PASS on all 3.
-- Chromium desktop 1280x720 and portrait 430x932: no console errors; screenshots of camera push-in, pitch loop, barrel roll and return look right. Audio-missing path runs silent.
-- NOT tested: real audio by ear (the layout was not checked against the sound), real phone/touch, whether the new path feels musical to a human, flip timing against the music in a real run.
+## Tested (Node with stubbed DOM, NOT in a browser)
+- Syntax of the full inline script: OK.
+- draw() runs without errors on normal frames and at outro instants.
+- Ladder: 7 transition cases pass (9 hits up, miss down, streak reset, grace, level 0 fail).
+- Geometry: lane top and ship line at the expected pixels; equal time gaps give 88.9 px screen gaps.
+- NOT tested: browser rendering and visuals, phone and touch, the audio path with real audio (setLevel), the fade and results screens, core.js (RES is stubbed), the outro in a real run.
 
-## Findings / to tune
-- Path is structural (phrases and density), not melodic. A later step could blend in spectral centroid per bar from the WAV (needs the masters in the chat).
-- Constants [TUNE]: dmax 0.5 per bar and BOUNCE 0.02 in relayout_cues.py; FLIP_BEATS 4, CAM_EDGE 0.45, FLIP_LEAD 0.3, FLIP_TAIL 0.35, OUTRO_MAX 8 in core.js.
-- Ship can sit at the road edge during a flip in portrait (it follows the finger).
-- Perspective still squeezes most of the 2 s lookahead near the horizon (not touched).
-- Serve with a trailing slash (/resonance/). Version tag in the corner.
+## Repo status
+- 2026-11-11: writing to crudeza/Rationalism failed with 403 (Resource not accessible by integration). Reads work. Nothing committed since w2-v5.
+- Pending commits: resonance/index.html (= index_outro_w2-v8.html), resonance/00_STATE.md (this file), resonance/03_DECISIONS.md.
+- resonance/README.md and core/test_bot.js still old. .gitignore to confirm.
+
+## Findings / to tune [TUNE]
+- DMAX 1.6, FAR 0.45 (lane top narrowing).
+- HITS_UP 9, GRACE_S 6, FADE_S 1.5, OUTRO_S 4.
+- Start level 2.
+- Cinematic sides are a placeholder (columns). Real cinematics follow D-20.
+- Fisheye constants (k, ca) no longer used.
 
 ## Open
-- Repo choice (new RESONANCE repo vs Rationalism/resonance); note the repo currently holds the game under resonance/resonance/. Links and prize link parked.
-- Q-03 final 3 songs confirmed by owner in W1 (Cry Me A Reverb, Nueva Anormalidad, Ganimedes); update 03_DECISIONS when convenient.
+- Owner checks w2-v8 on desktop and phone (portrait and landscape): does the lane read well, does the ladder feel right, does the outro land.
+- Cinematic layer (D-20): first three instances (camera sweep in a silence, ring wave in parallel during a drop, route tilt on a phrase boundary).
+- Repo write access, or manual commit of the three files.
+- Q-03 final 3 songs confirmed by owner in W1 (Cry Me A Reverb, Nueva Anormalidad, Ganimedes); 03_DECISIONS updated.
+- Q-04 links and prize link: parked.
+- Ship designs: the owner will bring them later (Blender, W3/W4).
 
 ## Next step
-Owner plays w2-v5 and says: does the path feel like the music, are flips well timed and fun? Then: perspective fix, then P5/P6 tracks.
+Owner plays w2-v8 on desktop and on a phone, and reports: lane, ladder, outro. Then the cinematic layer (D-20), then P5/P6 tracks.
