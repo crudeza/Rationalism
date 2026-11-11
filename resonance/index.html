@@ -18,7 +18,7 @@ body.play #pulse{display:block}
 #log{font:11px monospace;opacity:.6;max-width:90vw}
 small{opacity:.7}
 </style></head><body>
-<div id="ver">RESONANCE gray-box w2-v6</div><div id="err"></div>
+<div id="ver">RESONANCE gray-box w2-v7</div><div id="err"></div>
 <canvas id="c"></canvas>
 <button id="pulse">PULSE</button>
 <div class="ov" id="menu">
@@ -34,13 +34,14 @@ small{opacity:.7}
 <script>if(!/\/[^\/]*\.[a-z]+$/i.test(location.pathname)&&!location.pathname.endsWith('/'))location.replace(location.pathname+'/'+location.search+location.hash)</script>
 <script src="core/core.js"></script>
 <script>
-const VER='w2-v6', $=id=>document.getElementById(id), logEl=$('log');
+const VER='w2-v7', $=id=>document.getElementById(id), logEl=$('log');
 const log=s=>{logEl.textContent+=s+' · '};
 function showErr(e){const b=$('err');b.style.display='block';b.textContent=VER+' ERROR: '+(e&&e.stack||e)}
 addEventListener('error',e=>showErr(e.error||e.message));addEventListener('unhandledrejection',e=>showErr(e.reason));
 log('js ok');
 const WORLDS=[['cry-me-a-reverb','Cry Me A Reverb'],['nueva-anormalidad','Nueva Anormalidad'],['ganimedes','Ganimedes']];
 const BOT=/[?&]bot=1/.test(location.search), LOOK=2.0, CH=60;
+let lvl=2,hitRun=0,lastHits=0,lastMiss=0,failT=null,graceUntil=0,lastLvl=-1;   // stimulus ladder 0..4; miss = -1 step; 9 hits = +1
 let world=WORLDS[0][0], state='menu', run=null, cm=null, man=null, aud=null, clock=null, bot=null, lastF=0,lastT=0, hollowUntil=0, flash=0, burst=0;
 
 /* ---------- audio director: chunk streaming on AudioContext clock, 3-band hollow mix ---------- */
@@ -52,7 +53,10 @@ class Audio3{
     bus.connect(mk('lowpass',200)).connect(this.gL);
     bus.connect(mk('highpass',200)).connect(mk('lowpass',3000)).connect(this.gM);
     bus.connect(mk('highpass',3000)).connect(this.gH);
-    [this.gL,this.gM,this.gH].forEach(g=>g.connect(this.master));this.master.connect(x.destination);this.bus=bus}
+    this.kL=x.createGain();this.kM=x.createGain();this.kH=x.createGain();this.gL.connect(this.kL);this.gM.connect(this.kM);this.gH.connect(this.kH);
+    [this.kL,this.kM,this.kH].forEach(k=>k.connect(this.master));this.master.connect(x.destination);this.bus=bus}
+  setLevel(l){const t=this.ctx.currentTime;const L=l>=2?1:l>=1?.45:0,M=l>=3?1:0,H=l>=4?1:0;
+    [[this.kL,L],[this.kM,M],[this.kH,H]].forEach(([n,v])=>n.gain.setTargetAtTime(v,t,0.25))}
   async load(i){if(i>=this.m.n||this.buf[i])return this.buf[i];
     this.buf[i]=fetch(`audio/${this.w}_${i}.mp3`).then(r=>{if(!r.ok)throw new Error('audio '+r.status);return r.arrayBuffer()}).then(a=>this.ctx.decodeAudioData(a));return this.buf[i]}
   async start(){await this.ctx.resume();await Promise.all([this.load(0),this.load(1)]);this.T0=this.ctx.currentTime+0.3;this.tick()}
@@ -77,9 +81,9 @@ function resize(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight
 addEventListener('resize',resize);addEventListener('orientationchange',resize);resize();
 const keys={};let touchLast=null;
 const lerp=(a,b,u)=>a+(b-a)*u;
-function corr(){return{cx:W/2,rw:Math.min(W*.44,H*.5),hy:H*.30,sy:H*.82}}
+function corr(){const portrait=W<H;return{cx:W/2,rw:portrait?W*.36:Math.min(W*.2,H*.4),hy:H*.07,sy:H*.86}}
 /* close-follow camera: lower horizon, ship nearer the middle of the screen, road a little wider. cam 0..1 comes from the core */
-function corrCam(cam){const c=corr();return{cx:c.cx,rw:c.rw*(1+.45*cam),hy:lerp(c.hy,H*.38,cam),sy:lerp(c.sy,H*.74,cam)}}
+function corrCam(cam){const c=corr();return{cx:c.cx,rw:c.rw*(1+.25*cam),hy:lerp(c.hy,H*.12,cam),sy:lerp(c.sy,H*.9,cam)}}
 function pressNow(){if(run&&clock)RES.press(run,clock())}
 const setX=e=>{if(run&&!BOT){const c=corr();run.target.x=clamp((e.clientX-c.cx)/c.rw)}};
 cv.addEventListener('pointermove',setX);
@@ -105,9 +109,28 @@ async function begin(){
   let silent=false;
   try{aud=new Audio3(world,man,man.musicStart);await aud.start();clock=()=>aud.now()}
   catch(e){silent=true;aud=null;$('msg').textContent='Audio unavailable ('+e.message+'): playing silent.';const t0=performance.now()+300;clock=()=>man.musicStart+(performance.now()-t0)/1000}
+  lvl=2;hitRun=0;lastHits=0;lastMiss=0;failT=null;lastLvl=-1;graceUntil=clock()+GRACE_S;
   $('menu').classList.add('hide');document.body.classList.add('play');state='play';lastT=clock();$('msg').textContent=silent?$('msg').textContent:'';
   requestAnimationFrame(frame);
 }
+
+/* ---------- stimulus ladder: visual and audio follow one level 0..4 ---------- */
+const HITS_UP=9, GRACE_S=6, FADE_S=1.5;   // [TUNE]
+function updateLadder(t){
+  const h=(run.stats.perfect||0)+(run.stats.good||0), m=run.stats.miss||0;
+  if(h>lastHits){hitRun+=h-lastHits;lastHits=h}
+  if(m>lastMiss){lastMiss=m;hitRun=0;
+    if(t>=graceUntil){ if(lvl>0)lvl--; else if(failT===null)failT=t }}
+  if(hitRun>=HITS_UP){hitRun=0;lvl=Math.min(4,lvl+1)}
+  if(aud&&aud.ok&&lvl!==lastLvl){aud.setLevel(lvl);lastLvl=lvl}
+}
+/* side parallax: columns outside the lane, more with a higher level */
+function drawSides(t,c){const a=lvl/4;if(a<=0)return;
+  g.save();g.strokeStyle='#7cf';g.lineWidth=2;
+  for(const s of[-1,1])for(let i=0;i<8;i++){const f=((i/8)+t*(.04+.01*i))%1,
+    x=c.cx+s*c.rw*(1.35+1.6*f),y=c.hy+(c.sy-c.hy)*f,hh=6+f*140*a;
+    g.globalAlpha=a*(0.2+0.6*f);g.beginPath();g.moveTo(x,y);g.lineTo(x,y+hh);g.stroke()}
+  g.restore()}
 
 /* ---------- frame ---------- */
 function frame(now){
@@ -124,7 +147,9 @@ function frame(now){
   }
   if(aud&&aud.ok)aud.tick();
   flash=Math.max(0,flash-dt*3);burst=Math.max(0,burst-dt*2.5);
+  updateLadder(t);
   draw(t);
+  if(failT!==null){const f=Math.min(1,(t-failT)/FADE_S);g.fillStyle=`rgba(0,0,0,${f})`;g.fillRect(0,0,W,H);if(f>=1)return finish()}
   if(t>cm.duration+0.5||(t>cm.duration-0.2&&run.phr.every(p=>p.done)))return finish();
   requestAnimationFrame(frame);
 }
@@ -158,20 +183,16 @@ function drawShip(X,Y,S,pitch,roll){
 
 /* ---------- gray-box render: a road, cues lie on it ---------- */
 /* perspective: screen position is linear in time-to-arrival, so equal time gaps give equal screen gaps */
-const DMAX=1.6, FAR=0.32;   // [TUNE]
+const DMAX=1.6, FAR=0.45;   // [TUNE]
 function S(d){return 1-(1-FAR)*Math.min(Math.max(d,0),DMAX)/DMAX}
-function P(c,d,x){const s=S(d);return{x:c.cx+x*c.rw*s,y:c.hy+(c.sy-c.hy)*s,s}}
+function P(c,d,x){const dd=Math.min(Math.max(d,0),DMAX);const s=S(dd),y=c.sy-(c.sy-c.hy)*(dd/DMAX);return{x:c.cx+x*c.rw*s,y,s}}
 function draw(t){
   g.clearRect(0,0,W,H);g.fillStyle='#0b0d12';g.fillRect(0,0,W,H);
   const cam=run.cam,c=corrCam(cam);
   g.save();g.translate(W/2,H/2);g.rotate(-Math.sin(run.roll)*.06*cam);g.translate(-W/2,-H/2);   // slight bank during barrel rolls
-  // horizon glow
-  g.fillStyle='#10141d';g.fillRect(-20,c.hy-1,W+40,2);
-  // road
-  const far=P(c,DMAX,0),near={s:(H-c.hy)/(c.sy-c.hy),y:H};
-  // fog strip between the horizon and the far end of the road
-  const fg=g.createLinearGradient(0,c.hy,0,far.y);fg.addColorStop(0,'#10141d');fg.addColorStop(1,'#1b2030');
-  g.fillStyle=fg;g.fillRect(-20,c.hy,W+40,far.y-c.hy);
+  drawSides(t,c);
+  // road: from the lane top (far) to the ship line (near)
+  const far=P(c,DMAX,0),near={s:1,y:c.sy};
   g.fillStyle='#1b2030';g.beginPath();g.moveTo(c.cx-c.rw*far.s,far.y);g.lineTo(c.cx+c.rw*far.s,far.y);g.lineTo(c.cx+c.rw*near.s,near.y);g.lineTo(c.cx-c.rw*near.s,near.y);g.fill();
   g.strokeStyle='#5a6688';g.lineWidth=2;g.beginPath();g.moveTo(c.cx-c.rw*far.s,far.y);g.lineTo(c.cx-c.rw*near.s,near.y);g.moveTo(c.cx+c.rw*far.s,far.y);g.lineTo(c.cx+c.rw*near.s,near.y);g.stroke();
   // beat lines
