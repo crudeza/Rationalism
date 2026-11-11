@@ -4,7 +4,8 @@
 <style>
 :root{--bg:#0b0d12;--fg:#d7dbe6;--a:#7cf;--b:#f7a}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;overflow:hidden;touch-action:none}
-canvas{position:fixed;inset:0;width:100%;height:100%}
+#fx{position:fixed;inset:0;width:100%;height:100%}
+#c{position:fixed;inset:0;width:100%;height:100%;background:none}
 .ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(11,13,18,.88);padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);text-align:center;overflow:auto;touch-action:pan-y}
 .ov.hide{display:none}
 button,select,input{font:inherit;color:var(--fg);background:#1a1f2b;border:1px solid #3a4258;border-radius:8px;padding:10px 16px}
@@ -18,7 +19,8 @@ body.play #pulse{display:block}
 #log{font:11px monospace;opacity:.6;max-width:90vw}
 small{opacity:.7}
 </style></head><body>
-<div id="ver">RESONANCE gray-box w2-v5</div><div id="err"></div>
+<div id="ver">RESONANCE gray-box w2-v6</div><div id="err"></div>
+<canvas id="fx"></canvas>
 <canvas id="c"></canvas>
 <button id="pulse">PULSE</button>
 <div class="ov" id="menu">
@@ -34,7 +36,7 @@ small{opacity:.7}
 <script>if(!/\/[^\/]*\.[a-z]+$/i.test(location.pathname)&&!location.pathname.endsWith('/'))location.replace(location.pathname+'/'+location.search+location.hash)</script>
 <script src="core/core.js"></script>
 <script>
-const VER='w2-v5', $=id=>document.getElementById(id), logEl=$('log');
+const VER='w2-v6', $=id=>document.getElementById(id), logEl=$('log');
 const log=s=>{logEl.textContent+=s+' · '};
 function showErr(e){const b=$('err');b.style.display='block';b.textContent=VER+' ERROR: '+(e&&e.stack||e)}
 addEventListener('error',e=>showErr(e.error||e.message));addEventListener('unhandledrejection',e=>showErr(e.reason));
@@ -69,8 +71,45 @@ class Audio3{
 }
 
 /* ---------- input ---------- */
-const cv=$('c'),g=cv.getContext('2d');let W=0,H=0,dpr=1;
-function resize(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;g.setTransform(dpr,0,0,dpr,0,0)}
+const cv=$('c'), hg=cv.getContext('2d');
+const sc=document.createElement('canvas'), sg=sc.getContext('2d');
+let g=sg, W=0,H=0,dpr=1;
+
+/* ---------- fisheye pass: the scene (sc) goes through a WebGL shader; HUD stays flat on #c ---------- */
+const FX=(()=>{try{
+  const c=$('fx'), gl=c.getContext('webgl',{antialias:false,premultipliedAlpha:false});
+  if(!gl)return{ok:false};
+  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);
+    if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(o));return o};
+  const pr=gl.createProgram();
+  gl.attachShader(pr,sh(gl.VERTEX_SHADER,
+    'attribute vec2 p;varying vec2 uv;void main(){uv=p*.5+.5;gl_Position=vec4(p,0.,1.);}'));
+  gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,
+    'precision mediump float;varying vec2 uv;uniform sampler2D tx;uniform float k,ca;'+
+    'void main(){vec2 c=uv*2.-1.;float r2=dot(c,c);'+
+    'vec2 uR=(c*(1.+(k+ca)*r2))*.5+.5, uG=(c*(1.+k*r2))*.5+.5, uB=(c*(1.+(k-ca)*r2))*.5+.5;'+
+    'gl_FragColor=vec4(texture2D(tx,uR).r,texture2D(tx,uG).g,texture2D(tx,uB).b,1.);}'));
+  gl.linkProgram(pr);gl.useProgram(pr);
+  const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  const tx=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tx);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+  [gl.TEXTURE_MIN_FILTER,gl.TEXTURE_MAG_FILTER].forEach(p=>gl.texParameteri(gl.TEXTURE_2D,p,gl.LINEAR));
+  [gl.TEXTURE_WRAP_S,gl.TEXTURE_WRAP_T].forEach(p=>gl.texParameteri(gl.TEXTURE_2D,p,gl.CLAMP_TO_EDGE));
+  const uk=gl.getUniformLocation(pr,'k'),uca=gl.getUniformLocation(pr,'ca');
+  const st={ok:true};
+  c.addEventListener('webglcontextlost',e=>{e.preventDefault();st.ok=false});
+  st.size=(w,h)=>{c.width=w;c.height=h;gl.viewport(0,0,w,h)};
+  st.render=(src,k,ca)=>{gl.bindTexture(gl.TEXTURE_2D,tx);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src);
+    gl.uniform1f(uk,k);gl.uniform1f(uca,ca);gl.drawArrays(gl.TRIANGLE_STRIP,0,4)};
+  return st;
+}catch(e){console.warn('fx off',e);return{ok:false}}})();
+
+function resize(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;
+  sc.width=cv.width=W*dpr;sc.height=cv.height=H*dpr;
+  sg.setTransform(dpr,0,0,dpr,0,0);hg.setTransform(dpr,0,0,dpr,0,0);
+  if(FX.ok)FX.size(W*dpr,H*dpr)}
 addEventListener('resize',resize);addEventListener('orientationchange',resize);resize();
 const keys={};let touchLast=null;
 const lerp=(a,b,u)=>a+(b-a)*u;
@@ -154,15 +193,21 @@ function drawShip(X,Y,S,pitch,roll){
 }
 
 /* ---------- gray-box render: a road, cues lie on it ---------- */
-function P(c,d,x){const s=1/(1+d*4);return{x:c.cx+x*c.rw*s,y:c.hy+(c.sy-c.hy)*s,s}}
+/* perspective: screen position is linear in time-to-arrival, so equal time gaps give equal screen gaps */
+const DMAX=1.6, FAR=0.32;   // [TUNE]
+function S(d){return 1-(1-FAR)*Math.min(Math.max(d,0),DMAX)/DMAX}
+function P(c,d,x){const s=S(d);return{x:c.cx+x*c.rw*s,y:c.hy+(c.sy-c.hy)*s,s}}
 function draw(t){
-  g.clearRect(0,0,W,H);g.fillStyle='#0b0d12';g.fillRect(0,0,W,H);
+  g=sg; g.clearRect(0,0,W,H);g.fillStyle='#0b0d12';g.fillRect(0,0,W,H);
   const cam=run.cam,c=corrCam(cam);
   g.save();g.translate(W/2,H/2);g.rotate(-Math.sin(run.roll)*.06*cam);g.translate(-W/2,-H/2);   // slight bank during barrel rolls
   // horizon glow
   g.fillStyle='#10141d';g.fillRect(-20,c.hy-1,W+40,2);
   // road
-  const far=P(c,1.6,0),near={s:(H-c.hy)/(c.sy-c.hy),y:H};
+  const far=P(c,DMAX,0),near={s:(H-c.hy)/(c.sy-c.hy),y:H};
+  // fog strip between the horizon and the far end of the road
+  const fg=g.createLinearGradient(0,c.hy,0,far.y);fg.addColorStop(0,'#10141d');fg.addColorStop(1,'#1b2030');
+  g.fillStyle=fg;g.fillRect(-20,c.hy,W+40,far.y-c.hy);
   g.fillStyle='#1b2030';g.beginPath();g.moveTo(c.cx-c.rw*far.s,far.y);g.lineTo(c.cx+c.rw*far.s,far.y);g.lineTo(c.cx+c.rw*near.s,near.y);g.lineTo(c.cx-c.rw*near.s,near.y);g.fill();
   g.strokeStyle='#5a6688';g.lineWidth=2;g.beginPath();g.moveTo(c.cx-c.rw*far.s,far.y);g.lineTo(c.cx-c.rw*near.s,near.y);g.moveTo(c.cx+c.rw*far.s,far.y);g.lineTo(c.cx+c.rw*near.s,near.y);g.stroke();
   // beat lines
@@ -187,13 +232,21 @@ function draw(t){
   }
   g.globalAlpha=1;
   // flip / landing burst on the road
-  if(burst>0){const b=P(c,0,run.ship.x),sc=1+cam*1.6;g.strokeStyle=`rgba(255,255,255,${burst})`;g.lineWidth=3;g.beginPath();g.ellipse(b.x,b.y+6,(30+(1-burst)*120)*sc,(30+(1-burst)*120)*sc*.3,0,0,7);g.stroke()}
+  if(burst>0){const b=P(c,0,run.ship.x),sc2=1+cam*1.6;g.strokeStyle=`rgba(255,255,255,${burst})`;g.lineWidth=3;g.beginPath();g.ellipse(b.x,b.y+6,(30+(1-burst)*120)*sc2,(30+(1-burst)*120)*sc2*.3,0,0,7);g.stroke()}
   // ship: bigger and nearer while the camera is close, hops off the road during each flip
-  const sh=P(c,0,run.ship.x),S=14*(1+2.4*cam),hop=run.lift*H*(.10+.08*cam);
-  g.fillStyle=`rgba(255,255,255,${.14*(1-run.lift*.5)})`;g.beginPath();g.ellipse(sh.x,sh.y+6,18*S/14*(1-run.lift*.35),5*S/14,0,0,7);g.fill();
-  drawShip(sh.x,sh.y-S*.7-hop,S,run.pitch,run.roll);
+  const sh=P(c,0,run.ship.x),SZ=14*(1+2.4*cam),hop=run.lift*H*(.10+.08*cam);
+  g.fillStyle=`rgba(255,255,255,${.14*(1-run.lift*.5)})`;g.beginPath();g.ellipse(sh.x,sh.y+6,18*SZ/14*(1-run.lift*.35),5*SZ/14,0,0,7);g.fill();
+  drawShip(sh.x,sh.y-SZ*.7-hop,SZ,run.pitch,run.roll);
   g.restore();
-  // HUD
+
+  // fisheye pass: scene -> WebGL; HUD canvas is cleared here, then the scene is copied in if WebGL is off
+  const k=0.10+0.06*cam, ca=0.004;   // [TUNE]
+  hg.clearRect(0,0,W,H);
+  if(FX.ok)FX.render(sc,k,ca);
+  else hg.drawImage(sc,0,0,W,H);
+
+  // HUD on top, flat (no clearRect here: it would wipe the fallback scene)
+  g=hg;
   g.fillStyle='#d7dbe6';g.textAlign='left';g.font='13px system-ui';
   const lead=cm.startMark-t;g.fillText(`${cm.title}  ${t<cm.startMark?'lead-in '+lead.toFixed(1)+'s':fmt(t-cm.startMark)}`,12,34);
   g.fillText(`combo ${run.stats.combo}  miss ${run.stats.miss}`,12,52);
