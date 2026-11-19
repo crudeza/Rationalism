@@ -1,0 +1,61 @@
+{
+ "schema": 1,
+ "kit": "resonance-env-kit",
+ "pieces": {
+  "road_straight": {
+   "category": "road",
+   "hd": {
+    "glb": "profiles/hd/env/road_straight.glb",
+    "tris": 202
+   },
+   "lite": {
+    "glb": "profiles/lite/env/road_straight.glb",
+    "tris": 44
+   }
+  },
+  "road_widen": {
+   "category": "road",
+   "hd": {
+    "glb": "profiles/hd/env/road_widen.glb",
+    "tris": 344
+   },
+   "lite": {
+    "glb": "profiles/lite/env/road_widen.glb",
+    "tris": 52
+   }
+  },
+  "nebula": {
+   "category": "silence",
+   "hd": {
+    "glb": "profiles/hd/env/nebula.glb",
+    "tris": 320
+   },
+   "lite": {
+    "glb": "profiles/lite/env/nebula.glb",
+    "tris": 80
+   }
+  },
+  "ringed_planet": {
+   "category": "silence",
+   "hd": {
+    "glb": "profiles/hd/env/ringed_planet.glb",
+    "tris": 416
+   },
+   "lite": {
+    "glb": "profiles/lite/env/ringed_planet.glb",
+    "tris": 116
+   }
+  },
+  "light_creature": {
+   "category": "silence",
+   "hd": {
+    "glb": "profiles/hd/env/light_creature.glb",
+    "tris": 764
+   },
+   "lite": {
+    "glb": "profiles/lite/env/light_creature.glb",
+    "tris": 156
+   }
+  }
+ }
+}
