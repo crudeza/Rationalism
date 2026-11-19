@@ -1,0 +1,466 @@
+{
+ "schema": 1,
+ "generated_by": "W3 export pass",
+ "budgets": {
+  "hd_tris_max": 25000,
+  "lite_tris_max": 6000
+ },
+ "ships": {
+  "gemini": {
+   "slots": {
+    "HULL": {
+     "hd": {
+      "tris": 596,
+      "glb": "profiles/hd/ships/gemini/HULL.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      0.0,
+      0.3
+     ],
+     "livery_mask_hd": "textures/livery_gemini_1024.png",
+     "lite": {
+      "tris": 356,
+      "glb": "profiles/lite/ships/gemini/HULL.glb",
+      "role": "cosmetic"
+     }
+    },
+    "POD_L": {
+     "hd": {
+      "tris": 276,
+      "glb": "profiles/hd/ships/gemini/POD_L.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      -1.55,
+      0.2,
+      0.1
+     ],
+     "livery_mask_hd": "textures/livery_gemini_1024.png",
+     "lite": {
+      "tris": 164,
+      "glb": "profiles/lite/ships/gemini/POD_L.glb",
+      "role": "cosmetic"
+     }
+    },
+    "WING_L": {
+     "hd": {
+      "tris": 20,
+      "glb": "profiles/hd/ships/gemini/WING_L.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      -1.93,
+      0.8,
+      0.15
+     ],
+     "livery_mask_hd": "textures/livery_gemini_1024.png",
+     "lite": {
+      "tris": 20,
+      "glb": "profiles/lite/ships/gemini/WING_L.glb",
+      "role": "cosmetic"
+     }
+    },
+    "POD_R": {
+     "hd": {
+      "tris": 276,
+      "glb": "profiles/hd/ships/gemini/POD_R.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      1.55,
+      0.2,
+      0.1
+     ],
+     "livery_mask_hd": "textures/livery_gemini_1024.png",
+     "lite": {
+      "tris": 164,
+      "glb": "profiles/lite/ships/gemini/POD_R.glb",
+      "role": "cosmetic"
+     }
+    },
+    "WING_R": {
+     "hd": {
+      "tris": 20,
+      "glb": "profiles/hd/ships/gemini/WING_R.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      1.93,
+      0.8,
+      0.15
+     ],
+     "livery_mask_hd": "textures/livery_gemini_1024.png",
+     "lite": {
+      "tris": 20,
+      "glb": "profiles/lite/ships/gemini/WING_R.glb",
+      "role": "cosmetic"
+     }
+    },
+    "ENGINE": {
+     "hd": {
+      "tris": 1500,
+      "glb": "profiles/hd/ships/gemini/ENGINE.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      4.3,
+      0.0
+     ],
+     "livery_mask_hd": "textures/livery_gemini_1024.png",
+     "lite": {
+      "tris": 374,
+      "glb": "profiles/lite/ships/gemini/ENGINE.glb",
+      "role": "cosmetic"
+     }
+    },
+    "TRAIL": {
+     "hd": {
+      "tris": 0,
+      "glb": "profiles/hd/ships/gemini/TRAIL.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      5.9,
+      0.0
+     ],
+     "livery_mask_hd": null,
+     "lite": {
+      "tris": 0,
+      "glb": "profiles/lite/ships/gemini/TRAIL.glb",
+      "role": "cosmetic"
+     }
+    },
+    "DECAL": {
+     "hd": {
+      "tris": 2,
+      "glb": "profiles/hd/ships/gemini/DECAL.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      0.25,
+      0.205
+     ],
+     "livery_mask_hd": null,
+     "lite": {
+      "tris": 2,
+      "glb": "profiles/lite/ships/gemini/DECAL.glb",
+      "role": "cosmetic"
+     }
+    }
+   },
+   "total_tris": {
+    "hd": 2690,
+    "lite": 1100
+   }
+  },
+  "halo": {
+   "slots": {
+    "HULL": {
+     "hd": {
+      "tris": 632,
+      "glb": "profiles/hd/ships/halo/HULL.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      0.2,
+      0.3
+     ],
+     "livery_mask_hd": "textures/livery_halo_1024.png",
+     "lite": {
+      "tris": 316,
+      "glb": "profiles/lite/ships/halo/HULL.glb",
+      "role": "cosmetic"
+     }
+    },
+    "WING_L": {
+     "hd": {
+      "tris": 1472,
+      "glb": "profiles/hd/ships/halo/WING_L.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      0.6,
+      0.3
+     ],
+     "livery_mask_hd": "textures/livery_halo_1024.png",
+     "lite": {
+      "tris": 440,
+      "glb": "profiles/lite/ships/halo/WING_L.glb",
+      "role": "cosmetic"
+     }
+    },
+    "POD_L": {
+     "hd": {
+      "tris": 124,
+      "glb": "profiles/hd/ships/halo/POD_L.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      -1.25,
+      1.4,
+      -0.55
+     ],
+     "livery_mask_hd": "textures/livery_halo_1024.png",
+     "lite": {
+      "tris": 74,
+      "glb": "profiles/lite/ships/halo/POD_L.glb",
+      "role": "cosmetic"
+     }
+    },
+    "WING_R": {
+     "hd": {
+      "tris": 1472,
+      "glb": "profiles/hd/ships/halo/WING_R.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      0.6,
+      0.3
+     ],
+     "livery_mask_hd": "textures/livery_halo_1024.png",
+     "lite": {
+      "tris": 440,
+      "glb": "profiles/lite/ships/halo/WING_R.glb",
+      "role": "cosmetic"
+     }
+    },
+    "POD_R": {
+     "hd": {
+      "tris": 124,
+      "glb": "profiles/hd/ships/halo/POD_R.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      1.25,
+      1.4,
+      -0.55
+     ],
+     "livery_mask_hd": "textures/livery_halo_1024.png",
+     "lite": {
+      "tris": 74,
+      "glb": "profiles/lite/ships/halo/POD_R.glb",
+      "role": "cosmetic"
+     }
+    },
+    "ENGINE": {
+     "hd": {
+      "tris": 1916,
+      "glb": "profiles/hd/ships/halo/ENGINE.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      3.8,
+      0.3
+     ],
+     "livery_mask_hd": "textures/livery_halo_1024.png",
+     "lite": {
+      "tris": 382,
+      "glb": "profiles/lite/ships/halo/ENGINE.glb",
+      "role": "cosmetic"
+     }
+    },
+    "TRAIL": {
+     "hd": {
+      "tris": 0,
+      "glb": "profiles/hd/ships/halo/TRAIL.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      5.3,
+      0.3
+     ],
+     "livery_mask_hd": null,
+     "lite": {
+      "tris": 0,
+      "glb": "profiles/lite/ships/halo/TRAIL.glb",
+      "role": "cosmetic"
+     }
+    },
+    "DECAL": {
+     "hd": {
+      "tris": 32,
+      "glb": "profiles/hd/ships/halo/DECAL.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      -0.15,
+      0.622
+     ],
+     "livery_mask_hd": null,
+     "lite": {
+      "tris": 32,
+      "glb": "profiles/lite/ships/halo/DECAL.glb",
+      "role": "cosmetic"
+     }
+    }
+   },
+   "total_tris": {
+    "hd": 5772,
+    "lite": 1758
+   }
+  },
+  "petal": {
+   "slots": {
+    "HULL": {
+     "hd": {
+      "tris": 652,
+      "glb": "profiles/hd/ships/petal/HULL.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      0.2,
+      0.22
+     ],
+     "livery_mask_hd": "textures/livery_petal_1024.png",
+     "lite": {
+      "tris": 358,
+      "glb": "profiles/lite/ships/petal/HULL.glb",
+      "role": "cosmetic"
+     }
+    },
+    "ENGINE": {
+     "hd": {
+      "tris": 348,
+      "glb": "profiles/hd/ships/petal/ENGINE.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      3.0,
+      0.2
+     ],
+     "livery_mask_hd": "textures/livery_petal_1024.png",
+     "lite": {
+      "tris": 174,
+      "glb": "profiles/lite/ships/petal/ENGINE.glb",
+      "role": "cosmetic"
+     }
+    },
+    "TRAIL": {
+     "hd": {
+      "tris": 0,
+      "glb": "profiles/hd/ships/petal/TRAIL.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      4.6,
+      0.2
+     ],
+     "livery_mask_hd": null,
+     "lite": {
+      "tris": 0,
+      "glb": "profiles/lite/ships/petal/TRAIL.glb",
+      "role": "cosmetic"
+     }
+    },
+    "DECAL": {
+     "hd": {
+      "tris": 32,
+      "glb": "profiles/hd/ships/petal/DECAL.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.0,
+      -0.5,
+      0.4255
+     ],
+     "livery_mask_hd": null,
+     "lite": {
+      "tris": 32,
+      "glb": "profiles/lite/ships/petal/DECAL.glb",
+      "role": "cosmetic"
+     }
+    },
+    "WING_L": {
+     "hd": {
+      "tris": 368,
+      "glb": "profiles/hd/ships/petal/WING_L.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      -0.6,
+      1.4,
+      0.3
+     ],
+     "livery_mask_hd": "textures/livery_petal_1024.png",
+     "lite": {
+      "tris": 202,
+      "glb": "profiles/lite/ships/petal/WING_L.glb",
+      "role": "cosmetic"
+     }
+    },
+    "POD_L": {
+     "hd": {
+      "tris": 120,
+      "glb": "profiles/hd/ships/petal/POD_L.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      -0.78,
+      0.4,
+      0.2
+     ],
+     "livery_mask_hd": "textures/livery_petal_1024.png",
+     "lite": {
+      "tris": 72,
+      "glb": "profiles/lite/ships/petal/POD_L.glb",
+      "role": "cosmetic"
+     }
+    },
+    "WING_R": {
+     "hd": {
+      "tris": 368,
+      "glb": "profiles/hd/ships/petal/WING_R.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.6,
+      1.4,
+      0.3
+     ],
+     "livery_mask_hd": "textures/livery_petal_1024.png",
+     "lite": {
+      "tris": 202,
+      "glb": "profiles/lite/ships/petal/WING_R.glb",
+      "role": "cosmetic"
+     }
+    },
+    "POD_R": {
+     "hd": {
+      "tris": 120,
+      "glb": "profiles/hd/ships/petal/POD_R.glb",
+      "role": "cosmetic"
+     },
+     "pivot_local": [
+      0.78,
+      0.4,
+      0.2
+     ],
+     "livery_mask_hd": "textures/livery_petal_1024.png",
+     "lite": {
+      "tris": 72,
+      "glb": "profiles/lite/ships/petal/POD_R.glb",
+      "role": "cosmetic"
+     }
+    }
+   },
+   "total_tris": {
+    "hd": 2008,
+    "lite": 1112
+   }
+  }
+ }
+}
