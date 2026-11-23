@@ -32,22 +32,31 @@
     return { s0, s1: s0 + w, n, d: w / n };
   }
 
+  /* opt (all optional; defaults reproduce pre-W5 behaviour exactly):
+     span (ring hit half-width, default 0.2), perfect/good (pulse + ring windows, default 0.05/0.12),
+     shields (Echo charges that save a phrase from going hollow, default 0), magnet (0..~0.4, shrinks the
+     effective distance to a ring, default 0), calibMs. agility is kept only for back-compat (cfg.speed is
+     unused by movement since D-14 made steering instant); real upgrade levels live in progression.js. */
   function createRun(cm, tier, opt) {
     opt = opt || {};
     const flights = buildFlights(cm);
     flights.forEach(f => { f.plan = flipPlan(cm, f); });
     const inFlight = t => flights.some(f => t >= f.t0 && t < f.end);
     const cues = cm.cues.filter(c => TIERS[tier][c.tier || 'easy'] && !inFlight(c.t)).map((c, i) => Object.assign({ id: i, state: 'pending' }, c));
-    const phr = cm.phrases.map(p => ({ id: p.id, t0: p.t0, t1: p.t1, total: 0, hit: 0, missed: 0, allowed: 0, hollow: false, done: false }));
+    const phr = cm.phrases.map(p => ({ id: p.id, t0: p.t0, t1: p.t1, total: 0, hit: 0, missed: 0, allowed: 0, hollow: false, shielded: false, done: false }));
     cues.forEach(c => { phr[c.phrase].total++; });
     phr.forEach(p => { p.allowed = Math.floor(p.total * (1 - HEAR_RATIO)); }); // may miss up to 30% of a phrase and still hear it
     return {
       cm, tier, cues, phr, flights, fi: 0, flight: null, flying: false,
       cam: 0, lift: 0, pitch: 0, roll: 0, flipI: -1, flipKind: 'pitch', flipCount: 0, landings: [],
       ship: { x: 0, y: 0 }, target: { x: 0, y: 0 },
-      presses: [], events: [], next: 0, silence: false,
+      presses: [], events: [], next: 0, silence: false, shields: opt.shields || 0,
       stats: { perfect: 0, good: 0, miss: 0, combo: 0, max: 0, dust: 0 },
-      cfg: { span: opt.span || 0.2, perfect: 0.05, good: 0.12, calib: (opt.calibMs || 0) / 1000, speed: BASE_SPEED * (opt.agility || 1) }
+      cfg: {
+        span: opt.span != null ? opt.span : 0.2, perfect: opt.perfect != null ? opt.perfect : 0.05,
+        good: opt.good != null ? opt.good : 0.12, magnet: opt.magnet || 0,
+        calib: (opt.calibMs || 0) / 1000, speed: BASE_SPEED * (opt.agility || 1)
+      }
     };
   }
 
@@ -56,7 +65,10 @@
     if (g === 'miss') {
       c.state = 'miss'; s.miss++; s.combo = 0; const p = run.phr[c.phrase]; p.missed++;
       run.events.push({ type: 'miss', phrase: c.phrase, t: c.t });
-      if (!p.hollow && p.missed > p.allowed) { p.hollow = true; run.events.push({ type: 'hollow', phrase: c.phrase, until: p.t1 }); }
+      if (!p.hollow && !p.shielded && p.missed > p.allowed) {
+        if (run.shields > 0) { run.shields--; p.shielded = true; run.events.push({ type: 'shield', phrase: c.phrase, left: run.shields }); }
+        else { p.hollow = true; run.events.push({ type: 'hollow', phrase: c.phrase, until: p.t1 }); }
+      }
     } else {
       c.state = g; s[g]++; s.combo++; s.max = Math.max(s.max, s.combo); run.phr[c.phrase].hit++;
       run.events.push({ type: 'hit', grade: g, id: c.id });
@@ -108,7 +120,7 @@
         break;
       } else {
         if (t < tj) break;
-        const e = Math.abs(run.ship.x - c.x);
+        const e = Math.abs(run.ship.x - c.x) * (1 - cf.magnet); // Magnet: gentle pull toward the nearest ring
         grade(run, c, e <= cf.span * 0.5 ? 'perfect' : e <= cf.span ? 'good' : 'miss');
       }
     }
@@ -120,7 +132,11 @@
 
   function result(run) {
     const heard = run.phr.filter(p => !p.hollow).length, n = run.phr.length;
-    return { heardFrac: heard / n, heard, phrases: n, full: heard === n, energy: Math.round(100 * heard / n) + run.stats.dust, stats: run.stats };
+    const shieldsUsed = run.phr.filter(p => p.shielded).length, full = heard === n;
+    return {
+      heardFrac: heard / n, heard, phrases: n, full, pure: full && shieldsUsed === 0, shieldsUsed,
+      energy: Math.round(100 * heard / n) + run.stats.dust, stats: run.stats
+    };
   }
 
   /* Headless bot. skill 1 = perfect; lower = ignores some cues. Deterministic via seed. */
@@ -140,8 +156,8 @@
     };
   }
 
-  function simulate(cm, tier, skill, seed, dtFn) {
-    const run = createRun(cm, tier), bot = makeBot(run, skill, seed); let dt = 1 / 60;
+  function simulate(cm, tier, skill, seed, dtFn, opt) {
+    const run = createRun(cm, tier, opt), bot = makeBot(run, skill, seed); let dt = 1 / 60;
     let t = cm.startMark - 2;
     for (; t < cm.duration; t += dt) { if (dtFn) dt = dtFn(); bot(t); step(run, t, dt); if (isNaN(run.ship.x) || isNaN(run.pitch) || isNaN(run.roll) || isNaN(run.cam)) throw new Error('NaN'); }
     step(run, t + 1, dt);
