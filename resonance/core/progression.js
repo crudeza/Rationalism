@@ -9,14 +9,14 @@
 
   /* Upgrade levels -> actual gameplay numbers. Every one is forgiveness or earnings, never speed (P-07). */
   const UPGRADES = {
-    span: { label: 'Span', desc: 'Wider hit area on rings', effect: lvl => 0.2 + 0.025 * lvl },
+    span: { label: 'Span', desc: 'Wider hit area on rings', effect: lvl => 0.2 + 0.035 * lvl },
     agility: { label: 'Agility', desc: 'More forgiving timing windows', effect: lvl => ({ perfect: 0.05 + 0.008 * lvl, good: 0.12 + 0.015 * lvl }) },
     echo: { label: 'Echo', desc: 'Shield charges that save a phrase from going hollow', effect: lvl => lvl },
-    magnet: { label: 'Magnet', desc: 'Gentle pull toward the nearest ring', effect: lvl => 0.06 * lvl },
+    magnet: { label: 'Magnet', desc: 'Gentle pull toward the nearest ring', effect: lvl => 0.08 * lvl },
     gain: { label: 'Gain', desc: 'More Energy per run', effect: lvl => 1 + 0.15 * lvl }
   };
 
-  function upgradeCost(level) { return Math.round(20 * Math.pow(1.45, level)); } // cost of level -> level+1 [TUNE]
+  function upgradeCost(level) { return Math.round(15 * Math.pow(1.35, level)); } // cost of level -> level+1 [TUNE]
 
   const FULL_BONUS = 20, PURE_BONUS = 15; // [TUNE] flat Energy on top of the heard-fraction award
 
